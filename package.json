@@ -1,0 +1,29 @@
+{
+    "name": "lichess-es6",
+    "version": "0.0.1",
+    "description": "The best NodeJS client for the Lichess API",
+    "main": "index.js",
+    "scripts": {
+        "test": "./node_modules/.bin/jshint --exclude ./node_modules && ./node_modules/.bin/mocha --harmony"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/theLAZYmd/lichess-es6.git"
+    },
+    "keywords": [
+        "lichess",
+        "lila",
+        "chess",
+        "api"
+    ],
+    "author": "theLAZYmd",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/theLAZYmd/lichess-es6/issues"
+    },
+    "homepage": "https://github.com/theLAZYmd/lichess-es6#readme",
+    "dependencies": {
+        "request": "^2.88.0",
+        "request-promise": "^4.2.4"
+    }
+}
