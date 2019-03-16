@@ -11,19 +11,19 @@ class Users {
             if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(n)) throw new TypeError("Invalid format for lichess username: " + n);
         }
         try {
-            return rp.get({
+            return await rp.get({
                 "uri": config.uri + "api/users/status?ids=" + names.join(","),
                 "json": true,
                 "timeout": 2000
             });
         } catch (e) {
-            if (e) throw "Either request timed out or account doesn't exist. If account exists, please try again in 30 seconds.";
+            if (e) throw e;
         }
     }
 
     static async top10() {
         try {
-            return rp.get({
+            return await rp.get({
                 "uri": config.uri + "player",
                 "headers": {
                     "Accept": "application/vnd.lichess.v3+json"
@@ -48,7 +48,7 @@ class Users {
         if (!f) throw new TypeError("Variant must match list of lichess variant keys: " + config.variants.join(", "));
         if (n > 200) throw new TypeError("Cannot get leaderboard for more than 200 names");
         try {
-            return rp.get({
+            return await rp.get({
                 "uri": config.uri + "player/top/" + n + "/" + variant,
                 "json": true,
                 "timeout": 2000
@@ -58,17 +58,17 @@ class Users {
         }
     }
 
-    static async user(username) {
-        if (typeof username !== "string") throw new TypeError("lichess.users.user() takes string values of an array as an input: " + username);
+    static async get(username) {
+        if (typeof username !== "string") throw new TypeError("lichess.users.get() takes string values of an array as an input: " + username);
         if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
         try {
-            return rp.get({
+            return await rp.get({
                 "uri": config.uri + "api/user/" + username,
                 "json": true,
                 "timeout": 2000
             });
         } catch (e) {
-            if (e) throw "Either request timed out or account doesn't exist. If account exists, please try again in 30 seconds.";
+            if (e) throw e;
         }
     }
 
@@ -77,13 +77,13 @@ class Users {
         if (typeof username !== "string") throw new TypeError("lichess.users.history() takes string values of an array as an input: " + username);
         if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
         try {
-            return rp.get({
+            return await rp.get({
                 "uri": config.uri + "api/user/" + username + "/rating-history",
                 "json": true,
                 "timeout": 2000
             });
         } catch (e) {
-            if (e) throw "Either request timed out or account doesn't exist. If account exists, please try again in 30 seconds.";
+            if (e) throw e;
         }
     }
     
@@ -91,21 +91,21 @@ class Users {
         if (typeof username !== "string") throw new TypeError("lichess.users.activity() takes string values of an array as an input: " + username);
         if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
         try {
-            return rp.get({
+            return await rp.get({
                 "uri": config.uri + "api/user/" + username + "/activity",
                 "json": true,
                 "timeout": 2000
             });
         } catch (e) {
-            if (e) throw "Either request timed out or account doesn't exist. If account exists, please try again in 30 seconds.";
+            if (e) throw e;
         }
     }
 
-    static async users(names) {        
-        if (!Array.isArray(names)) throw new TypeError("lichess.users.users() takes an array as an input");
+    static async getMultiple(names) {        
+        if (!Array.isArray(names)) throw new TypeError("lichess.users.getMultiple() takes an array as an input");
         if (names.length > 50) throw new TypeError("Cannot check status of more than 50 names");
         for (let n of names) {
-            if (typeof n !== "string") throw new TypeError("lichess.users.status() takes string values of an array as an input: " + n);
+            if (typeof n !== "string") throw new TypeError("lichess.users.getMultiple() takes string values of an array as an input: " + n);
             if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(n)) throw new TypeError("Invalid format for lichess username: " + n);
         }
 		try {
@@ -129,25 +129,25 @@ class Users {
     static async team(team) {
         if (typeof team !== "string") throw new TypeError("lichess.users.team() takes string values of an array as an input: " + team);
         try {
-            return rp.get({
+            return await rp.get({
                 "uri": config.uri + "team/" + team + "/users",
                 "timeout": 2000
             });
         } catch (e) {
-            if (e) throw "Either request timed out or account doesn't exist. If account exists, please try again in 30 seconds.";
+            if (e) throw e;
         }
     }
 
     static async live() {
         try {
-            return rp.get({
+            return await rp.get({
                 "uri": config.uri + "streamer/live",
                 "json": true,
                 "timeout": 2000
             });
         } catch (e) {
-            if (e) throw "Either request timed out or account doesn't exist. If account exists, please try again in 30 seconds.";
-        }
+            if (e) throw e;
+         }
     }
 
     static async titled(titles = ["GM"], online = false) {
@@ -164,7 +164,7 @@ class Users {
         if (!f) throw new TypeError("Title must match list of lichess title keys: " + config.titles.join(", "));
         if (n > 200) throw new TypeError("Cannot get leaderboard for more than 200 names");
         try {
-            return rp.get({
+            return await rp.get({
                 "uri": config.uri + "api/users/titled?titles=" + titles.join(",") + "?online=" + online,
                 "json": true,
                 "timeout": 2000
