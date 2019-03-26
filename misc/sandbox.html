@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang=\"en\">
+<!-- Lichess is open source! See https://github.com/ornicar/lila -->
+
+<head>
+    <meta charset=\"utf-8\">
+    <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self' https://lichess1.org; connect-src 'self'
+        https://lichess1.org wss://socket.lichess.org:* https://explorer.lichess.ovh https://tablebase.lichess.ovh;
+        style-src 'self' 'unsafe-inline' https://lichess1.org https://fonts.googleapis.com; font-src 'self' lichess1.org
+        https://fonts.gstatic.com; frame-src 'self' https://lichess1.org https://www.youtube.com; worker-src 'self'
+        https://lichess1.org; img-src data: *;
+        script-src 'nonce-QZFwo1PtVboIRFMCQtLK' 'unsafe-inline' 'self' 'unsafe-eval' https://lichess1.org;
+        base-uri 'none' ;\">
+    <title>Internal server error • lichess.org</title>
+    <link href=\"https://fonts.googleapis.com/css?family=Noto+Sans:400,700|Roboto:300\" rel=\"stylesheet\">
+    <link href=\"https://fonts.googleapis.com/css?family=Roboto+Mono:500&text=0123456789:.\" rel=\"stylesheet\">
+    <link href=\"//lichess1.org/assets/_PLP5fi/stylesheets/common.css\" type=\"text/css\" rel=\"stylesheet\" />
+    <link href=\"//lichess1.org/assets/_PLP5fi/stylesheets/board.css\" type=\"text/css\" rel=\"stylesheet\" />
+    <link id=\"piece-sprite\" href=\"//lichess1.org/assets/_PLP5fi/stylesheets/piece/cburnett.css\" type=\"text/css\"
+        rel=\"stylesheet\" />
+    <meta content=\"Free online Chess server. Play Chess now in a clean interface. No registration, no ads, no plugin
+        required. Play Chess with the computer, friends or random opponents.\" name=\"description\" />
+    <link id=\"favicon\" rel=\"shortcut icon\" href=\"//lichess1.org/assets/images/favicon-32-white.png\"
+        type=\"image/x-icon\" />
+    <link rel=\"mask-icon\" href=\"//lichess1.org/assets/favicon.svg\" style=\"color: black;\" />
+    <link rel=\"icon\" type=\"image/png\" href=\"//lichess1.org/assets/favicon.256.png\" sizes=\"256x256\" />
+    <link rel=\"icon\" type=\"image/png\" href=\"//lichess1.org/assets/favicon.128.png\" sizes=\"128x128\" />
+    <link rel=\"icon\" type=\"image/png\" href=\"//lichess1.org/assets/favicon.64.png\" sizes=\"64x64\" />
+    <meta name=\"google\" content=\"notranslate\" />
+    <link href=\"/blog.atom\" type=\"application/atom+xml\" rel=\"alternate\" title=\"Blog\" />
+    <link rel=\"preload\" href=\"//lichess1.org/assets/font82/fonts/lichess.woff\" as=\"font\" type=\"font/woff\"
+        crossorigin />
+    <link rel=\"manifest\" href=\"/manifest.json\" />
+    <meta name=\"twitter:site\" content=\"@lichess\" />
+</head>
+
+<body class=\"preload base brown Woodi light Basic\" data-sound-set=\"standard\"
+    data-socket-domain=\"socket.lichess.org\" data-asset-url=\"//lichess1.org\" data-asset-version=\"PLP5fi\"
+    data-nonce=\"QZFwo1PtVboIRFMCQtLK\">
+    <form id=\"blind_mode\" action=\"/toggle-blind-mode\" method=\"POST\"><input type=\"hidden\" name=\"enable\"
+            value=\"1\" /><input type=\"hidden\" name=\"redirect\" value=\"/api/account\" /><button
+            type=\"submit\">Accessibility:
+            Enable blind mode</button></form>
+    <div id=\"site_description\">Free online Chess server. Play Chess now in a clean interface. No registration, no ads,
+        no plugin required. Play Chess with the computer, friends or random opponents.</div>
+    <div id=\"top\" class=\"is2d\">
+        <nav id=\"topmenu\" class=\"hover\">
+            <section><a href=\"/\">Play </a> <div role=\"group\"><a href=\"/?any#hook\">Create a game</a> <a
+                        href=\"/tournament\">Tournament </a> <a href=\"/simul\">Simultaneous exhibitions</a> </div>
+                        </section> <section><a href=\"/training\">Learn </a> <div role=\"group\"><a
+                                href=\"/learn\">Chess basics</a> <a href=\"/training\">Puzzles </a> <a
+                                href=\"/practice\">Practice </a> <a href=\"/training/coordinate\">Coordinates </a> <a
+                                href=\"/study\">Study </a> <a href=\"/coach\">Coaches </a> </div> </section> <section><a
+                                    href=\"/tv\">Watch </a> <div role=\"group\"><a href=\"/tv\">Lichess TV</a> <a
+                                        href=\"/games\">Current games</a> <a href=\"/streamer\">Streamers </a> <a
+                                        href=\"/broadcast\">Broadcasts (beta)</a> <a href=\"/video\">Video library</a>
+                                        </div> </section> <section><a href=\"/player\">Community </a> <div
+                                            role=\"group\"><a href=\"/player\">Players </a> <a href=\"/team\">Teams </a>
+                                                <a href=\"/forum\">Forum </a> <a href=\"/qa\">Questions &amp;
+                                                Answers</a> </div> </section> <section><a href=\"/analysis\">Tools </a>
+                                                    <div role=\"group\"><a href=\"/analysis\">Analysis board</a> <a
+                                                        href=\"/analysis#explorer\">Opening explorer</a> <a
+                                                        href=\"/editor\">Board editor</a> <a href=\"/paste\">Import
+                                                        game</a> <a href=\"/games/search\">Advanced search</a> </div>
+                                                        </section> </nav> <div id=\"ham-plate\" class=\"link
+                                                        hint--bottom\" data-hint=\"Menu\">
+                                                        <div id=\"hamburger\" data-icon=\"[\"></div>
+    </div>
+    <div id=\"clinput\"><a class=\"link\"><span data-icon=\"y\"></span></a><input spellcheck=\"false\"
+            placeholder=\"Search\" /></div><a id=\"reconnecting\" class=\"link text\" data-icon=\"B\">Reconnecting</a>
+    </div>
+    <div class=\"content is2d\">
+        <div id=\"site_header\">
+            <div id=\"notifications\"></div>
+            <div class=\"board_left\">
+                <h1><a id=\"site_title\" href=\"/\">lichess <span class=\"extension\">.org</span></a></h1>
+            </div>
+        </div>
+        <div id=\"lichess\">\n\n<div class=\"content_box small_box\">\n <h1>Something went wrong on this page.</h1>\n
+                <br />\n <br />\n <p>If the problem persists, please <a href=\"/contact#error-page\">report the bug</a>.
+                        </p>\n <br />\n <br />\n <code>ForAuth scopes missing</code>\n</div>\n</div>
+    </div>
+    <script src=\"//lichess1.org/assets/_PLP5fi/javascripts/vendor/chessground.min.js\"> </script> <script
+        src=\"//lichess1.org/assets/_PLP5fi/compiled/lichess.site.min.js\"> </script> <script
+        nonce=\"QZFwo1PtVboIRFMCQtLK\">
+        lichess.quantity = function (c) {
+            return c == 1 ? 'one' : 'other';
+        };
+        lichess.timeagoLocale = function (s, n) {
+                return [];
+        };
+    </script>
+</body>
+
+</html>

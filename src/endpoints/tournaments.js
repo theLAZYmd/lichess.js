@@ -3,7 +3,7 @@ const config = require('../config.json');
 
 class Tournaments {
 
-    static async get () {
+    async get () {
         return await rp.get({
             "uri": config.uri + "/api/tournament",
             "json": true,
@@ -11,7 +11,7 @@ class Tournaments {
         })
     }
 
-    static async games (id, options = {}, ndjson = false) {        
+    async games (id, options = {}, ndjson = false) {        
         if (typeof id !== "string") throw new TypeError("Tournament ID must be a string");
         let keys = [    "moves", "tags", "clocks", "evals", "opening", "literate"   ];
         let values = keys.filter(k => typeof options[k] !== "undefined").map(k => options[k]);
@@ -29,7 +29,7 @@ class Tournaments {
 		}
     }
 
-    static async results (id, nb = 9) {
+    async results (id, nb = 9) {
         try {
             if (typeof id !== "string") throw new TypeError("Tournament ID must be a string");
             if (typeof nb !== "number") throw new TypeError("Number of games to fetch must be type Number");

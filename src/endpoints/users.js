@@ -3,7 +3,7 @@ const config = require('../config.json');
 
 class Users {
 
-    static async status(names) {
+    async status(names) {
         if (!Array.isArray(names)) throw new TypeError("lichess.users.status() takes an array as an input");
         if (names.length > 50) throw new TypeError("Cannot check status of more than 50 names");
         for (let n of names) {
@@ -21,7 +21,7 @@ class Users {
         }
     }
 
-    static async top10() {
+    async top10() {
         try {
             return await rp.get({
                 "uri": config.uri + "player",
@@ -36,7 +36,7 @@ class Users {
         }
     }
 
-    static async leaderboard(variant = "bullet", n = 100) {
+    async leaderboard(variant = "bullet", n = 100) {
         if (typeof variant !== "string") throw new TypeError("Variant must match list of lichess variant keys");
         let f = false;
         for (let v of config.variants) {        //this is bad, we should use an aho-corasick at some point
@@ -58,7 +58,7 @@ class Users {
         }
     }
 
-    static async get(username) {
+    async get(username) {
         if (typeof username !== "string") throw new TypeError("lichess.users.get() takes string values of an array as an input: " + username);
         if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
         try {
@@ -73,7 +73,7 @@ class Users {
     }
 
     //seems to be deprecated
-    static async history(username) {
+    async history(username) {
         if (typeof username !== "string") throw new TypeError("lichess.users.history() takes string values of an array as an input: " + username);
         if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
         try {
@@ -87,7 +87,7 @@ class Users {
         }
     }
     
-    static async activity(username) {
+    async activity(username) {
         if (typeof username !== "string") throw new TypeError("lichess.users.activity() takes string values of an array as an input: " + username);
         if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
         try {
@@ -101,7 +101,7 @@ class Users {
         }
     }
 
-    static async getMultiple(names) {        
+    async getMultiple(names) {        
         if (!Array.isArray(names)) throw new TypeError("lichess.users.getMultiple() takes an array as an input");
         if (names.length > 50) throw new TypeError("Cannot check status of more than 50 names");
         for (let n of names) {
@@ -126,7 +126,7 @@ class Users {
 		}
     }
 
-    static async team(team) {
+    async team(team) {
         if (typeof team !== "string") throw new TypeError("lichess.users.team() takes string values of an array as an input: " + team);
         try {
             return await rp.get({
@@ -138,7 +138,7 @@ class Users {
         }
     }
 
-    static async live() {
+    async live() {
         try {
             return await rp.get({
                 "uri": config.uri + "streamer/live",
@@ -150,7 +150,7 @@ class Users {
          }
     }
 
-    static async titled(titles = ["GM"], online = false) {
+    async titled(titles = ["GM"], online = false) {
         if (!Array.isArray(titles)) throw new TypeError("Variant must match list of lichess variant keys");
         let f = false;
         for (let t of titles) {

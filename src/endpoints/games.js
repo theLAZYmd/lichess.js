@@ -4,7 +4,7 @@ const config = require('../config.json');
 
 class Users {
 
-    static async get(id, options = {}, json = false) {
+    async get(id, options = {}, json = false) {
         if (typeof id !== "string") throw new TypeError("game ID for lichess.games.export() must be a string");
         let keys = [    "moves", "tags", "clocks", "evals", "opening", "literate"   ];
         let values = [];
@@ -27,7 +27,7 @@ class Users {
         }
     }
     
-    static async byUser(username, options = {}, ndjson = false, filepath) { //it would be really nice if I learned how to use typescript to verify these values better than this   
+    async byUser(username, options = {}, ndjson = false, filepath) { //it would be really nice if I learned how to use typescript to verify these values better than this   
         let keys = ["since", "until", "max", "vs", "perfType", "color", "rated", "analysed", "ongoing", "moves", "tags", "clocks", "evals", "opening"]
         if (typeof username !== "string") throw new TypeError("game ID for lichess.games.exportUser() must be a string");
         if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
@@ -73,7 +73,7 @@ class Users {
         }
     }
 
-    static async getMultiple(ids, options = {}, ndjson = false) {        
+    async getMultiple(ids, options = {}, ndjson = false) {        
         if (!Array.isArray(ids)) throw new TypeError("lichess.games.getMultiple() takes an array as an input");
         for (let n of ids) {
             if (typeof n !== "string") throw new TypeError("lichess.users.status() takes string values of an array as an input: " + n);
@@ -107,7 +107,7 @@ class Users {
      * Stream the games played between a list of users, in real time. Only games where both players are part of the list are included.
      * Basically check if any two players from a list are playing right now
      */
-    static async current(usernames, options) {        
+    async current(usernames, options) {        
         if (!Array.isArray(usernames)) throw new TypeError("lichess.games.current() takes an array as an input");
         for (let n of usernames) {
             if (typeof n !== "string") throw new TypeError("lichess.users.current() takes string values of an array as an input: " + n);
@@ -133,7 +133,7 @@ class Users {
     /*
      * requires OAuth2 authorisation
      */
-    static async ongoing(nb = 9) {
+    async ongoing(nb = 9) {
         if (typeof nb !== "number") throw new TypeError("Number of games to fetch must be type Number");
         if (nb < 1 || nb > 50) throw new TypeError("nb value provided is out of range 1-50: " + nb);
 		try {
@@ -147,7 +147,7 @@ class Users {
 		}
     }
     
-    static async getTV(variants = []) {
+    async getTV(variants = []) {
         let vmap = new Map([
             ["bot", "Bot"],
             ["computer", "Computer"],
