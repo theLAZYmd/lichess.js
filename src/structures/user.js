@@ -1,11 +1,17 @@
-class User extends Base {
+const Base = require('./Base');
 
-    constructor(client, data) {
-        super(client);
+/**
+ * Represents a user on Discord.
+ * @implements {TextBasedChannel}
+ * @extends {Base}
+ */
+class User extends Base {
+    constructor(data) {
+        super();
 
         /**
          * The ID of the user
-         * @type {Snowflake}
+         * @type {string}
          */
         this.id = data.id;
 
@@ -14,7 +20,7 @@ class User extends Base {
          * @type {boolean}
          * @name User#bot
          */
-        this.bot = Boolean(data.bot);
+        this.bot = Boolean(data.title === "BOT");
 
         this._patch(data);
     }
@@ -26,15 +32,62 @@ class User extends Base {
          * @name User#username
          */
         if (data.username) this.username = data.username;
-    }
+        
+        /**
+         * Whether or not the user is online
+         * @type {Boolean}
+         * @name User#online
+         */
+        if (typeof data.online !== 'undefined') this.online = Boolean(data.online);
 
-    /**
-     * The timestamp the user was created at
-     * @type {number}
-     * @readonly
-     */
-    get createdTimestamp() {
-        return Snowflake.deconstruct(this.id).timestamp;
+        /**
+         * The timestamp the user was created at
+         * @type {number}
+         * @readonly
+         */
+        if (data.createdAt) this.createdTimestamp = data.createdAt;
+
+        /**
+         * The timestamp the user was last seen at at
+         * @type {number}
+         * @readonly
+         */
+        if (data.seenAt) this.seenTimestamp = data.createdAt;
+
+        /**
+         * The user's language, in format of {ISO 639-1}-{ISO3166-1}
+         * @type {string}
+         * @name User#language
+         */
+        if (data.language) this.language = data.language;
+
+        /**
+         * The URL to a user's profile
+         * @type {string}
+         * @name User#url
+         */
+        if (data.url) this.url = data.url;
+
+        /**
+         * The number of following for a user
+         * @type {number}
+         * @name User#following
+         */
+        if (typeof data.nbFollowing !== 'undefined') this.following = data.nbFollowing;
+
+        /**
+         * The number of followers for a user
+         * @type {number}
+         * @name User#followers
+         */
+        if (typeof data.nbFollowers !== 'undefined') this.followers = data.nbFollowers;
+
+        /**
+         * The user's game completion rate
+         * @type {number}
+         * @name User#completionRate
+         */
+        if (data.completionRate) this.completionRate = data.completionRate;
     }
 
     /**
@@ -47,160 +100,34 @@ class User extends Base {
     }
 
     /**
-     * The Message object of the last message sent by the user, if one was sent
-     * @type {?Message}
+     * The time the user was seen at
+     * @type {Date}
      * @readonly
      */
-    get lastMessage() {
-        const channel = this.client.channels.get(this.lastMessageChannelID);
-        return (channel && channel.messages.get(this.lastMessageID)) || null;
+    get seenAt() {
+        return new Date(this.seenTimestamp);
     }
 
     /**
-     * The presence of this user
-     * @type {Presence}
-     * @readonly
-     */
-    get presence() {
-        for (const guild of this.client.guilds.values()) {
-            if (guild.presences.has(this.id)) return guild.presences.get(this.id);
-        }
-        return new Presence(this.client, {
-            user: {
-                id: this.id
-            }
-        });
-    }
-
-    /**
-     * A link to the user's avatar.
-     * @param {ImageURLOptions} [options={}] Options for the Image URL
-     * @returns {?string}
-     */
-    avatarURL({
-        format,
-        size
-    } = {}) {
-        if (!this.avatar) return null;
-        return this.client.rest.cdn.Avatar(this.id, this.avatar, format, size);
-    }
-
-    /**
-     * A link to the user's default avatar
-     * @type {string}
-     * @readonly
-     */
-    get defaultAvatarURL() {
-        return this.client.rest.cdn.DefaultAvatar(this.discriminator % 5);
-    }
-
-    /**
-     * A link to the user's avatar if they have one.
-     * Otherwise a link to their default avatar will be returned.
-     * @param {ImageURLOptions} [options={}] Options for the Image URL
-     * @returns {string}
-     */
-    displayAvatarURL(options) {
-        return this.avatarURL(options) || this.defaultAvatarURL;
-    }
-
-    /**
-     * The Discord "tag" (e.g. `hydrabolt#0001`) for this user
-     * @type {string}
-     * @readonly
-     */
-    get tag() {
-        return `${this.username}#${this.discriminator}`;
-    }
-
-    /**
-     * Checks whether the user is typing in a channel.
-     * @param {ChannelResolvable} channel The channel to check in
-     * @returns {boolean}
-     */
-    typingIn(channel) {
-        channel = this.client.channels.resolve(channel);
-        return channel._typing.has(this.id);
-    }
-
-    /**
-     * Gets the time that the user started typing.
-     * @param {ChannelResolvable} channel The channel to get the time in
-     * @returns {?Date}
-     */
-    typingSinceIn(channel) {
-        channel = this.client.channels.resolve(channel);
-        return channel._typing.has(this.id) ? new Date(channel._typing.get(this.id).since) : null;
-    }
-
-    /**
-     * Gets the amount of time the user has been typing in a channel for (in milliseconds), or -1 if they're not typing.
-     * @param {ChannelResolvable} channel The channel to get the time in
-     * @returns {number}
-     */
-    typingDurationIn(channel) {
-        channel = this.client.channels.resolve(channel);
-        return channel._typing.has(this.id) ? channel._typing.get(this.id).elapsedTime : -1;
-    }
-
-    /**
-     * The DM between the client's user and this user
-     * @type {?DMChannel}
-     * @readonly
-     */
-    get dmChannel() {
-        return this.client.channels.find(c => c.type === 'dm' && c.recipient.id === this.id) || null;
-    }
-
-    /**
-     * Creates a DM channel between the client and the user.
-     * @returns {Promise<DMChannel>}
-     */
-    createDM() {
-        if (this.dmChannel) return Promise.resolve(this.dmChannel);
-        return this.client.api.users(this.client.user.id).channels.post({
-                data: {
-                    recipient_id: this.id,
-                }
-            })
-            .then(data => this.client.actions.ChannelCreate.handle(data).channel);
-    }
-
-    /**
-     * Deletes a DM channel (if one exists) between the client and the user. Resolves with the channel if successful.
-     * @returns {Promise<DMChannel>}
-     */
-    deleteDM() {
-        if (!this.dmChannel) return Promise.reject(new Error('USER_NO_DMCHANNEL'));
-        return this.client.api.channels(this.dmChannel.id).delete()
-            .then(data => this.client.actions.ChannelDelete.handle(data).channel);
-    }
-
-    /**
-     * Checks if the user is equal to another. It compares ID, username, discriminator, avatar, and bot flags.
+     * Checks if the user is equal to another. It compares ID, username, and bot flags.
      * It is recommended to compare equality by using `user.id === user2.id` unless you want to compare all properties.
      * @param {User} user User to compare with
      * @returns {boolean}
      */
     equals(user) {
-        let equal = user &&
-            this.id === user.id &&
-            this.username === user.username &&
-            this.discriminator === user.discriminator &&
-            this.avatar === user.avatar;
-
+        let equal = user && this.id === user.id && this.username === user.username && this.bot === user.bot;
         return equal;
     }
 
     /**
-     * When concatenated with a string, this automatically returns the user's mention instead of the User object.
+     * When concatenated with a string, this automatically returns a link to the user profile in markdown format.
      * @returns {string}
      * @example
-     * // Logs: Hello from <@123456789012345678>!
+     * // Logs: Hello from [theLAZYmd](https://lichess.org/@/theLAZYmd)!
      * console.log(`Hello from ${user}!`);
      */
     toString() {
-        return `<@${this.id}>`;
+        return `[${this.id}](${this.url})`;
     }
 
     toJSON(...props) {
@@ -216,11 +143,7 @@ class User extends Base {
         return json;
     }
 
-    // These are here only for documentation purposes - they are implemented by TextBasedChannel
-    /* eslint-disable no-empty-function */
     send() {}
 }
-
-TextBasedChannel.applyToClass(User);
 
 module.exports = User;

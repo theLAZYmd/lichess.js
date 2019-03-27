@@ -1,7 +1,5 @@
-const util = require('util');
-
 /**
- * A Map with additional utility methods. This is used rather than Arrays for anything that has
+ * A Map with additional utility methods. This is used throughout discord.js rather than Arrays for anything that has
  * an ID, for significantly improved performance and ease-of-use.
  * @extends {Map}
  */
@@ -490,51 +488,43 @@ class Collection extends Map {
     sort(compareFunction = (x, y) => +(x > y) || +(x === y) - 1) {
         return new Collection([...this.entries()].sort((a, b) => compareFunction(a[1], b[1], a[0], b[0])));
     }
+    
+    find(propOrFn, value) {
+        if (typeof propOrFn === 'string') {
+            process.emitWarning('Collection#find: pass a function instead', 'DeprecationWarning');
+            if (typeof value === 'undefined') throw new Error('Value must be specified.');
+            for (const item of this.values()) {
+                if (item[propOrFn] === value) return item;
+            }
+            return null;
+        } else if (typeof propOrFn === 'function') {
+            for (const [key, val] of this) {
+                if (propOrFn(val, key, this)) return val;
+            }
+            return null;
+        } else {
+            throw new Error('First argument must be a property string or a function.');
+        }
+    }
+
+    findKey(propOrFn, value) {
+        if (typeof propOrFn === 'string') {
+            process.emitWarning('Collection#findKey: pass a function instead', 'DeprecationWarning');
+            if (typeof value === 'undefined') throw new Error('Value must be specified.');
+            for (const [key, val] of this) {
+                if (val[propOrFn] === value) return key;
+            }
+            return null;
+        } else if (typeof propOrFn === 'function') {
+            for (const [key, val] of this) {
+                if (propOrFn(val, key, this)) return key;
+            }
+            return null;
+        } else {
+            throw new Error('First argument must be a property string or a function.');
+        }
+    }
+
 }
-
-Collection.prototype.findAll =
-    util.deprecate(Collection.prototype.findAll, 'Collection#findAll: use Collection#filter instead');
-
-Collection.prototype.filterArray =
-    util.deprecate(Collection.prototype.filterArray, 'Collection#filterArray: use Collection#filter instead');
-
-Collection.prototype.exists =
-    util.deprecate(Collection.prototype.exists, 'Collection#exists: use Collection#some instead');
-
-Collection.prototype.find = function find(propOrFn, value) {
-    if (typeof propOrFn === 'string') {
-        process.emitWarning('Collection#find: pass a function instead', 'DeprecationWarning');
-        if (typeof value === 'undefined') throw new Error('Value must be specified.');
-        for (const item of this.values()) {
-            if (item[propOrFn] === value) return item;
-        }
-        return null;
-    } else if (typeof propOrFn === 'function') {
-        for (const [key, val] of this) {
-            if (propOrFn(val, key, this)) return val;
-        }
-        return null;
-    } else {
-        throw new Error('First argument must be a property string or a function.');
-    }
-};
-
-Collection.prototype.findKey = function findKey(propOrFn, value) {
-    if (typeof propOrFn === 'string') {
-        process.emitWarning('Collection#findKey: pass a function instead', 'DeprecationWarning');
-        if (typeof value === 'undefined') throw new Error('Value must be specified.');
-        for (const [key, val] of this) {
-            if (val[propOrFn] === value) return key;
-        }
-        return null;
-    } else if (typeof propOrFn === 'function') {
-        for (const [key, val] of this) {
-            if (propOrFn(val, key, this)) return key;
-        }
-        return null;
-    } else {
-        throw new Error('First argument must be a property string or a function.');
-    }
-};
 
 module.exports = Collection;

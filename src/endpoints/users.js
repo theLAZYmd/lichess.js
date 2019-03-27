@@ -1,5 +1,7 @@
 const rp = require('request-promise');
 const config = require('../config.json');
+const UserStore = require('../stores/UserStore');
+const User = require('../structures/user');
 
 class Users {
 
@@ -23,7 +25,7 @@ class Users {
 
     async top10() {
         try {
-            return await rp.get({
+            let obj = await rp.get({
                 "uri": config.uri + "player",
                 "headers": {
                     "Accept": "application/vnd.lichess.v3+json"
@@ -31,6 +33,10 @@ class Users {
                 "json": true,
                 "timeout": 2000
             });
+            for (let variant of Object.keys(obj)) {
+                obj[variant] = new UserStore(obj[variant]);
+            }
+            return obj;
         } catch (e) {
             if (e) throw e;
         }
@@ -38,35 +44,17 @@ class Users {
 
     async leaderboard(variant = "bullet", n = 100) {
         if (typeof variant !== "string") throw new TypeError("Variant must match list of lichess variant keys");
-        let f = false;
-        for (let v of config.variants) {        //this is bad, we should use an aho-corasick at some point
-            if (variant === v) {
-                f = true;
-                break;
-            }
-        }
-        if (!f) throw new TypeError("Variant must match list of lichess variant keys: " + config.variants.join(", "));
+        if (config.variants.every(v => v !== variant)) throw new TypeError("Variant must match list of lichess variant keys: " + config.variants.join(", "));
         if (n > 200) throw new TypeError("Cannot get leaderboard for more than 200 names");
         try {
-            return await rp.get({
+            return new UserStore((await rp.get({
                 "uri": config.uri + "player/top/" + n + "/" + variant,
+                "headers": {
+                    "Accept": "application/vnd.lichess.v3+json"
+                },
                 "json": true,
                 "timeout": 2000
-            });
-        } catch (e) {
-            if (e) throw e;
-        }
-    }
-
-    async get(username) {
-        if (typeof username !== "string") throw new TypeError("lichess.users.get() takes string values of an array as an input: " + username);
-        if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
-        try {
-            return await rp.get({
-                "uri": config.uri + "api/user/" + username,
-                "json": true,
-                "timeout": 2000
-            });
+            })).users);
         } catch (e) {
             if (e) throw e;
         }
@@ -101,15 +89,50 @@ class Users {
         }
     }
 
+    /**
+     * Get user(s) public data. Calls {getOne} or {getMultiple} depending on input parameter.
+     * @param {string|string[]} userParam 
+     */
+    async get(userParam) {
+        if (typeof userParam === "string") return this.getOne(...arguments);
+        if (Array.isArray(userParam)) {
+            if (userParam.length === 1) return this.getOne(userParam[0], ...Array.from(arguments).slice(1));
+            return this.getMultiple(...arguments);
+        }
+        throw new TypeError("Input must be string or string[]");
+    }
+
+    /**
+     * Read public data of a user.
+     * @param {string} username 
+     */
+    async getOne(username) {
+        if (typeof username !== "string") throw new TypeError("lichess.users.get() takes string values of an array as an input: " + username);
+        if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
+        try {
+            return new User(await rp.get({
+                "uri": config.uri + "api/user/" + username,
+                "json": true,
+                "timeout": 2000
+            }));
+        } catch (e) {
+            if (e) throw e;
+        }
+    }
+
+    /**
+     * Get several users by their IDs. Users are returned in the order same order as the IDs.
+     * @param {string[]} names 
+     * @returns {Promise<UserStore>}
+     */
     async getMultiple(names) {        
         if (!Array.isArray(names)) throw new TypeError("lichess.users.getMultiple() takes an array as an input");
-        if (names.length > 50) throw new TypeError("Cannot check status of more than 50 names");
-        for (let n of names) {
-            if (typeof n !== "string") throw new TypeError("lichess.users.getMultiple() takes string values of an array as an input: " + n);
-            if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(n)) throw new TypeError("Invalid format for lichess username: " + n);
-        }
+        if (names.length > 50) throw new RangeError("Cannot check status of more than 50 names");
+        if (!names.every(n => typeof n === "string" && /[a-z][\w-]{0,28}[a-z0-9]/i.test(n))) throw new SyntaxError("Invalid format for lichess username: " + n);
+        names.unshift(null);
+        names.push(null);
 		try {
-            let options = {
+            return new UserStore(await rp.post({
                 "method": "POST",
                 "uri": config.uri + "api/users",
                 "body": {
@@ -119,8 +142,7 @@ class Users {
                 },
                 "timeout": 2000,
                 "json": true
-            };
-            return await rp.post(options);
+            }));
 		} catch (e) {
 			if (e) throw e;
 		}

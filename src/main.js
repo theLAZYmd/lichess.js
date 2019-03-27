@@ -1,4 +1,7 @@
-const c = require('./config.json');
+const {
+    id = null,
+    secret = null
+} = require('./config.json');
 
 const Users = require("./endpoints/users");
 const Games = require("./endpoints/games");
@@ -9,7 +12,7 @@ const Tournaments = require("./endpoints/tournaments");
  * @constructor
  * @param {clientOptions} config 
  */
-class lazy_lila {
+class Lila {
 
     /**
      * @typedef {Object} clientOptions
@@ -24,10 +27,6 @@ class lazy_lila {
          * @property {string} id
          * @property {string} secret
          */
-        this.oauth = config.oauth || {
-            id: c.id || null,
-            secret: c.secret || null
-        }
     }
 
     get users () {
@@ -47,18 +46,4 @@ class lazy_lila {
 
 }
 
-const Lichess = new lazy_lila();
-module.exports = Lichess;
-
-(async () => {
-    try {
-        //console.log(await Lichess.users.status(["theLAZYmd", "mathace", "dovijanic", "opperwezen"]));
-        //console.log(await Lichess.users.top10());
-        //console.log(await Lichess.users.leaderboard("crazyhouse"));
-        //console.log(await Lichess.users.user("theLAZYmd"));
-        //console.log(await Lichess.users.history("theLAZYmd"));
-        console.log(await Lichess.users.users(["theLAZYmd", "mathace", "dovijanic", "opperwezen"]));
-    } catch (e) {
-        if (e) console.error(e);
-    }
-})();
+module.exports = Lila;
