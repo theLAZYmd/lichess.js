@@ -101,6 +101,14 @@ class Collection extends Map {
     }
 
     /**
+     * Returns the index of an ID in a map if the map were converted to an array
+     * @param {string} id 
+     */
+    index(id) {
+        return Array.from(this.keys()).map(k => k.toLowerCase()).indexOf(id.toLowerCase());
+    }
+
+    /**
      * Obtains the last value(s) in this collection. This relies on {@link Collection#array}, and thus the caching
      * mechanism applies here as well.
      * @param {number} [count] Number of values to obtain from the end

@@ -1,49 +1,59 @@
-const {
-    id = null,
-    secret = null
-} = require('./config.json');
-
 const Users = require("./endpoints/users");
 const Games = require("./endpoints/games");
 const Tournaments = require("./endpoints/tournaments");
 
-/**
- * Creates a new instance of the client to use the Lichess API with oauth settings
- * @constructor
- * @param {clientOptions} config 
- */
 class Lila {
 
     /**
-     * @typedef {Object} clientOptions
-     * @property {oAuthOptions} oauth
+     * Sets the client's ID to use for OAuth
+     * @param {string} id 
      */
-    constructor(config) {
+    setID(id) {
+        if (!this.oauth) this.oauth = {};
+        this.oauth.id = id;
+        return this;
+    }
+    /**
+     * Sets the client's secret to use for OAuth
+     * @param {string} secret 
+     */
+    setSecret(secret) {
+        if (!this.oauth) this.oauth = {};
+        this.oauth.secret = secret;
+        return this;
+    }
 
-        this.config = config;
+    setHost() {}
+    setCallback() {}
+    setScopes() {}
+    login() {}
 
-        /**
-         * @typedef {Object} oauthOptions
-         * @property {string} id
-         * @property {string} secret
-         */
+    /**
+     * Sets the client's Personal Access Token if one is supplied
+     * @param {string} secret 
+     */
+    setPersonal(access_token) {        
+        if (!this.oauth) this.oauth = {};
+        this.oauth.access_token = access_token;
+        return this;
     }
 
     get users () {
-        if (this._users) return this._users;
-        return this._users = new Users(this.config);
+        return new Users(this.oauth);
     }
 
     get games () {
-        if (this._games) return this._games;
-        return this._games = new Games(this.config);
+        return new Games(this.oauth);
     }
 
     get tournaments () {
-        if (this._tournaments) return this._tournaments;
-        return this._tournaments = new Tournaments(this.config);
+        return new Tournaments(this.oauth);
+    }
+
+    get _constructor () {
+        return Lila;
     }
 
 }
 
-module.exports = Lila;
+module.exports = new Lila;

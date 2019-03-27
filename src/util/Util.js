@@ -9,6 +9,41 @@ class Util {
         throw new Error(`The ${this.constructor.name} class may not be instantiated.`);
     }
 
+    static ndjson (str) {
+        return str.split("\n").map(JSON.parse);
+    }
+
+    /**
+     * Returns the number of days in a date
+     * @param {Date} obj 
+     */
+    static getUTCDays (obj) {
+        return Math.floor(obj.getTime() / 86400000);
+    }
+
+    /**
+     * Parses a time elapsed in milliseconds into an object broken down into days, hours, minutes, seconds, and milliseconds.
+     * @param {number} ms
+     * @typedef {Object} time
+     * @property {number} days - Number of days elapsed
+     * @property {number} hours - Number of hours elapsed
+     * @property {number} minutes - Number of minutes elapsed
+     * @property {number} seconds - Number of seconds elapsed
+     * @property {number} milliseconds - Number of milliseconds elapsed
+     * @property {number} timestamp - Total number of milliseconds elapsed
+     */
+    static getTime(ms) {
+        let date = new Date(ms);
+        let time = {};
+        time.days = Util.getUTCDays(date);
+        time.hours = date.getUTCHours();
+        time.minutes = date.getUTCMinutes();
+        time.seconds = date.getUTCSeconds();
+        time.milliseconds = date.getUTCMilliseconds();
+        time.timestamp = ms;
+        return time;
+    }
+
     /**
      * Flatten an object. Any properties that are collections will get converted to an array of keys.
      * @param {Object} obj The object to flatten.

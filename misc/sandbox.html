@@ -1,94 +1,494 @@
 <!doctype html>
-<html lang=\"en\">
+<html lang="en">
 <!-- Lichess is open source! See https://github.com/ornicar/lila -->
 
 <head>
-    <meta charset=\"utf-8\">
-    <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self' https://lichess1.org; connect-src 'self'
-        https://lichess1.org wss://socket.lichess.org:* https://explorer.lichess.ovh https://tablebase.lichess.ovh;
-        style-src 'self' 'unsafe-inline' https://lichess1.org https://fonts.googleapis.com; font-src 'self' lichess1.org
-        https://fonts.gstatic.com; frame-src 'self' https://lichess1.org https://www.youtube.com; worker-src 'self'
-        https://lichess1.org; img-src data: *;
-        script-src 'nonce-QZFwo1PtVboIRFMCQtLK' 'unsafe-inline' 'self' 'unsafe-eval' https://lichess1.org;
-        base-uri 'none' ;\">
-    <title>Internal server error • lichess.org</title>
-    <link href=\"https://fonts.googleapis.com/css?family=Noto+Sans:400,700|Roboto:300\" rel=\"stylesheet\">
-    <link href=\"https://fonts.googleapis.com/css?family=Roboto+Mono:500&text=0123456789:.\" rel=\"stylesheet\">
-    <link href=\"//lichess1.org/assets/_PLP5fi/stylesheets/common.css\" type=\"text/css\" rel=\"stylesheet\" />
-    <link href=\"//lichess1.org/assets/_PLP5fi/stylesheets/board.css\" type=\"text/css\" rel=\"stylesheet\" />
-    <link id=\"piece-sprite\" href=\"//lichess1.org/assets/_PLP5fi/stylesheets/piece/cburnett.css\" type=\"text/css\"
-        rel=\"stylesheet\" />
-    <meta content=\"Free online Chess server. Play Chess now in a clean interface. No registration, no ads, no plugin
-        required. Play Chess with the computer, friends or random opponents.\" name=\"description\" />
-    <link id=\"favicon\" rel=\"shortcut icon\" href=\"//lichess1.org/assets/images/favicon-32-white.png\"
-        type=\"image/x-icon\" />
-    <link rel=\"mask-icon\" href=\"//lichess1.org/assets/favicon.svg\" style=\"color: black;\" />
-    <link rel=\"icon\" type=\"image/png\" href=\"//lichess1.org/assets/favicon.256.png\" sizes=\"256x256\" />
-    <link rel=\"icon\" type=\"image/png\" href=\"//lichess1.org/assets/favicon.128.png\" sizes=\"128x128\" />
-    <link rel=\"icon\" type=\"image/png\" href=\"//lichess1.org/assets/favicon.64.png\" sizes=\"64x64\" />
-    <meta name=\"google\" content=\"notranslate\" />
-    <link href=\"/blog.atom\" type=\"application/atom+xml\" rel=\"alternate\" title=\"Blog\" />
-    <link rel=\"preload\" href=\"//lichess1.org/assets/font82/fonts/lichess.woff\" as=\"font\" type=\"font/woff\"
-        crossorigin />
-    <link rel=\"manifest\" href=\"/manifest.json\" />
-    <meta name=\"twitter:site\" content=\"@lichess\" />
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' https://lichess1.org; connect-src 'self' https://lichess1.org wss://socket.lichess.org:* https://explorer.lichess.ovh https://tablebase.lichess.ovh; style-src 'self' 'unsafe-inline' https://lichess1.org https://fonts.googleapis.com; font-src 'self' lichess1.org https://fonts.gstatic.com; frame-src 'self' https://lichess1.org https://www.youtube.com; worker-src 'self' https://lichess1.org; img-src data: *; script-src 'nonce-1njiK2lCIXn1Hvo0pHIy' 'unsafe-inline' 'self' 'unsafe-eval' https://lichess1.org; base-uri 'none';">
+    <title>Monthly Blitz Arena #eG6QWTOo • lichess.org</title>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700|Roboto:300" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:500&text=0123456789:." rel="stylesheet">
+    <link href="//lichess1.org/assets/_PLP5fi/stylesheets/common.css" type="text/css" rel="stylesheet" />
+    <link href="//lichess1.org/assets/_PLP5fi/stylesheets/board.css" type="text/css" rel="stylesheet" />
+    <link href="//lichess1.org/assets/_PLP5fi/stylesheets/tournament.css" type="text/css" rel="stylesheet" />
+    <link href="//lichess1.org/assets/_PLP5fi/stylesheets/chat.css" type="text/css" rel="stylesheet" />
+    <link id="piece-sprite" href="//lichess1.org/assets/_PLP5fi/stylesheets/piece/cburnett.css" type="text/css"
+        rel="stylesheet" />
+    <meta
+        content="1332 players compete in the Mar 27, 2019 Monthly Blitz Arena. 5+0 rated games are played during 240 minutes. Winner is not yet decided."
+        name="description" />
+    <link id="favicon" rel="shortcut icon" href="//lichess1.org/assets/images/favicon-32-white.png"
+        type="image/x-icon" />
+    <link rel="mask-icon" href="//lichess1.org/assets/favicon.svg" style="color: black;" />
+    <link rel="icon" type="image/png" href="//lichess1.org/assets/favicon.256.png" sizes="256x256" />
+    <link rel="icon" type="image/png" href="//lichess1.org/assets/favicon.128.png" sizes="128x128" />
+    <link rel="icon" type="image/png" href="//lichess1.org/assets/favicon.64.png" sizes="64x64" />
+    <meta name="google" content="notranslate" />
+    <meta property="og:title" content="Monthly Blitz Arena: Standard 5+0 rated #eG6QWTOo" />
+    <meta property="og:description"
+        content="1332 players compete in the Mar 27, 2019 Monthly Blitz Arena. 5+0 rated games are played during 240 minutes. Winner is not yet decided." />
+    <meta property="og:url" content="https://lichess.org/tournament/eG6QWTOo" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="lichess.org" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Monthly Blitz Arena: Standard 5+0 rated #eG6QWTOo" />
+    <meta name="twitter:description"
+        content="1332 players compete in the Mar 27, 2019 Monthly Blitz Arena. 5+0 rated games are played during 240 minutes. Winner is not yet decided." />
+    <link href="/blog.atom" type="application/atom+xml" rel="alternate" title="Blog" />
+    <link rel="preload" href="//lichess1.org/assets/font82/fonts/lichess.woff" as="font" type="font/woff" crossorigin />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="twitter:site" content="@lichess" />
 </head>
 
-<body class=\"preload base brown Woodi light Basic\" data-sound-set=\"standard\"
-    data-socket-domain=\"socket.lichess.org\" data-asset-url=\"//lichess1.org\" data-asset-version=\"PLP5fi\"
-    data-nonce=\"QZFwo1PtVboIRFMCQtLK\">
-    <form id=\"blind_mode\" action=\"/toggle-blind-mode\" method=\"POST\"><input type=\"hidden\" name=\"enable\"
-            value=\"1\" /><input type=\"hidden\" name=\"redirect\" value=\"/api/account\" /><button
-            type=\"submit\">Accessibility:
-            Enable blind mode</button></form>
-    <div id=\"site_description\">Free online Chess server. Play Chess now in a clean interface. No registration, no ads,
+<body class="preload base brown Woodi light Basic" data-sound-set="standard" data-socket-domain="socket.lichess.org"
+    data-asset-url="//lichess1.org" data-asset-version="PLP5fi" data-nonce="1njiK2lCIXn1Hvo0pHIy">
+    <form id="blind_mode" action="/toggle-blind-mode" method="POST"><input type="hidden" name="enable"
+            value="1" /><input type="hidden" name="redirect" value="/tournament/eG6QWTOo" /><button
+            type="submit">Accessibility: Enable blind mode</button></form>
+    <div id="site_description">Free online Chess server. Play Chess now in a clean interface. No registration, no ads,
         no plugin required. Play Chess with the computer, friends or random opponents.</div>
-    <div id=\"top\" class=\"is2d\">
-        <nav id=\"topmenu\" class=\"hover\">
-            <section><a href=\"/\">Play </a> <div role=\"group\"><a href=\"/?any#hook\">Create a game</a> <a
-                        href=\"/tournament\">Tournament </a> <a href=\"/simul\">Simultaneous exhibitions</a> </div>
-                        </section> <section><a href=\"/training\">Learn </a> <div role=\"group\"><a
-                                href=\"/learn\">Chess basics</a> <a href=\"/training\">Puzzles </a> <a
-                                href=\"/practice\">Practice </a> <a href=\"/training/coordinate\">Coordinates </a> <a
-                                href=\"/study\">Study </a> <a href=\"/coach\">Coaches </a> </div> </section> <section><a
-                                    href=\"/tv\">Watch </a> <div role=\"group\"><a href=\"/tv\">Lichess TV</a> <a
-                                        href=\"/games\">Current games</a> <a href=\"/streamer\">Streamers </a> <a
-                                        href=\"/broadcast\">Broadcasts (beta)</a> <a href=\"/video\">Video library</a>
-                                        </div> </section> <section><a href=\"/player\">Community </a> <div
-                                            role=\"group\"><a href=\"/player\">Players </a> <a href=\"/team\">Teams </a>
-                                                <a href=\"/forum\">Forum </a> <a href=\"/qa\">Questions &amp;
-                                                Answers</a> </div> </section> <section><a href=\"/analysis\">Tools </a>
-                                                    <div role=\"group\"><a href=\"/analysis\">Analysis board</a> <a
-                                                        href=\"/analysis#explorer\">Opening explorer</a> <a
-                                                        href=\"/editor\">Board editor</a> <a href=\"/paste\">Import
-                                                        game</a> <a href=\"/games/search\">Advanced search</a> </div>
-                                                        </section> </nav> <div id=\"ham-plate\" class=\"link
-                                                        hint--bottom\" data-hint=\"Menu\">
-                                                        <div id=\"hamburger\" data-icon=\"[\"></div>
+    <div id="top" class="is2d">
+        <nav id="topmenu" class="hover">
+            <section><a href="/">Play</a>
+                <div role="group"><a href="/?any#hook">Create a game</a><a href="/tournament">Tournament</a><a
+                        href="/simul">Simultaneous exhibitions</a></div>
+            </section>
+            <section><a href="/training">Learn</a>
+                <div role="group"><a href="/learn">Chess basics</a><a href="/training">Puzzles</a><a
+                        href="/practice">Practice</a><a href="/training/coordinate">Coordinates</a><a
+                        href="/study">Study</a><a href="/coach">Coaches</a></div>
+            </section>
+            <section><a href="/tv">Watch</a>
+                <div role="group"><a href="/tv">Lichess TV</a><a href="/games">Current games</a><a
+                        href="/streamer">Streamers</a><a href="/broadcast">Broadcasts (beta)</a><a href="/video">Video
+                        library</a></div>
+            </section>
+            <section><a href="/player">Community</a>
+                <div role="group"><a href="/player">Players</a><a href="/team">Teams</a><a href="/forum">Forum</a><a
+                        href="/qa">Questions &amp; Answers</a></div>
+            </section>
+            <section><a href="/analysis">Tools</a>
+                <div role="group"><a href="/analysis">Analysis board</a><a href="/analysis#explorer">Opening
+                        explorer</a><a href="/editor">Board editor</a><a href="/paste">Import game</a><a
+                        href="/games/search">Advanced search</a></div>
+            </section>
+        </nav>
+        <div id="ham-plate" class="link hint--bottom" data-hint="Menu">
+            <div id="hamburger" data-icon="["></div>
+        </div>
+        <div class="dasher"><a class="toggle anon"><span class="hint--bottom-left" data-hint="Preferences"><span
+                        data-icon="%"></span></span></a>
+            <div id="dasher_app" class="dropdown" data-playing="false"></div>
+        </div>
+        <a href="/login?referrer=/tournament/eG6QWTOo" class="signin button text">Sign in</a>
+        <div id="clinput"><a class="link"><span data-icon="y"></span></a><input spellcheck="false"
+                placeholder="Search" /></div><a id="reconnecting" class="link text" data-icon="B">Reconnecting</a>
     </div>
-    <div id=\"clinput\"><a class=\"link\"><span data-icon=\"y\"></span></a><input spellcheck=\"false\"
-            placeholder=\"Search\" /></div><a id=\"reconnecting\" class=\"link text\" data-icon=\"B\">Reconnecting</a>
-    </div>
-    <div class=\"content is2d\">
-        <div id=\"site_header\">
-            <div id=\"notifications\"></div>
-            <div class=\"board_left\">
-                <h1><a id=\"site_title\" href=\"/\">lichess <span class=\"extension\">.org</span></a></h1>
+    <div class="content is2d">
+        <div id="site_header">
+            <div id="notifications"></div>
+            <div class="board_left">
+                <h1><a id="site_title" href="/">lichess<span class="extension">.org</span></a></h1>
+                <div class="side_box padded">
+                    <div class="game_infos" data-icon=")">
+                        <div class="header"><span class="setup">5+0 • Blitz • 4h</span>Rated • Arena <a
+                                class="blue help" href="/tournament/help?system=arena" data-icon=""></a></div>
+                    </div>
+                    <div data-icon="7" class="game_infos conditions">
+                        <p>Condition of entry:</p>
+                        <p class="condition text accepted">≥ 20 Blitz rated games</p>
+                    </div>
+                </div>
+                <div id="chat" class="side_box"></div>
+            </div>
+            <div class="under_chat">
+                <div class="watchers hidden" aria-live="off" aria-relevant="additions removals text"><span
+                        class="list inline_userlist"></span></div>
             </div>
         </div>
-        <div id=\"lichess\">\n\n<div class=\"content_box small_box\">\n <h1>Something went wrong on this page.</h1>\n
-                <br />\n <br />\n <p>If the problem persists, please <a href=\"/contact#error-page\">report the bug</a>.
-                        </p>\n <br />\n <br />\n <code>ForAuth scopes missing</code>\n</div>\n</div>
+        <div id="lichess">
+            <div id="tournament" class="scheduled monthly blitz standard id_eG6QWTOo">
+                <div class="content_box no_padding tournament_box tournament_show">
+                    <div class="content_box_content">
+                        <div class="spinner"><svg viewBox="0 0 40 40">
+                                <circle cx=20 cy=20 r=18 fill="none"></circle>
+                            </svg></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script src=\"//lichess1.org/assets/_PLP5fi/javascripts/vendor/chessground.min.js\"> </script> <script
-        src=\"//lichess1.org/assets/_PLP5fi/compiled/lichess.site.min.js\"> </script> <script
-        nonce=\"QZFwo1PtVboIRFMCQtLK\">
+    <script src="//lichess1.org/assets/_PLP5fi/compiled/lichess.site.min.js"></script>
+    <script src="//lichess1.org/assets/_PLP5fi/compiled/lichess.tournament.min.js"></script>
+    <script nonce="1njiK2lCIXn1Hvo0pHIy">
+        lichess = lichess || {};
+        lichess.tournament = {
+            data: {
+                "nbPlayers": 1332,
+                "duels": [{
+                    "id": "UxV0hGcO",
+                    "p": [{
+                        "n": "WarShoe",
+                        "r": 2130,
+                        "k": 1
+                    }, {
+                        "n": "o-sacrificador",
+                        "r": 2213,
+                        "k": 11
+                    }]
+                }, {
+                    "id": "GunSd7MN",
+                    "p": [{
+                        "n": "Kovl12",
+                        "r": 2110,
+                        "k": 20
+                    }, {
+                        "n": "lokner",
+                        "r": 2162,
+                        "k": 16
+                    }]
+                }, {
+                    "id": "dbVYzaC3",
+                    "p": [{
+                        "n": "RonniSky",
+                        "r": 2197,
+                        "k": 143
+                    }, {
+                        "n": "viejayeac",
+                        "r": 2023,
+                        "k": 141
+                    }]
+                }, {
+                    "id": "7OWWaUg9",
+                    "p": [{
+                        "n": "Rantanplaaan",
+                        "r": 1872,
+                        "k": 50
+                    }, {
+                        "n": "dragonwelb",
+                        "r": 2295,
+                        "k": 23
+                    }]
+                }, {
+                    "id": "I94L4vYg",
+                    "p": [{
+                        "n": "Berezedny",
+                        "r": 1776,
+                        "k": 10
+                    }, {
+                        "n": "Ivan11Martic",
+                        "r": 2375,
+                        "k": 4,
+                        "t": "FM"
+                    }]
+                }, {
+                    "id": "LKEaC6Kc",
+                    "p": [{
+                        "n": "M-Shamsiddin",
+                        "r": 2105,
+                        "k": 35
+                    }, {
+                        "n": "wiezawadowice",
+                        "r": 2027,
+                        "k": 11
+                    }]
+                }],
+                "standing": {
+                    "page": 1,
+                    "players": [{
+                        "name": "WarShoe",
+                        "rank": 1,
+                        "rating": 2130,
+                        "ratingDiff": 0,
+                        "score": 36,
+                        "sheet": {
+                            "scores": [
+                                [3, 2],
+                                [3, 2],
+                                [5, 3],
+                                [2, 3],
+                                [3, 2],
+                                [2, 2],
+                                [5, 3],
+                                [5, 3],
+                                [4, 3],
+                                [4, 3]
+                            ],
+                            "total": 36,
+                            "fire": true
+                        }
+                    }, {
+                        "name": "kitty2016",
+                        "rank": 2,
+                        "rating": 1721,
+                        "ratingDiff": 0,
+                        "score": 34,
+                        "sheet": {
+                            "scores": [2, 0, [2, 2],
+                                [2, 2],
+                                [4, 3],
+                                [4, 3],
+                                [4, 3],
+                                [4, 3],
+                                [4, 3],
+                                [4, 3],
+                                [4, 3], 0
+                            ],
+                            "total": 34
+                        }
+                    }, {
+                        "name": "StepanOsinovsky",
+                        "rank": 3,
+                        "rating": 2316,
+                        "ratingDiff": 0,
+                        "score": 32,
+                        "sheet": {
+                            "scores": [
+                                [3, 2],
+                                [3, 2], 0, [3, 2],
+                                [3, 2],
+                                [5, 3],
+                                [2, 3],
+                                [3, 2],
+                                [2, 2],
+                                [5, 3], 0, [3, 2]
+                            ],
+                            "total": 32
+                        }
+                    }, {
+                        "name": "nikol1902",
+                        "rank": 4,
+                        "rating": 2173,
+                        "ratingDiff": 0,
+                        "score": 31,
+                        "sheet": {
+                            "scores": [
+                                [2, 2],
+                                [3, 2],
+                                [5, 3],
+                                [5, 3],
+                                [4, 3],
+                                [4, 3],
+                                [4, 3],
+                                [4, 3]
+                            ],
+                            "total": 31,
+                            "fire": true
+                        }
+                    }, {
+                        "name": "Ivan11Martic",
+                        "rank": 5,
+                        "rating": 2375,
+                        "ratingDiff": 0,
+                        "score": 29,
+                        "sheet": {
+                            "scores": [
+                                [3, 2],
+                                [3, 2],
+                                [4, 3],
+                                [5, 3], 0, [3, 2],
+                                [3, 2],
+                                [4, 3],
+                                [4, 3]
+                            ],
+                            "total": 29,
+                            "fire": true
+                        },
+                        "title": "FM"
+                    }, {
+                        "name": "Ligole",
+                        "rank": 6,
+                        "rating": 2183,
+                        "ratingDiff": 0,
+                        "score": 29,
+                        "sheet": {
+                            "scores": [
+                                [2, 2],
+                                [3, 2],
+                                [4, 3],
+                                [4, 3],
+                                [4, 3],
+                                [4, 3],
+                                [4, 3],
+                                [4, 3], 0
+                            ],
+                            "total": 29
+                        }
+                    }, {
+                        "name": "BadCnx",
+                        "rank": 7,
+                        "rating": 2082,
+                        "ratingDiff": 0,
+                        "score": 29,
+                        "sheet": {
+                            "scores": [0, [2, 2],
+                                [2, 2],
+                                [4, 3],
+                                [4, 3],
+                                [4, 3],
+                                [4, 3],
+                                [2, 3],
+                                [3, 2],
+                                [2, 2], 0, 2, 0
+                            ],
+                            "total": 29
+                        }
+                    }, {
+                        "name": "Avengres",
+                        "rank": 8,
+                        "rating": 1798,
+                        "ratingDiff": 0,
+                        "score": 29,
+                        "sheet": {
+                            "scores": [0, [3, 2],
+                                [3, 2],
+                                [5, 3],
+                                [5, 3],
+                                [5, 3],
+                                [4, 3], 0, 1, 3, 0
+                            ],
+                            "total": 29
+                        }
+                    }, {
+                        "name": "kingstar70",
+                        "rank": 9,
+                        "rating": 2319,
+                        "ratingDiff": 0,
+                        "score": 27,
+                        "sheet": {
+                            "scores": [0, [3, 2],
+                                [3, 2],
+                                [5, 3],
+                                [5, 3],
+                                [2, 3], 0, [3, 2],
+                                [3, 2], 0, [3, 2]
+                            ],
+                            "total": 27
+                        }
+                    }, {
+                        "name": "Berezedny",
+                        "rank": 10,
+                        "rating": 1776,
+                        "ratingDiff": 0,
+                        "score": 27,
+                        "sheet": {
+                            "scores": [
+                                [3, 2],
+                                [3, 2],
+                                [5, 3],
+                                [4, 3],
+                                [2, 3], 0, 0, 0, 1, [2, 2],
+                                [2, 2],
+                                [5, 3]
+                            ],
+                            "total": 27,
+                            "fire": true
+                        }
+                    }]
+                },
+                "isStarted": true,
+                "secondsToFinish": 10577,
+                "featured": {
+                    "id": "UxV0hGcO",
+                    "fen": "r1bqk2r/1p1n1p1p/p1nPp1p1/3p4/2pP1P2/4BN2/PPPQ2PP/2KR1B1R",
+                    "color": "black",
+                    "lastMove": "e5d6",
+                    "white": {
+                        "rank": 1,
+                        "name": "WarShoe",
+                        "rating": 2130
+                    },
+                    "black": {
+                        "rank": 12,
+                        "name": "o-sacrificador",
+                        "rating": 2213
+                    }
+                },
+                "socketVersion": 291,
+                "id": "eG6QWTOo",
+                "createdBy": "lichess",
+                "startsAt": "2019-03-27T17:00:00.000Z",
+                "system": "arena",
+                "fullName": "Monthly Blitz Arena",
+                "minutes": 240,
+                "perf": {
+                    "icon": ")",
+                    "name": "Blitz"
+                },
+                "clock": {
+                    "limit": 300,
+                    "increment": 0
+                },
+                "variant": "standard",
+                "berserkable": true,
+                "verdicts": {
+                    "list": [{
+                        "condition": "\u2265 20 Blitz rated games",
+                        "verdict": "ok"
+                    }],
+                    "accepted": true
+                },
+                "schedule": {
+                    "freq": "monthly",
+                    "speed": "blitz"
+                }
+            },
+            i18n: {
+                "standing": "Standing",
+                "starting": "Starting:",
+                "tournamentIsStarting": "The tournament is starting",
+                "youArePlaying": "You are playing!",
+                "standByX": "Stand by %s, pairing players, get ready!",
+                "tournamentPairingsAreNowClosed": "The tournament pairings are now closed.",
+                "join": "Join",
+                "withdraw": "Withdraw",
+                "joinTheGame": "Join the game",
+                "signIn": "Sign in",
+                "averageElo": "Average rating",
+                "gamesPlayed": "Games played",
+                "nbPlayers:one": "%s player",
+                "nbPlayers": "%s players",
+                "winRate": "Win rate",
+                "berserkRate": "Berserk rate",
+                "performance": "Performance",
+                "tournamentComplete": "Tournament complete",
+                "movesPlayed": "Moves played",
+                "whiteWins": "White wins",
+                "blackWins": "Black wins",
+                "draws": "Draws",
+                "nextXTournament": "Next %s tournament:",
+                "viewMoreTournaments": "View more tournaments",
+                "averageOpponent": "Average opponent",
+                "ratedTournament": "Rated",
+                "casualTournament": "Casual"
+            },
+            userId: null,
+            chat: null
+        };
+    </script>
+    <script nonce="1njiK2lCIXn1Hvo0pHIy">
         lichess.quantity = function (c) {
             return c == 1 ? 'one' : 'other';
         };
         lichess.timeagoLocale = function (s, n) {
-                return [];
-        };
+            return [
+                ["just now", "right now"],
+                ["%s seconds ago", "in %s seconds"],
+                ["1 minute ago", "in 1 minute"],
+                ["%s minutes ago", "in %s minutes"],
+                ["1 hour ago", "in 1 hour"],
+                ["%s hours ago", "in %s hours"],
+                ["1 day ago", "in 1 day"],
+                ["%s days ago", "in %s days"],
+                ["1 week ago", "in 1 week"],
+                ["%s weeks ago", "in %s weeks"],
+                ["1 month ago", "in 1 month"],
+                ["%s months ago", "in %s months"],
+                ["1 year ago", "in 1 year"],
+                ["%s years ago", "in %s years"]
+            ][n]
+        };;
     </script>
 </body>
 

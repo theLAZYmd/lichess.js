@@ -1,35 +1,18 @@
 const Base = require('./Base');
 const Util = require('../util/Util');
+const { variants  } = require('../config.json');
 
 /**
- * Represents a Lichess user
+ * Represents a rating object from Lichess
  * @extends {Base}
- * @implements {TournamentUser}
  */
-class User extends Base {
+class Rating extends Base {
     constructor(data) {
         super();
-
-        /**
-         * The ID of the user, must match /[a-z][\w-]{0,28}[a-z0-9]/i
-         * @type {string}
-         * @readonly
-         */
-        this.id = data.id;
-
         this._patch(data);
     }
 
     _patch(data) {
-
-        /**
-         * Whether or not the user is a bot
-         * @type {boolean}
-         * @name User#bot
-         * @readonly
-         */
-        this.bot = Boolean(data.title === "BOT");
-
         /**
          * The username of the user
          * @type {string}

@@ -1,13 +1,14 @@
 const DataStore = require('./DataStore');
-const User = require('../structures/user');
+const User = require('../structures/User');
+const Endpoint = require('../endpoints/users');
 
 /**
  * A data store to store User models.
  * @extends {DataStore}
  */
 class UserStore extends DataStore {
-    constructor(iterable) {
-        super(iterable, User);
+    constructor(iterable, U = User) {
+        super(iterable, U);
     }
 
     /**
@@ -16,7 +17,7 @@ class UserStore extends DataStore {
      * * A Snowflake
      * * A Message object (resolves to the message author)
      * * A GuildMember object
-     * @typedef {User|Snowflake|Message} UserResolvable
+     * @typedef {User|Snowflake} UserResolvable
      */
 
     /**
@@ -25,7 +26,6 @@ class UserStore extends DataStore {
      * @returns {?User}
      */
     resolve(user) {
-        if (user instanceof Message) return user.author;
         return super.resolve(user);
     }
 
@@ -35,7 +35,6 @@ class UserStore extends DataStore {
      * @returns {?Snowflake}
      */
     resolveID(user) {
-        if (user instanceof Message) return user.author.id;
         return super.resolveID(user);
     }
 
@@ -47,8 +46,8 @@ class UserStore extends DataStore {
      */
     async fetch(id, cache = true) {
         const existing = this.get(id);
-        if (existing && !existing.partial) return existing;
-        const data = await this.client.api.users(id).get();
+        if (existing) return existing;
+        const data = await new Endpoint().get(id);
         return this.add(data, cache);
     }
 }

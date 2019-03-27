@@ -1,7 +1,7 @@
 const rp = require('request-promise');
 const config = require('../config.json');
 const UserStore = require('../stores/UserStore');
-const User = require('../structures/user');
+const User = require('../structures/User');
 
 class Users {
 
