@@ -97,31 +97,31 @@ class Lila {
      * @param {string} secret 
      */
     async login(secret) {
-        if (secret) this.secret = secret;
+        if (secret) this.oauthOptions.secret = secret;
         this.oauth = await this.getOAuth();
         return this;
     }
 
     async getOAuth() {
         if (!this.oauthOptions.id && !this.oauthOptions.access_token) throw new Error("Can't login to Authentication process without a valid app ID");
-        throw new Error('e');
         const OAuth = require('./util/OAuth');
         const Session = new OAuth(this.oauthOptions);
         return Session.oauth2;
     }
 
     get users () {
-        const Users = require('./endpoints/users');
+        let Users = require('./endpoints/users');
+        console.log(Users);
         return new Users(this.oauth);
     }
 
     get games () {
-        const Games = require('./endpoints/games');
+        let Games = require('./endpoints/games');
         return new Games(this.oauth);
     }
 
     get tournaments () {
-        const Tournaments = require('./endpoints/tournaments');
+        let Tournaments = require('./endpoints/tournaments');
         return new Tournaments(this.oauth);
     }
 

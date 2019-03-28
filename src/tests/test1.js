@@ -7,12 +7,12 @@ const {
 } = require('../config.json');
 
 const lila = require('../index')
-    .setID('i91k6C7VQnqfivw2')
+    .setID(id)
     .setHost(host)
     .setPort(port)
     .setCallback(callback)
     .setScopes()
-    //.login('KDCs2v3kvz0BQqiapuFXsqRrt7zGpu6q');
+    .login(secret);
 
 class Test {
 

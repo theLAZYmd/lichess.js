@@ -34,9 +34,7 @@ class OAuth2 {
         this.authorizePath = '/oauth/authorize';
         this.host = `${host}:${port}`;
         this.redirect_uri = `${this.host}${callback}`;
-        console.log(this.redirect_uri);
 
-        console.log(this.oauth2);
         this.set();
         this.listen();
         this.launch();
@@ -90,21 +88,17 @@ class OAuth2 {
     set() {
         this.app.get('/', (req, res) => res.send('Hello<br><a href="/auth">Log in with lichess</a>'));
         this.app.get('/auth', (req, res) => {
-            console.log(this.authorizationUri);
             res.redirect(this.authorizationUri);
         });
         this.app.get('/callback', async (req, res) => {
             try {
-                console.log(req.query.code);
                 const result = await this.oauth2.authorizationCode.getToken({
                     code: req.query.code,
                     redirect_uri: this.redirect_uri
                 });
-                console.log(result);
-                const token = this.oauth2.accessToken.create(result); 
-                console.log(token);         
+                const token = this.oauth2.accessToken.create(result);       
                 const userInfo = await OAuth2.getUserInfo(token.token);
-                res.send(`<h1>Successfully authorised!</h1>Your lichess user info: <pre>${JSON.stringify(userInfo, null, 4)}</pre><br>You can now close this tab.`);
+                res.send(`<h1>Successfully authorised!</h1>You can close this tab now.<br>Your lichess user info: <pre>${JSON.stringify(userInfo, null, 4)}</pre>`);
             } catch (e) {
                 //if (e) console.error(e);
                 res.send(`<h1>Authentication Failed.</h1><pre>${e.toString()}</pre>`)
@@ -141,7 +135,7 @@ class OAuth2 {
             json: true,
             headers: {
                 Accept: 'application/json',
-                Authorization: 'Bearer ' + this.access_token, //token.access_token
+                Authorization: 'Bearer ' + token.access_token
             }
         })
         return axios.get('/api/account', {
@@ -153,14 +147,5 @@ class OAuth2 {
     }
 
 }
-
-new OAuth2({
-    id: 'i91k6C7VQnqfivw2',
-    secret: 'KDCs2v3kvz0BQqiapuFXsqRrt7zGpu6q',
-    host: 'http://localhost',
-    scopes: [],
-    port: 3000,
-    callback: '/callback'
-})
 
 module.exports = OAuth2;
