@@ -5,6 +5,7 @@ const Util = require('../util/Util');
  * Represents a Lichess user
  * @extends {Base}
  * @implements {TournamentUser}
+ * @implements {StatusUser}
  */
 class User extends Base {
     constructor(data) {
@@ -37,6 +38,14 @@ class User extends Base {
          * @readonly
          */
         if (data.username) this.username = data.username;
+
+        /**
+         * A user's title on Lichess
+         * @type {string}
+         * @name User#title
+         * @readonly
+         */
+        if (data.title && data.title !== "BOT") this.title = data.title;
         
         /**
          * Whether or not the user is online
@@ -158,15 +167,7 @@ class User extends Base {
     }
 
     toJSON(...props) {
-        const json = super.toJSON({
-            createdTimestamp: true,
-            defaultAvatarURL: true,
-            tag: true,
-            lastMessage: false,
-            lastMessageID: false,
-        }, ...props);
-        json.avatarURL = this.avatarURL();
-        json.displayAvatarURL = this.displayAvatarURL();
+        const json = super.toJSON({}, ...props);
         return json;
     }
 

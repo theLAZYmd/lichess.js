@@ -15,7 +15,7 @@ const clientSecret = config.secret;
 const redirectUri = `http://localhost:${port}/callback`;
 // uncomment the scopes you need
 // list of scopes: https://lichess.org/api#section/Authentication
-const scopes = [
+const scopes = [];/*[
     'game:read',
     'preference:read', //- Read your preferences
     'preference:write', //- Write your preferences
@@ -24,7 +24,7 @@ const scopes = [
     'challenge:write', //- Create, accept, decline challenges
     'tournament:write', //- Create tournaments
     'bot:play'
-];
+];*/
 /* --- End of your app config --- */
 
 /* --- Lichess config --- */

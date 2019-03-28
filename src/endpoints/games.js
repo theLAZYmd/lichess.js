@@ -1,26 +1,28 @@
-const request = require('request');
 const rp = require('request-promise');
 const config = require('../config.json');
+const qs = require('querystring');
 
 class Users {
 
     async get(id, options = {}, json = false) {
         if (typeof id !== "string") throw new TypeError("game ID for lichess.games.export() must be a string");
-        let keys = [    "moves", "tags", "clocks", "evals", "opening", "literate"   ];
-        let values = [];
-        for (let k of keys) {
-            let val = options[k];
-            if (typeof val === "boolean") values.push(k + "=" + val.toString());
-            else if (typeof val !== "undefined") throw new TypeError("options for lichess.games.export() requires boolean values");
-        }
-        let query = (values.length > 0 ? "?" : "") + values.join("&");
+        let def = {
+            moves: true,
+            tags: true, 
+            clocks: true, 
+            evals: true, 
+            opening: true, 
+            literate: false
+        };
+        if (!Object.keys(options).every(k => k in def)) throw new Error(`Query parameter doesn't exist!`);
+        if (!Object.values(options).every(v => typeof v !== "boolean")) throw new Error('Query parameter must take a boolean value!');
         try {
             return await rp.get({
-                "uri": config.uri + "game/export/" + id + query,
-                "headers": {
-                    "Accept": "application/" + (json ? "json" : "x-chess-pgn")
+                uri: `${config.uri}game/export/${id}?${qs.stringify(Object.assign(def, options))}`,
+                headers: {
+                    Accept: "application/" + (json ? "json" : "x-chess-pgn")
                 },
-                "timeout": 2000
+                timeout: 2000
             });
         } catch (e) {
             if (e) throw e;

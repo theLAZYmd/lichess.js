@@ -1,11 +1,18 @@
 const {
-    id = null,
-    secret = null
+    id,
+    secret,
+    host,
+    port,
+    callback
 } = require('../config.json');
 
-const lila = require('../main')
-    .setID(id)
-    .setSecret(secret);
+const lila = require('../index')
+    .setID('i91k6C7VQnqfivw2')
+    .setHost(host)
+    .setPort(port)
+    .setCallback(callback)
+    .setScopes()
+    //.login('KDCs2v3kvz0BQqiapuFXsqRrt7zGpu6q');
 
 class Test {
 
@@ -14,7 +21,9 @@ class Test {
     }
 
     static async status() {
-        console.log(lila.users.status(["theLAZYmd", "mathace", "dovijanic", "opperwezen"]));
+        console.log(await lila.users.status(["theLAZYmd", "mathace", "dovijanic", "opperwezen"], {
+            fetchUsers: true
+        }));
     }
 
     static async top10() {
@@ -33,8 +42,12 @@ class Test {
         console.log(await lila.users.history("theLAZYmd"));
     }
 
+    static async titled() {
+        console.log(await lila.users.titled('GM', 'BHM'));
+    }
+
     static async users() {
-        console.log((await lila.users.getMultiple(["mathace", "theLAZYmd", "littleplotkin", "penguingim1", "opperwezen", "obiwanbenoni"])));
+        console.log((await lila.users.getMultiple(["mathace", "opperwezen", "obiwanbenoni"])).get('opperwezen'));
     }
 
     static async tournament() {
@@ -52,4 +65,5 @@ class Test {
 
 }
 
-Test.tournament();
+Test.status();
+//Test.users();

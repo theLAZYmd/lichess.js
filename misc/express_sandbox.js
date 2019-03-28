@@ -3,7 +3,8 @@ const axios = require('axios');
 const rp = require('request-promise');
 const simpleOAuth = require('simple-oauth2');
 const qs = require('querystring');
-const {id, secret} = require('../src/config.json');
+//const {id, secret} = require('../src/config.json');
+const [id, secret] = ['i91k6C7VQnqfivw2', 'KDCs2v3kvz0BQqiapuFXsqRrt7zGpu6q']
 
 const {Builder, By, Key, until} = require('selenium-webdriver');
 require('chromedriver');
@@ -17,6 +18,8 @@ class OAuth2 {
         this.tokenPath = '/oauth';
         this.authorizePath = '/oauth/authorize';
         this.redirectUri = "http://localhost:3000/callback";
+    
+        console.log(this.oauth2);
     }
 
     /**
@@ -25,13 +28,13 @@ class OAuth2 {
     get scopes () {
         if (this._scopes) return this._scopes;
         return this._scopes = [
-            'game:read',
-            'preference:read', //- Read your preferences
-            'preference:write', //- Write your preferences
-            'email:read', //- Read your email address
-            'challenge:read', //- Read incoming challenges
-            'challenge:write', //- Create, accept, decline challenges
-            'tournament:write' //- Create tournaments
+            //'game:read',
+            //'preference:read', //- Read your preferences
+            //'preference:write', //- Write your preferences
+            //'email:read', //- Read your email address
+            //'challenge:read', //- Read incoming challenges
+            //'challenge:write', //- Create, accept, decline challenges
+            //'tournament:write' //- Create tournaments
             //'bot:play'
         ];
     }
@@ -57,12 +60,12 @@ class OAuth2 {
         return this._oauth2 = simpleOAuth.create({
             client: {
                 id,
-                secret,
+                secret
             },
             auth: {
                 tokenHost: this.tokenHost,
                 tokenPath: this.tokenPath,
-                authorizePath: this.authorizePath,
+                authorizePath: this.authorizePath
             }
         });
     }
@@ -75,16 +78,19 @@ class OAuth2 {
         });
         this.app.get('/callback', async (req, res) => {
             try {
+                console.log(req.query.code); //syntactically equivallent to the console.log on the other side
                 const result = await this.oauth2.authorizationCode.getToken({
                     "code": req.query.code,
                     "redirect_uri": this.redirectUri
                 });
+                console.log(result);
                 const token = this.oauth2.accessToken.create(result);
                 console.log(token);                
                 const userInfo = await OAuth2.getUserInfo(token.token);
-                res.send(`<h1>Success!</h1>Your lichess user info: <pre>${JSON.stringify(userInfo.data)}</pre>`);
+                res.send(`<h1>Success!</h1>Your lichess user info: <pre>${JSON.stringify(userInfo, null, 4)}</pre>`);
             } catch (e) {
                 if (e) console.error(e);
+                res.send(`<h1>Authentication Failed.</h1><pre>${e.toString()}</pre>`)
             }
         });
     }

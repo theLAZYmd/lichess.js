@@ -1,9 +1,9 @@
-const User = require('./user');
 const Base = require('./base');
 
 /**
  * Represents a Lichess user in a tournament
- * @extends {TournamentUser}
+ * @extends {Base]}
+ * @implements {User}
  */
 class TournamentUser extends Base {
 
@@ -106,8 +106,6 @@ class TournamentUser extends Base {
         }
 
         if (data.count) this.games = data.count;
-
-        if (TournamentUser.fetch) this.user = new User(this);
     }
 
 }

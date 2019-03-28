@@ -108,6 +108,21 @@ class Collection extends Map {
         return Array.from(this.keys()).map(k => k.toLowerCase()).indexOf(id.toLowerCase());
     }
 
+    merge(collection) {
+        if (!['keyArray', 'get', 'set'].every(prop => typeof collection[prop] === "function")) throw new TypeError('Collection.prototype.merge must take another collection or map as its parameter');
+        let map = new Collection();
+        console.log(typeof this.get, typeof collection.get);
+        for (let c of [this, collection]) {
+            for (let k of this.keyArray()) {
+                let entry = map.get(k) || {};
+                let value = c.get(k);
+                Object.assign(entry, value);
+                map.set(k, entry);
+            }
+        }
+        return map;
+    }
+
     /**
      * Obtains the last value(s) in this collection. This relies on {@link Collection#array}, and thus the caching
      * mechanism applies here as well.
