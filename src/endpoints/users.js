@@ -11,6 +11,9 @@ class Users {
     constructor(oauth, result) {
         this.oauth = oauth;
         this.result = result;
+        (async () => {            
+
+        })();
         this.redirect_uri = 'http://localhost:3000/callback'
     }
 
@@ -157,24 +160,16 @@ class Users {
     /**
      * Read public data of a user.
      * @param {string} username 
-     * @param {oauthOptions} options
      * @returns {User}
      */
-    async getOne(username, {
-        oauth = false
-    } = {}) {
+    async getOne(username) {
         if (typeof username !== "string") throw new TypeError("lichess.users.get() takes string values of an array as an input: " + username);
         if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
         try {
-            let token = this.oauth.accessToken.create(result).token.access_token;
             let options = {
-                uri: config.uri + "api/user/" + username,
+                uri: `${config.uri}api/user/${username}`,
                 json: true,
                 timeout: 2000
-            }
-            if (oauth) options.headers = {
-                Accept: 'application/json',
-                Authorization: 'Bearer ' + token
             }
             return new User(await rp.get(options));
         } catch (e) {
@@ -185,7 +180,6 @@ class Users {
     /**
      * Get several users by their IDs. Users are returned in the order same order as the IDs.
      * @param {string[]} names 
-     * @param {oauthOptions} options
      * @returns {Promise<Collection>}
      */
     async getMultiple(names, {
@@ -202,10 +196,7 @@ class Users {
                 uri: config.uri + "api/users",
                 body: names.join(","),
                 timeout: 2000,
-                json: true,
-                headers: !oauth ? null : {
-                    Authorization: 'Bearer ' + this.oauth.accessToken.create(this.result).token.access_token
-                }
+                json: true
             }));
 		} catch (e) {
 			if (e) throw e;

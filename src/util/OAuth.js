@@ -54,7 +54,12 @@ class OAuth2 {
 
     async run (res) {
         this.set()
-        .then(() => res());
+        .then(async () => {            
+            const token = this.oauth2.accessToken.create(this.result); 
+            const userInfo = await OAuth2.getUserInfo(token.token);
+            //console.log(userInfo);
+            res();
+        });
         this.listen();
         this.launch();
     }
@@ -97,7 +102,7 @@ class OAuth2 {
      */
     async set() {
         this.app.getPromise('/')
-            .then(([req, res]) => res.send('Hello<br><a href="/auth">Log in with lichess</a>'))
+            .then(([req, res]) => res.send('Hello<br><a href="/auth">Log in with Lichess</a>'))
             .catch(console.error);
         this.app.getPromise('/auth')
             .then(([req, res]) => res.redirect(this.authorizationUri))
@@ -112,7 +117,7 @@ class OAuth2 {
             const userInfo = await OAuth2.getUserInfo(token.token);
             res.send(`<h1>Successfully authorised!</h1><h2>You can close this tab now.</h2><br>Your lichess user info: <pre>${JSON.stringify(userInfo, null, 4)}</pre>`);
             this.result = result;
-            return true;
+            return this;
         } catch (e) {
             res.send(`<h1>Authentication Failed.</h1><pre>${e.toString()}</pre>`)
         }

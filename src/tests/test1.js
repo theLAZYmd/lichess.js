@@ -6,13 +6,14 @@ const {
     callback
 } = require('../config.json');
 
-const lila = require('../main')
+const client = require('../main');
+const lila = (new client)
     .setID(id)
     .setHost(host)
     .setPort(port)
     .setCallback(callback)
     .setScopes()
-    .login(secret);
+    //.login(secret);
 
 class Test {
 
@@ -35,9 +36,8 @@ class Test {
     }
 
     static async user() {
-        await lila.authentication();
         console.log(await lila.users.get(["theLAZYmd"], {
-            oauth: true
+            oauth: false
         }));
     }
 
@@ -51,7 +51,7 @@ class Test {
 
     static async users() {
         console.log((await lila.users.getMultiple(["mathace", "opperwezen", "obiwanbenoni"], {
-            oauth: true
+            oauth: false
         })));
     }
 

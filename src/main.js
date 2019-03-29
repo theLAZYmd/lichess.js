@@ -144,7 +144,7 @@ class Lila {
         const OAuth = require('./util/OAuth');
         this.oauthOptions.state = state;
         const Session = new OAuth(this.oauthOptions);
-        Session.run(() => {
+        Session.run(async () => {
             this.oauth = Session.oauth2;
             this.result = Session.result;
             if (Session.state === state) authentication.emit('login');
@@ -153,6 +153,7 @@ class Lila {
 
     get users () {
         let Users = require('./endpoints/users');
+
         return new Users(this.oauth, this.result);
     }
 
@@ -168,4 +169,4 @@ class Lila {
 
 }
 
-module.exports = new Lila();
+module.exports = Lila;
