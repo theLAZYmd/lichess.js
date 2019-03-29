@@ -1,11 +1,13 @@
-const _events = require('events');
 let version = Number(process.version
     .match(/v([0-9]+)\.([0-9]+)\.([0-9]+)/)
     .slice(1)
     .map(n => '0'.repeat(2 - n.toString().length) + n.toString())
     .join(''));
-if (version < 111300) events = require('./util/Events.js');
-const {once, EventEmitter} = events;
+events = version < 111300 ? require('./util/Events.js') : require('events');
+const {
+    once,
+    EventEmitter
+} = events;
 let authentication = new EventEmitter();
 
 class Lila {
@@ -28,12 +30,12 @@ class Lila {
         this.oauthOptions.id = id;
         return this;
     }
-    
+
     /**
      * Sets the client's Personal Access Token if one is supplied
      * @param {string} secret 
      */
-    setPersonal(access_token) {        
+    setPersonal(access_token) {
         this.oauthOptions.access_token = access_token;
         return this;
     }
@@ -151,18 +153,18 @@ class Lila {
         });
     }
 
-    get users () {
+    get users() {
         let Users = require('./endpoints/users');
 
         return new Users(this.oauth, this.result);
     }
 
-    get games () {
+    get games() {
         let Games = require('./endpoints/games');
         return new Games(this.oauth, this.result);
     }
 
-    get tournaments () {
+    get tournaments() {
         let Tournaments = require('./endpoints/tournaments');
         return new Tournaments(this.oauth, this.result);
     }

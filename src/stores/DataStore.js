@@ -18,8 +18,7 @@ class DataStore extends Collection {
     }
 
     add(data, cache = true, {
-        id,
-        extras = []
+        id
     } = {}) {
         const existing = this.get(id || data.id);
         if (existing && cache && existing._patch) existing._patch(data);

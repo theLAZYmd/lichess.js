@@ -4,7 +4,9 @@ const qs = require('querystring');
 
 const UserStore = require('../stores/UserStore');
 const StatusUser = require('../structures/StatusUser');
+const StreamUser = require('../structures/StreamUser');
 const User = require('../structures/User');
+const Util = require('../util/Util');
 
 class Users {
 
@@ -15,6 +17,68 @@ class Users {
 
         })();
         this.redirect_uri = 'http://localhost:3000/callback'
+    }
+
+    /**
+     * Get user(s) public data. Calls {getOne} or {getMultiple} depending on input parameter.
+     * @param {string|string[]} userParam 
+     */
+    async get(userParam) {
+        if (typeof userParam === "string") return this.getOne(...arguments);
+        if (Array.isArray(userParam)) {
+            if (userParam.length === 1) return this.getOne(userParam[0], ...Array.from(arguments).slice(1));
+            return this.getMultiple(...arguments);
+        }
+        throw new TypeError("Input must be string or string[]");
+    }
+
+    /**
+     * @typedef {Object} oauthOptions
+     * @param {boolean} oauth @default false
+     */
+
+    /**
+     * Read public data of a user.
+     * @param {string} username 
+     * @returns {User}
+     */
+    async getOne(username) {
+        if (typeof username !== "string") throw new TypeError("lichess.users.get() takes string values of an array as an input: " + username);
+        if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
+        try {
+            let options = {
+                uri: `${config.uri}api/user/${username}`,
+                json: true,
+                timeout: 2000
+            }
+            return new User(await rp.get(options));
+        } catch (e) {
+            if (e) throw e;
+        }
+    }
+
+    /**
+     * Get several users by their IDs. Users are returned in the order same order as the IDs.
+     * @param {string[]} names 
+     * @returns {Promise<Collection>}
+     */
+    async getMultiple(names) {     
+        if (!Array.isArray(names)) throw new TypeError("lichess.users.getMultiple() takes an array as an input");
+        if (names.length > 50) throw new RangeError("Cannot check status of more than 50 names");
+        if (!names.every(n => typeof n === "string" && /[a-z][\w-]{0,28}[a-z0-9]/i.test(n))) throw new SyntaxError("Invalid format for lichess username: " + n);
+        names.unshift(null);
+        names.push(null);
+        try {
+            return new UserStore(await rp.post({
+                method: "POST",
+                uri: config.uri + "api/users",
+                body: names.join(","),
+                timeout: 2000,
+                json: true
+            }));
+		} catch (e) {
+			if (e) throw e;
+		}
     }
 
     /**
@@ -140,90 +204,40 @@ class Users {
     }
 
     /**
-     * Get user(s) public data. Calls {getOne} or {getMultiple} depending on input parameter.
-     * @param {string|string[]} userParam 
-     */
-    async get(userParam) {
-        if (typeof userParam === "string") return this.getOne(...arguments);
-        if (Array.isArray(userParam)) {
-            if (userParam.length === 1) return this.getOne(userParam[0], ...Array.from(arguments).slice(1));
-            return this.getMultiple(...arguments);
-        }
-        throw new TypeError("Input must be string or string[]");
-    }
-
-    /**
-     * @typedef {Object} oauthOptions
-     * @param {boolean} oauth @default false
-     */
-
-    /**
-     * Read public data of a user.
-     * @param {string} username 
-     * @returns {User}
-     */
-    async getOne(username) {
-        if (typeof username !== "string") throw new TypeError("lichess.users.get() takes string values of an array as an input: " + username);
-        if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
-        try {
-            let options = {
-                uri: `${config.uri}api/user/${username}`,
-                json: true,
-                timeout: 2000
-            }
-            return new User(await rp.get(options));
-        } catch (e) {
-            if (e) throw e;
-        }
-    }
-
-    /**
-     * Get several users by their IDs. Users are returned in the order same order as the IDs.
-     * @param {string[]} names 
+     * Get members of a team. Members are sorted by reverse chronological order of joining the team (most recent first).
+     * @param {string} teamID
      * @returns {Promise<Collection>}
      */
-    async getMultiple(names, {
-        oauth = false
-    } = {}) {     
-        if (!Array.isArray(names)) throw new TypeError("lichess.users.getMultiple() takes an array as an input");
-        if (names.length > 50) throw new RangeError("Cannot check status of more than 50 names");
-        if (!names.every(n => typeof n === "string" && /[a-z][\w-]{0,28}[a-z0-9]/i.test(n))) throw new SyntaxError("Invalid format for lichess username: " + n);
-        names.unshift(null);
-        names.push(null);
+    async team(teamID) {
+        if (typeof teamID !== "string") throw new TypeError("teamID takes string values: " + teamID);
         try {
-            return new UserStore(await rp.post({
-                method: "POST",
-                uri: config.uri + "api/users",
-                body: names.join(","),
-                timeout: 2000,
-                json: true
-            }));
-		} catch (e) {
-			if (e) throw e;
-		}
-    }
-
-    //untested
-    async team(team) {
-        if (typeof team !== "string") throw new TypeError("lichess.users.team() takes string values of an array as an input: " + team);
-        try {
-            return await rp.get({
-                "uri": config.uri + "team/" + team + "/users",
-                "timeout": 2000
-            });
+            return new UserStore(Util.ndjson((await rp.get({
+                uri: `${config.uri}team/${teamID}/users`,
+                timeout: 10000
+            })).trim()));
         } catch (e) {
             if (e) throw e;
         }
     }
 
-    //untested
-    async live() {
+    /**
+     * Get a list of users who are live.
+     * @param {statusOptions} options
+     * @returns {Promise<Collection>}
+     */
+    async streaming({
+        fetchUsers = false,
+        filter = user => user.streaming
+    } = {}) {
         try {
-            return await rp.get({
-                "uri": config.uri + "streamer/live",
-                "json": true,
-                "timeout": 2000
-            });
+            let result = new UserStore(await rp.get({
+                uri: `${config.uri}streamer/live`,
+                json: true,
+                timeout: 2000
+            }), StreamUser);            
+            if (!fetchUsers) return result;
+            let users = await this.getMultiple(result.keyArray().filter(k => filter(result.get(k))));
+            return result.merge(users);
         } catch (e) {
             if (e) throw e;
          }

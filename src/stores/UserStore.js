@@ -1,13 +1,15 @@
 const DataStore = require('./DataStore');
-const User = require('../structures/User');
+const U = require('../structures/User');
 
 /**
  * A data store to store User models.
  * @extends {DataStore}
+ * @param {iterable} iterable A data object returned from an API call in an Array or iterable format
+ * @param {Constructor} User A user type or implemented user type by which each member of the collection can be constructed.
  */
 class UserStore extends DataStore {
-    constructor(iterable, U = User) {
-        super(iterable, U);
+    constructor(iterable, User = U) {
+        super(iterable, User);
     }
 
     /**

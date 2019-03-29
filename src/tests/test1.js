@@ -35,7 +35,7 @@ class Test {
         console.log(await lila.users.leaderboard("crazyhouse"));
     }
 
-    static async user() {
+    static async user() { 
         console.log(await lila.users.get(["theLAZYmd"], {
             oauth: false
         }));
@@ -49,10 +49,20 @@ class Test {
         console.log(await lila.users.titled('GM', 'BHM'));
     }
 
+    static async team() {
+        console.log(await lila.users.team('oxford-university-chess-club'));
+    }
+
     static async users() {
         console.log((await lila.users.getMultiple(["mathace", "opperwezen", "obiwanbenoni"], {
             oauth: false
         })));
+    }
+
+    static async streaming() {
+        console.log(await lila.users.streaming({
+            fetchUsers: true
+        }));
     }
 
     static async tournament() {
@@ -69,6 +79,3 @@ class Test {
     }
 
 }
-
-//Test.status();
-Test.user();
