@@ -13,7 +13,7 @@ const lila = (new client)
     .setPort(port)
     .setCallback(callback)
     .setScopes()
-    //.login(secret);
+    .login(secret);
 
 class Test {
 
@@ -46,7 +46,7 @@ class Test {
     }
 
     static async titled() {
-        console.log(await lila.users.titled('GM', 'BHM'));
+        console.log(await lila.users.titled('GM'));
     }
 
     static async team() {
@@ -65,6 +65,10 @@ class Test {
         }));
     }
 
+    static async activity() {
+        console.log(await lila.users.activity('theLAZYmd'));
+    }
+
     static async tournament() {
         console.log((await lila.tournaments.results('eG6QWTOo', {
             nb: 30,
@@ -78,4 +82,11 @@ class Test {
         }))
     }
 
+    static async me() {
+        await lila.authentication();
+        console.log(await lila.profile.get());
+    }
+
 }
+
+Test.me();

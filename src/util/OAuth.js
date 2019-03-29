@@ -4,6 +4,7 @@ const rp = require('request-promise');
 const simpleOAuth = require('simple-oauth2');
 const qs = require('querystring');
 const open = require('open');
+const path = require('path');
 
 //const {Builder, By, Key, until} = require('selenium-webdriver');
 //require('chromedriver');
@@ -101,25 +102,30 @@ class OAuth2 {
      * Creates a temporary server on a given domain with a callback url. Listens on the callback url for the authentication server to send a request confirming authorization
      */
     async set() {
-        this.app.getPromise('/')
-            .then(([req, res]) => res.send('Hello<br><a href="/auth">Log in with Lichess</a>'))
-            .catch(console.error);
-        this.app.getPromise('/auth')
-            .then(([req, res]) => res.redirect(this.authorizationUri))
-            .catch(console.error);
-        let [req, res] = await this.app.getPromise('/callback');
         try {
-            const result = await this.oauth2.authorizationCode.getToken({
-                code: req.query.code,
-                redirect_uri: this.redirect_uri
-            });
-            const token = this.oauth2.accessToken.create(result); 
-            const userInfo = await OAuth2.getUserInfo(token.token);
-            res.send(`<h1>Successfully authorised!</h1><h2>You can close this tab now.</h2><br>Your lichess user info: <pre>${JSON.stringify(userInfo, null, 4)}</pre>`);
-            this.result = result;
-            return this;
+            this.app.getPromise('/style.css')
+                .then(([req, res]) => res.sendFile(path.normalize(__dirname + '/../views/OAuth/style.css')))
+            this.app.getPromise('/')
+                .then(([req, res]) => res.sendFile(path.normalize(__dirname + '/../views/OAuth/auth.html')))
+            this.app.getPromise('/auth')
+                .then(([req, res]) => res.redirect(this.authorizationUri))
+            let [req, res] = await this.app.getPromise('/callback');
+            try {
+                const result = await this.oauth2.authorizationCode.getToken({
+                    code: req.query.code,
+                    redirect_uri: this.redirect_uri
+                });
+                const token = this.oauth2.accessToken.create(result); 
+                const userInfo = await OAuth2.getUserInfo(token.token);
+                res.send(`<h1>Successfully authorised!</h1><h2>You can close this tab now.</h2><br>Your lichess user info: <pre>${JSON.stringify(userInfo, null, 4)}</pre>`);
+                this.result = result;
+                return this;
+            } catch (e) {
+                res.send(`<h1>Authentication Failed.</h1><pre>${e.toString()}</pre>`)
+            }
         } catch (e) {
-            res.send(`<h1>Authentication Failed.</h1><pre>${e.toString()}</pre>`)
+            if (e) res.send(e);
+            console.error(e);
         }
     }
 

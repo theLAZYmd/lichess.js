@@ -10,6 +10,16 @@ const {
 } = events;
 let authentication = new EventEmitter();
 
+const Users = require('./endpoints/users');
+const Games = require('./endpoints/games');
+const Tournaments = require('./endpoints/tournaments');
+const Profile = require('./endpoints/profile');
+
+/**
+ * Creates a new instance of a JavaScript client for the Lichess API.
+ * This client is almost entirely asynchronous and relies on the dependencies in package.json, with the most notable being {'request-promise'}
+ * View {Collection} to see the properties of a collection.
+ */
 class Lila {
 
     constructor() {
@@ -36,7 +46,7 @@ class Lila {
      * @param {string} secret 
      */
     setPersonal(access_token) {
-        this.oauthOptions.access_token = access_token;
+        this.access_token = access_token;
         return this;
     }
 
@@ -123,6 +133,7 @@ class Lila {
 
     /**
      * Resolves a promise when the OAuth process has completed. Useful for testing.
+     * @name Lila#authentication
      * @example
      * //Gets the user endpoint only once authentication has been achieved
      * const lila = require('lazy-lila').setID(id).login(secret);
@@ -141,8 +152,13 @@ class Lila {
         }
     }
 
+    /**
+     * Sets OAuth values from a user-specified config. Resolves a promise for Lila#authentication when called
+     * @private
+     * @param {string} state 
+     */
     async getOAuth(state) {
-        if (!this.oauthOptions.id && !this.oauthOptions.access_token) throw new Error("Can't login to Authentication process without a valid app ID");
+        if (!this.oauthOptions.id || !this.oauthOptions.secret) throw new Error("Can't login to Authentication process without a valid app ID");
         const OAuth = require('./util/OAuth');
         this.oauthOptions.state = state;
         const Session = new OAuth(this.oauthOptions);
@@ -154,19 +170,21 @@ class Lila {
     }
 
     get users() {
-        let Users = require('./endpoints/users');
 
-        return new Users(this.oauth, this.result);
+        return new Users(this.oauth, this.result, this.access_token);
     }
 
     get games() {
-        let Games = require('./endpoints/games');
-        return new Games(this.oauth, this.result);
+        return new Games(this.oauth, this.result, this.access_token);
     }
 
     get tournaments() {
-        let Tournaments = require('./endpoints/tournaments');
-        return new Tournaments(this.oauth, this.result);
+        return new Tournaments(this.oauth, this.result, this.access_token);
+    }
+    
+    get profile() {
+        if (!this.oauth && !this.access_token) throw new Error("Can't call OAuth method without having first logged in!");
+        return new Profile(this.oauth, this.result, this.access_token);
     }
 
 }

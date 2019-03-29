@@ -2,52 +2,35 @@ const rp = require('request-promise');
 const config = require('../config.json');
 const qs = require('querystring');
 
-const UserStore = require('../stores/UserStore');
-const StatusUser = require('../structures/StatusUser');
-const StreamUser = require('../structures/StreamUser');
 const User = require('../structures/User');
 const Util = require('../util/Util');
 
-class Users {
+class Profile {
 
     constructor(oauth, result, access_token) {
         this.oauth = oauth;
         this.result = result;
-        this.access_token = access_token;
+        this.access_token = access_token
     }
 
     /**
-     * Get user(s) public data. Calls {getOne} or {getMultiple} depending on input parameter.
-     * @param {string|string[]} userParam 
-     */
-    async get(userParam) {
-        if (typeof userParam === "string") return this.getOne(...arguments);
-        if (Array.isArray(userParam)) {
-            if (userParam.length === 1) return this.getOne(userParam[0], ...Array.from(arguments).slice(1));
-            return this.getMultiple(...arguments);
-        }
-        throw new TypeError("Input must be string or string[]");
-    }
-
-    /**
-     * @typedef {Object} oauthOptions
-     * @param {boolean} oauth @default false
-     */
-
-    /**
-     * Read public data of a user.
-     * @param {string} username 
+     * Read public data of logged-in user.
      * @returns {User}
      */
-    async getOne(username) {
-        if (typeof username !== "string") throw new TypeError("lichess.users.get() takes string values of an array as an input: " + username);
-        if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
+    async get() {
         try {
+            const token = this.oauth ? this.oauth.accessToken.create(this.result) : undefined;
+            let access_token = token ? token.token.access_token : this.access_token;
             let options = {
-                uri: `${config.uri}api/user/${username}`,
+                uri: `${config.uri}api/account`,
                 json: true,
-                timeout: 2000
+                timeout: 5000,
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: 'Bearer ' + access_token
+                }
             }
+            console.log(options);
             return new User(await rp.get(options));
         } catch (e) {
             if (e) throw e;
@@ -55,7 +38,7 @@ class Users {
     }
 
     /**
-     * Get several users by their IDs. Users are returned in the order same order as the IDs.
+     * Get several users by their IDs. Profile are returned in the order same order as the IDs.
      * @param {string[]} names 
      * @returns {Promise<Collection>}
      */
@@ -314,4 +297,4 @@ class Users {
 
 }
 
-module.exports = Users;
+module.exports = Profile;
