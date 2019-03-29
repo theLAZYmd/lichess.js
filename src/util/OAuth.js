@@ -117,9 +117,10 @@ class OAuth2 {
                 });
                 const token = this.oauth2.accessToken.create(result); 
                 const userInfo = await OAuth2.getUserInfo(token.token);
-                res.send(`<h1>Successfully authorised!</h1><h2>You can close this tab now.</h2><br>Your lichess user info: <pre>${JSON.stringify(userInfo, null, 4)}</pre>`);
+                //res.send(`<h1>Successfully authorised!</h1><h2>You can close this tab now.</h2><br>Your lichess user info: <pre>${JSON.stringify(userInfo, null, 4)}</pre>`);
+                res.sendFile(path.normalize(__dirname + '/../views/OAuth/callback.html'));
                 this.result = result;
-                return this;
+                return this; 
             } catch (e) {
                 res.send(`<h1>Authentication Failed.</h1><pre>${e.toString()}</pre>`)
             }

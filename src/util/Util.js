@@ -9,6 +9,11 @@ class Util {
         throw new Error(`The ${this.constructor.name} class may not be instantiated.`);
     }
 
+    /**
+     * Splits data in ndjson format (a string where each newline represents an un-pretty-printed JSON object)
+     * @param {string} str 
+     * @returns {object[]|Array[]}
+     */
     static ndjson (str) {
         return str.split("\n").map(JSON.parse);
     }

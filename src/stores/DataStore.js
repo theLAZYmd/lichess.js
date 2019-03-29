@@ -10,9 +10,11 @@ class DataStore extends Collection {
     constructor(iterable, type) {
         super();
         if (type) Structure = type;
+        if (!Array.isArray(iterable) && typeof iterable === "object") iterable = Object.entries(iterable);
         if (iterable) {
             for (let item of iterable) {
-                this.add(item);
+                if (Array.isArray(item) && item.length === 2) this.add(item[1], true, item[0]);
+                else this.add(item);
             }
         }
     }

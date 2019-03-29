@@ -25,7 +25,7 @@ class RatingStore extends DataStore {
      * @returns {?Rating}
      */
     resolve(rating) {
-        if (rating instanceof Message) return rating.author;
+        if (rating instanceof User) return rating.perfs;
         return super.resolve(rating);
     }
 

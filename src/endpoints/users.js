@@ -57,7 +57,7 @@ class Users {
     /**
      * Get several users by their IDs. Users are returned in the order same order as the IDs.
      * @param {string[]} names 
-     * @returns {Promise<Collection>}
+     * @returns {Promise<Collection<User>>}
      */
     async getMultiple(names) {
         if (!Array.isArray(names)) throw new TypeError("lichess.users.getMultiple() takes an array as an input");
@@ -89,14 +89,13 @@ class Users {
      *  fetchUsers: false,
      *  filter: user => user.playing && user.titled
      * }
-     * @returns {Promise<Collection>}
      */
 
     /**
      * Gets the status of many users and returns it
      * @param {string[]} ids 
      * @param {statusOptions} options
-     * @returns {Promise<Collection>}
+     * @returns {Promise<Collection<StatusUser|User>>}
      */
     async status(ids, {
         fetchUsers = false,
@@ -230,7 +229,7 @@ class Users {
     /**
      * Get members of a team. Members are sorted by reverse chronological order of joining the team (most recent first).
      * @param {string} teamID
-     * @returns {Promise<Collection>}
+     * @returns {Promise<Collection<User>>}
      */
     async team(teamID) {
         if (typeof teamID !== "string") throw new TypeError("teamID takes string values: " + teamID);
@@ -247,7 +246,7 @@ class Users {
     /**
      * Get a list of users who are live.
      * @param {statusOptions} options
-     * @returns {Promise<Collection>}
+     * @returns {Promise<Collection<StatusUser|User>>}
      */
     async streaming({
         fetchUsers = false,
@@ -291,7 +290,7 @@ class Users {
      * Get titled users. Get users by title. Several titles can be specified.
      * @param {LichessTitle[]} titles 
      * @param {Boolean} online 
-     * @returns {Promise<Collection>}
+     * @returns {Promise<Collection<StatusUser|User>>}
      */
     async titled(titles = ["GM"], online = false) {
         if (typeof titles === "string") titles = [titles];

@@ -1,5 +1,7 @@
 const Base = require('./Base');
 const Util = require('../util/Util');
+const RatingStore = require('../stores/RatingStore');
+const qs = require('querystring');
 
 /**
  * Represents a Lichess user
@@ -121,7 +123,36 @@ class User extends Base {
             if (data.playTime.tv) this.tvTime = Util.getTime(data.playTime.tv * 1000);
         }
 
+        /**
+         * @typedef {Object} GamesObject
+         * @property {Number} all
+         * @property {Number} rated
+         * @property {Number} ai
+         * @property {Number} draw
+         * @property {Number} drawH
+         * @property {Number} loss
+         * @property {Number} lossH
+         * @property {Number} win
+         * @property {Number} winH
+         * @property {Number} bookmark
+         * @property {Number} playing
+         * @property {Number} import
+         * @property {Number} me
+         */
+
+        /**
+         * Represents a summary of the games a user has played.
+         * @type {GamesObject}
+         * @name User#games
+         * @readonly
+         */
         if (data.count) this.games = data.count;
+
+        /**
+         * List of all valid Lichess ratings mapped to the user's rating for that variant
+         * @returns {Collection<Rating>}
+         */
+        if (data.perfs) this.ratings = new RatingStore(data.perfs);
     }
 
     /**
@@ -140,6 +171,52 @@ class User extends Base {
      */
     get seenAt() {
         return new Date(this.seenTimestamp);
+    }
+    
+    /**
+     * The URL to challenge a user
+     * @type {string}
+     * @name User#challengeURL
+     * @readonly
+     */
+    get challengeURL() {
+        return `${config.url}?${qs.stringify({
+            user: this.id + '#friend'
+        })}`
+    }
+
+    /**
+     * The URL to a DM a user
+     * @type {string}
+     * @name User#messageURL
+     * @readonly
+     */
+    get messageURL() {
+        return `${config.url}inbox/new?${qs.stringify({
+            user: this.id
+        })}`
+    }
+    
+    /**
+     * The URL to a user's game, unless a status call has been made to show they are not playing one
+     * @type {string}
+     * @name User#gameURL
+     * @readonly
+     */
+    get gameURL () {
+        if (!this.playing === false) return undefined;
+        return `${config.uri}/@/${this.username}/tv`
+    }
+    
+    /**
+     * The URL to a user's stream, unless a status call has been made to show they are not online
+     * @type {string}
+     * @name User#streamURL
+     * @readonly
+     */
+    get streamURL () {
+        if (!this.streaming === false) return undefined;
+        return `${config.uri}/@/${this.username}/tv`
     }
 
     /**

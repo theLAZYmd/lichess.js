@@ -46,7 +46,7 @@ class StatusUser extends Base {
          * @name StatusUser#online
          * @readonly
          */
-        if (typeof data.online !== 'undefined') this.online = Boolean(data.online);
+        this.online = Boolean(data.online);
                 
         /**
          * Whether or not the user is playing
@@ -54,7 +54,7 @@ class StatusUser extends Base {
          * @name StatusUser#playing
          * @readonly
          */
-        if (typeof data.playing !== 'undefined') this.playing = Boolean(data.playing);
+        this.playing = Boolean(data.playing);
                 
         /**
          * Whether or not the user is streaming
@@ -62,7 +62,7 @@ class StatusUser extends Base {
          * @name StatusUser#streaming
          * @readonly
          */
-        if (typeof data.streaming !== 'undefined') this.streaming = Boolean(data.streaming);
+        this.streaming = Boolean(data.streaming);
                 
         /**
          * Whether or not the user is a patron
@@ -70,7 +70,7 @@ class StatusUser extends Base {
          * @name StatusUser#patron
          * @readonly
          */
-        if (typeof data.patron !== 'undefined') this.patron = Boolean(data.patron);
+        this.patron = Boolean(data.patron);
     }
 
     /**
@@ -91,7 +91,7 @@ class StatusUser extends Base {
      * @readonly
      */
     get streamURL () {
-        if (!this.playing) return undefined;
+        if (!this.streaming) return undefined;
         return `${config.uri}/@/${this.username}/tv`
     }
 

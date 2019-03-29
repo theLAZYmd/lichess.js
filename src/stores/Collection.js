@@ -111,11 +111,11 @@ class Collection extends Map {
     merge(collection) {
         if (!['keyArray', 'get', 'set'].every(prop => typeof collection[prop] === "function")) throw new TypeError('Collection.prototype.merge must take another collection or map as its parameter');
         let map = new Collection();
-        console.log(typeof this.get, typeof collection.get);
         for (let c of [this, collection]) {
             for (let k of this.keyArray()) {
                 let entry = map.get(k) || {};
                 let value = c.get(k);
+                if (typeof value !== "object") continue;
                 Object.assign(entry, value);
                 map.set(k, entry);
             }
