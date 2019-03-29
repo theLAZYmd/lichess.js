@@ -11,7 +11,10 @@ const TournamentUser = require('../structures/TournamentUser');
 
 class Tournaments {
 
-    constructor() {}
+    constructor(oauth, result) {
+        this.oauth = oauth;
+        this.result = result;
+    }
 
     async get () {
         return await rp.get({

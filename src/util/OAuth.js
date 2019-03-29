@@ -1,11 +1,12 @@
 const express = require('express');
-const axios = require('axios');
+//const axios = require('axios');
 const rp = require('request-promise');
 const simpleOAuth = require('simple-oauth2');
 const qs = require('querystring');
+const open = require('open');
 
-const {Builder, By, Key, until} = require('selenium-webdriver');
-require('chromedriver');
+//const {Builder, By, Key, until} = require('selenium-webdriver');
+//require('chromedriver');
 
 /**
  * Initiates a new login process to Lichess' OAuth service
@@ -13,20 +14,21 @@ require('chromedriver');
  * @param {string} id
  * @param {string} secret
  * @param {string} access_token
- * @param {string} host
- * @param {string} callback
- * @param {string[]} scopes
+ * @param {string} host @default 'http://localhost
+ * @param {string} callback @default '/callback'
+ * @param {string[]} scopes @default []
  */
 class OAuth2 {
 
     constructor({
-        id, secret, access_token, host, port, scopes, callback
+        id, secret, access_token, host, port, scopes, callback, state
     } = {}) {
         this.id = id;
         this.secret = secret;
         this.access_token = access_token,
         this.port = port;
         this.scopes = scopes;
+        this.state = state;
         
         this.app = express();
         this.tokenHost = 'https://oauth.lichess.org';
@@ -35,18 +37,26 @@ class OAuth2 {
         this.host = `${host}:${port}`;
         this.redirect_uri = `${this.host}${callback}`;
 
-        this.set();
-        this.listen();
-        this.launch();
+        //this.app.get('/', (req, res) => res.send('Hello<br><a href="/auth">Log in with lichess</a>'));
+
+        this.app.getPromise = (data) => {
+            return new Promise((res, rej) => {
+                this.app.get(data, function () {
+                    try {
+                        res(arguments);
+                    } catch (e) {
+                        rej(e);
+                    }
+                })
+            })
+        }
     }
 
-    /**
-     * Generates a randomised string which is returned in the authorisation. Can be checked at the end to check request is the same
-     * @type {string}
-     */
-    get state () {
-        if (this._state) return this._state;
-        return this._state = Math.random().toString(36).substring(2);
+    async run (res) {
+        this.set()
+        .then(() => res());
+        this.listen();
+        this.launch();
     }
 
     /**
@@ -85,32 +95,34 @@ class OAuth2 {
     /**
      * Creates a temporary server on a given domain with a callback url. Listens on the callback url for the authentication server to send a request confirming authorization
      */
-    set() {
-        this.app.get('/', (req, res) => res.send('Hello<br><a href="/auth">Log in with lichess</a>'));
-        this.app.get('/auth', (req, res) => {
-            res.redirect(this.authorizationUri);
-        });
-        this.app.get('/callback', async (req, res) => {
-            try {
-                const result = await this.oauth2.authorizationCode.getToken({
-                    code: req.query.code,
-                    redirect_uri: this.redirect_uri
-                });
-                const token = this.oauth2.accessToken.create(result);       
-                const userInfo = await OAuth2.getUserInfo(token.token);
-                res.send(`<h1>Successfully authorised!</h1>You can close this tab now.<br>Your lichess user info: <pre>${JSON.stringify(userInfo, null, 4)}</pre>`);
-            } catch (e) {
-                //if (e) console.error(e);
-                res.send(`<h1>Authentication Failed.</h1><pre>${e.toString()}</pre>`)
-            }
-        });
+    async set() {
+        this.app.getPromise('/')
+            .then(([req, res]) => res.send('Hello<br><a href="/auth">Log in with lichess</a>'))
+            .catch(console.error);
+        this.app.getPromise('/auth')
+            .then(([req, res]) => res.redirect(this.authorizationUri))
+            .catch(console.error);
+        let [req, res] = await this.app.getPromise('/callback');
+        try {
+            const result = await this.oauth2.authorizationCode.getToken({
+                code: req.query.code,
+                redirect_uri: this.redirect_uri
+            });
+            const token = this.oauth2.accessToken.create(result); 
+            const userInfo = await OAuth2.getUserInfo(token.token);
+            res.send(`<h1>Successfully authorised!</h1><h2>You can close this tab now.</h2><br>Your lichess user info: <pre>${JSON.stringify(userInfo, null, 4)}</pre>`);
+            this.result = result;
+            return true;
+        } catch (e) {
+            res.send(`<h1>Authentication Failed.</h1><pre>${e.toString()}</pre>`)
+        }
     }
 
     /**
      * Sets the listeners on a given domain
      */
     listen() {
-        this.app.listen(this.port, () => console.log(`App listening on port ${this.port}!`));
+        this.app.listen(this.port, () => {});
     }
 
     /**
@@ -118,8 +130,9 @@ class OAuth2 {
      */
     async launch() {
         try {
-            let driver = new Builder().forBrowser('chrome').build();
-            await driver.get(this.host);
+            await open(this.host);
+            //let driver = new Builder().forBrowser('chrome').build();
+            //await driver.get(this.host);
         } catch (e) {
             if (e) console.error(e);
         }
@@ -138,12 +151,14 @@ class OAuth2 {
                 Authorization: 'Bearer ' + token.access_token
             }
         })
+        /*
         return axios.get('/api/account', {
             baseURL: 'https://lichess.org/',
             headers: {
                 'Authorization': 'Bearer ' + token.access_token
             }
         });
+        */
     }
 
 }

@@ -6,7 +6,7 @@ const {
     callback
 } = require('../config.json');
 
-const lila = require('../index')
+const lila = require('../main')
     .setID(id)
     .setHost(host)
     .setPort(port)
@@ -35,7 +35,10 @@ class Test {
     }
 
     static async user() {
-        console.log(await lila.users.get(["theLAZYmd"]));
+        await lila.authentication();
+        console.log(await lila.users.get(["theLAZYmd"], {
+            oauth: true
+        }));
     }
 
     static async history() {
@@ -47,7 +50,9 @@ class Test {
     }
 
     static async users() {
-        console.log((await lila.users.getMultiple(["mathace", "opperwezen", "obiwanbenoni"])).get('opperwezen'));
+        console.log((await lila.users.getMultiple(["mathace", "opperwezen", "obiwanbenoni"], {
+            oauth: true
+        })));
     }
 
     static async tournament() {
@@ -65,5 +70,5 @@ class Test {
 
 }
 
-Test.status();
-//Test.users();
+//Test.status();
+Test.user();

@@ -1,3 +1,13 @@
+const _events = require('events');
+let version = Number(process.version
+    .match(/v([0-9]+)\.([0-9]+)\.([0-9]+)/)
+    .slice(1)
+    .map(n => '0'.repeat(2 - n.toString().length) + n.toString())
+    .join(''));
+if (version < 111300) events = require('./util/Events.js');
+const {once, EventEmitter} = events;
+let authentication = new EventEmitter();
+
 class Lila {
 
     constructor() {
@@ -5,7 +15,8 @@ class Lila {
             port: '3000',
             host: 'http://localhost',
             callback: 'http://localhost:3000/callback',
-            scopes: []
+            scopes: [],
+            autoclose: false
         }
     }
 
@@ -59,7 +70,7 @@ class Lila {
 
     /**
      * List of scopes "https://lichess.org/api#section/Authentication"}
-     * @default []
+     * @default {}
      * @typedef {scopeOptions}
      * @property {Boolean} 'game:read': @default false - Read game playing
      * @property {Boolean} 'preference:read' @default false -  Read your preferences
@@ -72,6 +83,11 @@ class Lila {
      * @param {scopeOptions} scopes 
      */
 
+    /**
+     * Sets the scopes for the authentication process
+     * @default []
+     * @param {scopeOptions} scopes 
+     */
     setScopes(scopes = {}) {
         let def = {
             'game:read': false,
@@ -96,35 +112,60 @@ class Lila {
      * Logs into the client OAuth credentials using the app secret
      * @param {string} secret 
      */
-    async login(secret) {
-        if (secret) this.oauthOptions.secret = secret;
-        this.oauth = await this.getOAuth();
+    login(secret) {
+        if (!secret) throw 'Invalid secret to login';
+        this.oauthOptions.secret = secret;
+        this.oauth = this.getOAuth(Math.random().toString(36).substring(2));
         return this;
     }
 
-    async getOAuth() {
+    /**
+     * Resolves a promise when the OAuth process has completed. Useful for testing.
+     * @example
+     * //Gets the user endpoint only once authentication has been achieved
+     * const lila = require('lazy-lila').setID(id).login(secret);
+     * 
+     * (async () => {
+     *  await lila.authentication();
+     *  lila.users.get('theLAZYmd');    //Method is not called unless user logs in
+     * })
+     */
+    async authentication() {
+        try {
+            await once(authentication, 'login');
+            return true;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async getOAuth(state) {
         if (!this.oauthOptions.id && !this.oauthOptions.access_token) throw new Error("Can't login to Authentication process without a valid app ID");
         const OAuth = require('./util/OAuth');
+        this.oauthOptions.state = state;
         const Session = new OAuth(this.oauthOptions);
-        return Session.oauth2;
+        Session.run(() => {
+            this.oauth = Session.oauth2;
+            this.result = Session.result;
+            if (Session.state === state) authentication.emit('login');
+        });
     }
 
     get users () {
         let Users = require('./endpoints/users');
-        console.log(Users);
-        return new Users(this.oauth);
+        return new Users(this.oauth, this.result);
     }
 
     get games () {
         let Games = require('./endpoints/games');
-        return new Games(this.oauth);
+        return new Games(this.oauth, this.result);
     }
 
     get tournaments () {
         let Tournaments = require('./endpoints/tournaments');
-        return new Tournaments(this.oauth);
+        return new Tournaments(this.oauth, this.result);
     }
 
 }
 
-module.exports = Lila;
+module.exports = new Lila();

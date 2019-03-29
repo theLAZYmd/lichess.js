@@ -4,6 +4,11 @@ const qs = require('querystring');
 
 class Users {
 
+    constructor(oauth, result) {
+        this.oauth = oauth;
+        this.result = result;
+    }
+
     async get(id, options = {}, json = false) {
         if (typeof id !== "string") throw new TypeError("game ID for lichess.games.export() must be a string");
         let def = {

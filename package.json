@@ -2,7 +2,7 @@
     "name": "lichess-es6",
     "version": "0.0.6",
     "description": "The best NodeJS client for the Lichess API",
-    "main": "src/index.js",
+    "main": "src/main.js",
     "scripts": {
         "test": "./node_modules/.bin/jshint --exclude ./node_modules && ./node_modules/.bin/mocha --harmony"
     },
@@ -24,9 +24,9 @@
     "homepage": "https://github.com/theLAZYmd/lichess-es6#readme",
     "dependencies": {
         "axios": "^0.18.0",
-        "cheerio": "^1.0.0-rc.2",
         "chromedriver": "^2.46.0",
         "express": "^4.16.4",
+        "open": "^6.0.0",
         "request": "^2.88.0",
         "request-promise": "^4.2.4",
         "selenium-webdriver": "^4.0.0-alpha.1",
