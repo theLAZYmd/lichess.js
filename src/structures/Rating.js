@@ -2,7 +2,7 @@ const Base = require('./Base');
 const Util = require('../util/Util');
 
 /**
- * @typedef {string} LichessRating - Represents a valid variant value on Lichess
+ * @typedef {string} LichessVariant - Represents a valid variant value on Lichess
  * @example
  * [
  *  "ultraBullet",

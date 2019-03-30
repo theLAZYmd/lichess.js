@@ -11,9 +11,10 @@ const TournamentUser = require('../structures/TournamentUser');
 
 class Tournaments {
 
-    constructor(oauth, result) {
+    constructor(oauth, result, access_token) {
         this.oauth = oauth;
         this.result = result;
+        this.access_token = access_token;
     }
 
     async get () {
@@ -92,6 +93,45 @@ class Tournaments {
                 console.log($(this));
             })*/
             return json;
+        } catch (e) {
+            if (e) throw e;
+        }
+    }
+
+    /**
+     * @typedef {Object} tournamentOptions
+     * @property {string} name
+     * @property {number} clockTime
+     * @property {number} clockIncrement
+     * @property {number} minutes
+     * @property {number} waitMinutes
+     * @property {number} startDate
+     * @property {LichessVariant} variant 
+     * @property {boolean} rated
+     * @property {string} position
+     * @property {boolean} berserkable
+     * @property {string} password
+     */
+
+    /**
+     * Create a new tournament. Create a public or private tournament to your taste.
+     * This endpoint mirrors the form on https://lichess.org/tournament/new.
+     * You can create up to 2 tournaments per day for a single login.
+     * @param {tournamentOptions} tournamentOptions 
+     */
+    async create(tournamentOptions = {}) {
+        try {
+            if ((!this.oauth || !this.result) && !this.access_token) throw new Error('Insufficient permissions! Must connect OAuth app first.');
+            let token = this.oauth ? this.oauth.accessToken.create(this.result) : undefined;
+            access_token = token ? token.token.access_token : this.access_token;
+            await rp.post({
+                uri: `${config.uri}tournament/new`,
+                headers: {
+                    Authorization: 'Bearer ' + access_token
+                },
+                body: tournamentOptions,
+                json: true
+            })
         } catch (e) {
             if (e) throw e;
         }
