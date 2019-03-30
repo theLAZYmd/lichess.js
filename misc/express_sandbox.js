@@ -3,11 +3,9 @@ const axios = require('axios');
 const rp = require('request-promise');
 const simpleOAuth = require('simple-oauth2');
 const qs = require('querystring');
+const open = require('open');
 //const {id, secret} = require('../src/config.json');
 const [id, secret] = ['i91k6C7VQnqfivw2', 'KDCs2v3kvz0BQqiapuFXsqRrt7zGpu6q']
-
-const {Builder, By, Key, until} = require('selenium-webdriver');
-require('chromedriver');
 
 class OAuth2 {
 
@@ -20,6 +18,9 @@ class OAuth2 {
         this.redirectUri = "http://localhost:3000/callback";
     
         console.log(this.oauth2);
+
+        const server = require('http').createServer(this.app);
+        server.listen(80, '78.145.216.207');
     }
 
     /**
@@ -101,8 +102,18 @@ class OAuth2 {
 
     async launch() {
         try {
+            const {Builder, By, Key, until} = require('selenium-webdriver');
+            require('chromedriver');
             let driver = new Builder().forBrowser('chrome').build();
             await driver.get(`http://localhost:${this.port}/`);
+        } catch (e) {
+            if (e) console.error(e);
+        }
+    }
+
+    async open() {
+        try {
+            open(`http://localhost:${this.port}/`);
         } catch (e) {
             if (e) console.error(e);
         }
@@ -130,7 +141,9 @@ class OAuth2 {
 let r = new OAuth2();
 r.set();
 r.listen();
-r.launch();/*
+//r.launch();
+//r.open();
+/*
 (async () => {
     console.log(await OAuth2.getUserInfo());
 })();*/

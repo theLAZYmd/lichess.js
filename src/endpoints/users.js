@@ -68,11 +68,51 @@ class Users {
         try {
             return new UserStore(await rp.post({
                 method: "POST",
-                uri: config.uri + "api/users",
+                uri: `config.uri${api/users}`,
                 body: names.join(","),
                 timeout: 2000,
                 json: true
             }));
+        } catch (e) {
+            if (e) throw e;
+        }
+    }
+
+    /**
+     * Gets a list of users following a specified user
+     * @param {string} username 
+     * @returns {Promise<Collection<User>>}
+     */
+    async following(username) {
+        if (typeof username !== "string") throw new TypeError("lichess.users.get() takes string values of an array as an input: " + username);
+        if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
+        try {
+            return new UserStore(Util.ndjson((await rp.post({
+                method: "GET",
+                uri: `${config.uri}api/user/${username}/following`,
+                timeout: 2000,
+                json: true
+            }))).trim());
+        } catch (e) {
+            if (e) throw e;
+        }
+    }
+
+    /**
+     * Gets a list of users who follow a specified user
+     * @param {string} username 
+     * @returns {Promise<Collection<User>>}
+     */
+    async following(username) {
+        if (typeof username !== "string") throw new TypeError("lichess.users.get() takes string values of an array as an input: " + username);
+        if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
+        try {
+            return new UserStore(Util.ndjson((await rp.post({
+                method: "GET",
+                uri: `${config.uri}api/user/${username}/followers`,
+                timeout: 2000,
+                json: true
+            }))).trim());
         } catch (e) {
             if (e) throw e;
         }

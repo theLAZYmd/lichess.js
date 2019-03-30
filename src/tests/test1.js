@@ -13,7 +13,7 @@ const lila = (new client)
     .setPort(port)
     .setCallback(callback)
     .setScopes()
-    .login(secret);
+    //.login(secret);
 
 class Test {
 
@@ -89,4 +89,4 @@ class Test {
 
 }
 
-Test.me();
+Test.user();

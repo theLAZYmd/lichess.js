@@ -48,15 +48,86 @@ class User extends Base {
          * @readonly
          */
         if (data.title && data.title !== "BOT") this.title = data.title;
-        
+
         /**
          * Whether or not the user is online
          * @type {Boolean}
-         * @name User#online
+         * @name StatusUser#online
          * @readonly
          */
-        if (typeof data.online !== 'undefined') this.online = Boolean(data.online);
+        this.online = Boolean(data.online);
+                
+        /**
+         * Whether or not the user is streaming
+         * @type {Boolean}
+         * @name StatusUser#streaming
+         * @readonly
+         */
+        this.streaming = Boolean(data.streaming);
 
+        
+        if (data.profile) {
+            let names = [];
+            if (data.profile.firstName) names.push(data.profile.firstName);
+            if (data.profile.lastName) names.push(data.profile.lastName);
+
+            /**
+             * A user's name
+             * @type {string}
+             * @readonly
+             */
+            if (names.length > 0) this.name = names.join(' ');
+
+            /**
+             * A user's country as an ISO3166-1 code
+             * @type {string}
+             * @readonly
+             */
+            if (data.profile.country) this.country = data.profile.country;
+
+            /**
+             * A user's location
+             * @type {string}
+             * @readonly
+             */
+            if (data.profile.location) this.location = data.profile.location;
+
+            /**
+             * A user's self-written biography
+             * @type {string}
+             * @readonly
+             */
+            if (data.profile.bio) this.bio = data.profile.bio;
+
+            /**
+             * The links a user has chosen to write in their biography
+             * @type {string[]}
+             * @readonly
+             */
+            if (data.profile.links) this.links = Util.clean(data.profile.links.split('\r\n'));
+
+            /**
+             * A user's FIDE rating, if they have provided it
+             * @type {number}
+             * @readonly
+             */
+            if (data.profile.fideRating) this.FIDE = data.profile.fideRating;
+
+            /**
+             * A user's USCF rating, if they have provided it
+             * @type {number}
+             * @readonly
+             */
+            if (data.profile.uscfRating) this.USCF = data.profile.uscfRating;
+
+            /**
+             * A user's ECF rating, if they have provided it
+             * @type {number}
+             * @readonly
+             */
+            if (data.profile.ecfRating) this.ECF = data.profile.ecfRating;
+        }
+        
         /**
          * The timestamp the user was created at
          * @type {number}
@@ -110,7 +181,7 @@ class User extends Base {
          * @readonly
          */
         if (data.completionRate) this.completionRate = data.completionRate;
-        
+
         if (data.playTime) {
 
             /**
@@ -153,6 +224,8 @@ class User extends Base {
          * @returns {Collection<Rating>}
          */
         if (data.perfs) this.ratings = new RatingStore(data.perfs);
+
+        if (typeof data.playing === "string") this.gameURL = data.playing;
     }
 
     /**
@@ -172,7 +245,7 @@ class User extends Base {
     get seenAt() {
         return new Date(this.seenTimestamp);
     }
-    
+
     /**
      * The URL to challenge a user
      * @type {string}
@@ -196,25 +269,25 @@ class User extends Base {
             user: this.id
         })}`
     }
-    
+
     /**
      * The URL to a user's game, unless a status call has been made to show they are not playing one
      * @type {string}
-     * @name User#gameURL
+     * @name User#watchURL
      * @readonly
      */
-    get gameURL () {
+    get watchURL() {
         if (!this.playing === false) return undefined;
         return `${config.uri}/@/${this.username}/tv`
     }
-    
+
     /**
      * The URL to a user's stream, unless a status call has been made to show they are not online
      * @type {string}
      * @name User#streamURL
      * @readonly
      */
-    get streamURL () {
+    get streamURL() {
         if (!this.streaming === false) return undefined;
         return `${config.uri}/@/${this.username}/tv`
     }

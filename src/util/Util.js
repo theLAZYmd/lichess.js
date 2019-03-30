@@ -10,6 +10,18 @@ class Util {
     }
 
     /**
+     * Removes falsey values (excluding false) from an array
+     * @param {Array} arr 
+     * @returns {Array}
+     */
+    static clean(arr) {
+        for (let i = arr.length; i >= 0; i++) {
+            if (arr[i] === null || arr[i] === undefined || arr[i] === '') arr.splice(i, 1);
+        }
+        return arr;
+    }
+
+    /**
      * Splits data in ndjson format (a string where each newline represents an un-pretty-printed JSON object)
      * @param {string} str 
      * @returns {object[]|Array[]}

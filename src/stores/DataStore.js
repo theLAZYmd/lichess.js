@@ -7,26 +7,26 @@ let Structure;
  */
 class DataStore extends Collection {
 
-    constructor(iterable, type) {
+    constructor(iterable, type, nulls = []) {
         super();
         if (type) Structure = type;
         if (!Array.isArray(iterable) && typeof iterable === "object") iterable = Object.entries(iterable);
+        if (nulls.length > 0) iterable = iterable.concat(nulls.map(key => [key, undefined]));
+        console.log(iterable);
         if (iterable) {
             for (let item of iterable) {
-                if (Array.isArray(item) && item.length === 2) this.add(item[1], true, item[0]);
+                if (Array.isArray(item) && item.length === 2) this.add(item[1], item[0]);
                 else this.add(item);
             }
         }
     }
 
-    add(data, cache = true, {
-        id
-    } = {}) {
+    add(data, id) {
         const existing = this.get(id || data.id);
-        if (existing && cache && existing._patch) existing._patch(data);
+        if (existing && existing._patch) existing._patch(data);
         if (existing) return existing;
         let entry = Structure ? new Structure(data) : data;
-        if (cache) this.set(id || entry.id, entry);
+        this.set(id || entry.id, entry);
         return entry;
     }
 
