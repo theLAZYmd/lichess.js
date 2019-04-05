@@ -1,0 +1,32 @@
+{
+    "variants": [
+        "ultraBullet",
+        "bullet",
+        "blitz",
+        "rapid",
+        "classical",
+        "chess960",
+        "crazyhouse",
+        "antichess",
+        "atomic",
+        "horde",
+        "kingOfTheHill",
+        "racingKings",
+        "threeCheck",
+        "puzzle"
+    ],
+    "titles": [
+        "GM",
+        "WGM",
+        "IM",
+        "WIM",
+        "FM",
+        "WFM",
+        "NM",
+        "CM",
+        "WCM",
+        "WNM",
+        "LM",
+        "BOT"
+    ]
+}
