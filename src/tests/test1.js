@@ -106,6 +106,10 @@ class Test {
         console.log(await lila.games.current(['tomodbk', 'LeProfessionnel']));
     }
 
+    static async tv() {
+        console.log(await lila.games.tv(['crazyhouse']))
+    }
+
 }
 
-Test.game();
+Test.tv();

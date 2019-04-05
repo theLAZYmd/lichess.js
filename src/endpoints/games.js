@@ -10,6 +10,7 @@ const GameStore = require('../stores/GameStore');
 const UserStore = require('../stores/UserStore');
 const Game = require('../structures/game.js');
 const StatusUser = require('../structures/StatusUser');
+const DataStore = require('../stores/DataStore');
 
 class Games {
 
@@ -223,7 +224,7 @@ class Games {
 		}
     }
     
-    async TV(variants = []) {
+    async tv(variants = []) {
         let vmap = new Map([
             ["bot", "Bot"],
             ["computer", "Computer"],
@@ -241,7 +242,8 @@ class Games {
             ["racingKings", "Racing Kings"],
             ["threeCheck", "Three-check"],
             ["topRated", "Top Rated"]
-        ])
+        ]);
+        let xmap = new Map(Array.from(vmap).reverse());
         if (variants) {
             if (typeof variants === "string") variants = [variants];
             if (!Array.isArray(variants)) throw new TypeError("variants parameter must be a variant represented as a string or an array containing variants from the specific lichess list: " + config.variants.join(","));
@@ -254,10 +256,12 @@ class Games {
                 timeout: 2000
             });
             if (variants.length === 0) return data;
-            let robj = {};
-            for (let v of variants) {
-                robj[v] = data[vmap.get(v)]
-            }
+            /*
+            if (variants.length === 0) return new DataStore(Object.entries(data).map(([x, games]) => {
+                return [xmap.get(x), new GameStore(games, Game)]
+            }));*/
+            let robj = new DataStore();
+            for (let v of variants) robj.add(data[vmap.get(v)], v);
             return robj;
         } catch (e) {
             if (e) throw e;
