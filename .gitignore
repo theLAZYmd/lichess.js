@@ -3,3 +3,4 @@ src/config.json
 package-lock.json
 misc/
 src/tests/debug.log
+src/config.json
