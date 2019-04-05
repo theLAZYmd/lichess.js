@@ -27,7 +27,7 @@ class Util {
      * @returns {object[]|Array[]}
      */
     static ndjson (str) {
-        return str.split("\n").map(JSON.parse);
+        return str.trim().split("\n").map(JSON.parse);
     }
 
     /**

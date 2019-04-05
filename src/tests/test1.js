@@ -88,7 +88,7 @@ class Test {
     }
 
     static async game() {
-        console.log(await lila.games.get('JJ6Yz5RAYUej', {
+        console.log(await lila.games.get(['IBJTqc5R', 'cfhpQQ9o'], {
             fetchUsers: true
         }));
     }
@@ -102,6 +102,10 @@ class Test {
         .on('error', console.error)
     }
 
+    static async current() {
+        console.log(await lila.games.current(['tomodbk', 'LeProfessionnel']));
+    }
+
 }
 
-Test.games();
+Test.game();

@@ -62,7 +62,7 @@ class Users {
     async getMultiple(names) {
         if (!Array.isArray(names)) throw new TypeError("lichess.users.getMultiple() takes an array as an input");
         if (names.length > 50) throw new RangeError("Cannot check status of more than 50 names");
-        if (!names.every(n => typeof n === "string" && /[a-z][\w-]{0,28}[a-z0-9]/i.test(n))) throw new SyntaxError("Invalid format for lichess username: " + n);
+        if (!names.every(n => typeof n === "string" && /[a-z][\w-]{0,28}[a-z0-9]/i.test(n))) throw new SyntaxError("Invalid format for lichess username.");
         names.unshift(null);
         names.push(null);
         try {

@@ -22,14 +22,12 @@ class Games {
     /**
      * @typedef {gameOptions}
      */
-
-    /**
-     * Download one game in PGN or JSON format. Only finished games can be downloaded.
-     * @param {string} id 
-     * @param {gameOptions} options 
+        /**
+     * Get user(s) public data. Calls {getOne} or {getMultiple} depending on input parameter.
+     * @param {string|string[]} userParam 
+     * @param {gameOptions} options
      */
-    async get(id, options = {}) {
-        if (typeof id !== "string") throw new TypeError("game ID for lichess.games.export() must be a string");
+    async get(userParam, options) {
         let def = {
             moves: true,
             tags: true,
@@ -42,8 +40,23 @@ class Games {
         };
         if (!Object.keys(options).every(k => k in def)) throw new Error(`Query parameter doesn't exist!`);
         if (!Object.values(options).every(v => typeof v === "boolean")) throw new Error('Query parameter must take a boolean value!');
-        if (id.length > 8) id = id.slice(0, 8);
         options = Object.assign(def, options);
+        if (typeof userParam === "string") return this.getOne(userParam, options);
+        if (Array.isArray(userParam)) {
+            if (userParam.length === 1) return this.getOne(userParam[0], options);
+            return this.getMultiple(userParam, options);
+        }
+        throw new TypeError("Input must be string or string[]");
+    }
+
+    /**
+     * Download one game in PGN or JSON format. Only finished games can be downloaded.
+     * @param {string} id 
+     * @param {gameOptions} options 
+     */
+    async getOne(id, options) {
+        if (typeof id !== "string" || !/[a-z][\w-]{0,28}[a-z0-9]/i.test(id)) throw new TypeError("game ID for lichess.games.export() must be a string");
+        if (id.length > 8) id = id.slice(0, 8);
         try {
             let result = new Game(JSON.parse(await rp.get({
                 uri: `${config.uri}game/export/${id}?${qs.stringify(options)}`,
@@ -65,7 +78,47 @@ class Games {
         }
     }
     
-    byUser(username, options = {}, ndjson = true, filepath) { //it would be really nice if I learned how to use typescript to verify these values better than this   
+    /**
+     * Get several users by their IDs. Users are returned in the order same order as the IDs.
+     * @param {string[]} names 
+     * @returns {Promise<Collection<User>>}
+     */
+    async getMultiple(ids, options) {
+        if (!Array.isArray(ids)) throw new TypeError("lichess.users.getMultiple() takes an array as an input");
+        if (!ids.every(n => typeof n === "string" && /[a-z][\w-]{0,28}[a-z0-9]/i.test(n))) throw new SyntaxError("Invalid format for lichess username.");
+        ids = ids.map(id => id.slice(0, 8));
+        try {
+            let req = {
+                method: "POST",
+                uri: `${config.uri}games/export/_ids?${qs.stringify(options)}`,
+                headers: {
+                    Accept: "application/json"
+                },
+                body: {
+                    text: ids.join(",")
+                },
+                timeout: 8000,
+                json: true
+            };
+            let res = await rp.post(req);
+            console.log(req, res);
+            return new GameStore(Util.ndjson(res));
+        } catch (e) {
+            if (e) throw e;
+        }
+    }
+    
+    /**
+     * Games are sorted by reverse chronological order (most recent first). We recommend streaming the response, for it can be very long. https://lichess.org/@/german11 for instance has more than 250,000 games. The game stream is throttled, depending on who is making the request:
+     * Anonymous request: 10 games per second
+     * OAuth2 authenticated request: 20 games per second
+     * Authenticated, downloading your own games: 50 games per second
+     * @param {string} username 
+     * @param {gameOptions} options 
+     * @param {Boolean} stream - Whether to return the output once all games have been collected or to stream the result using an event emitter
+     * @param {string} filepath 
+     */
+    byUser(username, options = {}, stream = false, filepath) { //it would be really nice if I learned how to use typescript to verify these values better than this   
         let keys = ["since", "until", "max", "vs", "perfType", "color", "rated", "analysed", "ongoing", "moves", "tags", "clocks", "evals", "opening"]
         if (typeof username !== "string") throw new TypeError("game ID for lichess.games.exportUser() must be a string");
         if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
@@ -92,12 +145,12 @@ class Games {
             let req = {
                 uri: `${config.uri}api/games/user/${username}?${query}`,
                 headers: {
-                    Accept: "application/" + (ndjson ? "x-ndjson" : "x-chess-pgn")
+                    Accept: "application/x-ndjson",
                 },
                 timeout: 20000,
                 json: true
             }
-            switch (Boolean(options.stream)) {
+            switch (Boolean(stream)) {
                 case true:
                     let output = new EventEmitter();
                     request(req)
@@ -110,7 +163,7 @@ class Games {
                     return output;
                 case false:
                     return Promise.resolve((async () => {
-                        new GameStore(Util.ndjson((await rp.get(req)).trim()))
+                        new GameStore(Util.ndjson(await rp.get(req)))
                     })());
                 default:
                     throw new TypeError(options);
@@ -120,58 +173,34 @@ class Games {
         }
     }
 
-    async getMultiple(ids, options = {}, ndjson = false) {        
-        if (!Array.isArray(ids)) throw new TypeError("lichess.games.getMultiple() takes an array as an input");
-        for (let n of ids) {
-            if (typeof n !== "string") throw new TypeError("lichess.users.status() takes string values of an array as an input: " + n);
-            if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(n)) throw new TypeError("Invalid format for lichess username: " + n);
-        }
-        let keys = [    "moves", "tags", "clocks", "evals", "opening", "literate"   ];
-        let values = keys.filter(k => typeof options[k] !== "undefined").map(k => options[k]);
-        let query = (values.length > 0 ? "?" : "") + values.join("&");
-		try {
-            let options = {
-                "method": "POST",
-                "uri": config.uri + "games/export/_ids" + query,
-                "headers": {
-                    "Accept": "application/" + (ndjson ? "x-ndjson" : "x-chess-pgn")
-                },
-                "body": {
-                    "text": {
-                        "plain": ids.join(",")
-                    }
-                },
-                "timeout": 2000,
-                "json": true
-            };
-            return await rp.post(options);
-		} catch (e) {
-			if (e) throw e;
-		}
-    }
-
     /*
      * Stream the games played between a list of users, in real time. Only games where both players are part of the list are included.
      * Basically check if any two players from a list are playing right now
      */
     async current(usernames, options) {        
         if (!Array.isArray(usernames)) throw new TypeError("lichess.games.current() takes an array as an input");
-        for (let n of usernames) {
-            if (typeof n !== "string") throw new TypeError("lichess.users.current() takes string values of an array as an input: " + n);
-            if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(n)) throw new TypeError("Invalid format for lichess username: " + n);
-        }
+        if (!usernames.every(n => typeof n === "string" && /[a-z][\w-]{0,28}[a-z0-9]/i.test(n))) throw new SyntaxError("Invalid format for lichess username.");
 		try {
             let options = {
-                "method": "POST",
-                "uri": config.uri + "api/stream/games-by-users",
-                "body": {
-                    "text": {
-                        "plain": usernames.join(",")
+                method: "POST",
+                uri: config.uri + "api/stream/games-by-users",
+                body: {
+                    text: {
+                        plain: usernames.join(",")
                     }
                 },
-                "timeout": 2000
+                json: true
             };
-            return await rp.post(options);
+            let output = new EventEmitter();
+            let x = request.post(options)
+            .on('data', (data) => {
+                let game = new Game(JSON.parse(data.toString().trim()));
+                console.log(game);
+            })
+            .on('error', (e) => output.emit('error', e))
+            .on('end', () => output.emit('end'));
+            console.log(x);
+            //return new GameStore(Util.ndjson(await rp.post(options)));
 		} catch (e) {
 			if (e) throw e;
 		}
@@ -194,7 +223,7 @@ class Games {
 		}
     }
     
-    async getTV(variants = []) {
+    async TV(variants = []) {
         let vmap = new Map([
             ["bot", "Bot"],
             ["computer", "Computer"],
@@ -216,15 +245,13 @@ class Games {
         if (variants) {
             if (typeof variants === "string") variants = [variants];
             if (!Array.isArray(variants)) throw new TypeError("variants parameter must be a variant represented as a string or an array containing variants from the specific lichess list: " + config.variants.join(","));
-            for (let variant of variants) {
-                if (config.variants.indexOf(variant.trim()) === -1) throw new TypeError("variants specified must be from the specific list of lichess variant keys, separated by a comma: " + config.variants.join(","));
-            }
+            if (!variants.every(v => config.variants.indexOf(v.trim()))) throw new TypeError("variants specified must be from the specific list of lichess variant keys, separated by a comma: " + config.variants.join(","));
         }
         try {
             let data = await rp.get({
-                "uri": config.uri + "tv/channels",
-                "json": true,
-                "timeout": 2000
+                uri: `${config.uri}tv/channels`,
+                json: true,
+                timeout: 2000
             });
             if (variants.length === 0) return data;
             let robj = {};
