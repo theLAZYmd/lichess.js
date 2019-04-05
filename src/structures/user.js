@@ -52,7 +52,7 @@ class User extends Base {
         /**
          * Whether or not the user is online
          * @type {Boolean}
-         * @name StatusUser#online
+         * @name User#online
          * @readonly
          */
         this.online = Boolean(data.online);
@@ -60,7 +60,7 @@ class User extends Base {
         /**
          * Whether or not the user is streaming
          * @type {Boolean}
-         * @name StatusUser#streaming
+         * @name User#streaming
          * @readonly
          */
         this.streaming = Boolean(data.streaming);

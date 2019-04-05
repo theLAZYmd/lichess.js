@@ -18,7 +18,7 @@ class UserStore extends DataStore {
      * * A Snowflake
      * * A Message object (resolves to the message author)
      * * A GuildMember object
-     * @typedef {User|Snowflake} UserResolvable
+     * @typedef {User} UserResolvable
      */
 
     /**
@@ -33,7 +33,7 @@ class UserStore extends DataStore {
     /**
      * Resolves a UserResolvable to a user ID string.
      * @param {UserResolvable} user The UserResolvable to identify
-     * @returns {?Snowflake}
+     * @returns {?string}
      */
     resolveID(user) {
         return super.resolveID(user);

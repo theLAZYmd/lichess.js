@@ -68,7 +68,7 @@ class Users {
         try {
             return new UserStore(await rp.post({
                 method: "POST",
-                uri: `config.uri${api/users}`,
+                uri: `${config.uri}api/users`,
                 body: names.join(","),
                 timeout: 2000,
                 json: true
@@ -259,7 +259,6 @@ class Users {
                 json: true,
                 timeout: 2000
             });
-            for (let v of obj) console.log(v.games);
             return obj;
         } catch (e) {
             if (e) throw e;

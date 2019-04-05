@@ -1,6 +1,4 @@
 const Collection = require('./Collection');
-let Structure;
-
 /**
  * Manages the creation, retrieval and deletion of a specific data model.
  * @extends {Collection}
@@ -9,23 +7,23 @@ class DataStore extends Collection {
 
     constructor(iterable, type, nulls = []) {
         super();
-        if (type) Structure = type;
+        if (type) this.Structure = type;
         if (!Array.isArray(iterable) && typeof iterable === "object") iterable = Object.entries(iterable);
         if (nulls.length > 0) iterable = iterable.concat(nulls.map(key => [key, undefined]));
-        console.log(iterable);
         if (iterable) {
             for (let item of iterable) {
                 if (Array.isArray(item) && item.length === 2) this.add(item[1], item[0]);
                 else this.add(item);
             }
         }
+        if (this.Structure) delete this.Structure;
     }
 
     add(data, id) {
         const existing = this.get(id || data.id);
         if (existing && existing._patch) existing._patch(data);
         if (existing) return existing;
-        let entry = Structure ? new Structure(data) : data;
+        let entry = this.Structure ? new this.Structure(data) : data;
         this.set(id || entry.id, entry);
         return entry;
     }

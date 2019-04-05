@@ -358,6 +358,14 @@ class Collection extends Map {
         return results;
     }
 
+    reKey(map) {
+        let Instance = new this.constructor();
+        this.tap((v, k) => {
+            Instance.set(map.get(k) !== undefined ? map.get(k) : k, v)
+        });
+        return Instance;
+    }
+
     /**
      * Identical to
      * [Array.map()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map).

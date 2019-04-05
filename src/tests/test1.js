@@ -87,6 +87,21 @@ class Test {
         console.log(await lila.profile.get());
     }
 
+    static async game() {
+        console.log(await lila.games.get('JJ6Yz5RAYUej', {
+            fetchUsers: true
+        }));
+    }
+
+    static async games() {
+        let res = lila.games.byUser('opperwezen', {
+            max: 10,
+            stream: true
+        });
+        res.on('data', console.log)
+        .on('error', console.error)
+    }
+
 }
 
-Test.user();
+Test.games();

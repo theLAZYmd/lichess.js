@@ -1,46 +1,77 @@
 const rp = require('request-promise');
+const request = require('request');
 const config = require('../config.json');
 const qs = require('querystring');
+const EventEmitter = require('events');
 
-class Users {
+const Util = require('../util/Util');
+const Users = require('./users');
+const GameStore = require('../stores/GameStore');
+const UserStore = require('../stores/UserStore');
+const Game = require('../structures/game.js');
+const StatusUser = require('../structures/StatusUser');
+
+class Games {
 
     constructor(oauth, result) {
         this.oauth = oauth;
         this.result = result;
+        this.Users = new Users(...arguments);
     }
 
-    async get(id, options = {}, json = false) {
+    /**
+     * @typedef {gameOptions}
+     */
+
+    /**
+     * Download one game in PGN or JSON format. Only finished games can be downloaded.
+     * @param {string} id 
+     * @param {gameOptions} options 
+     */
+    async get(id, options = {}) {
         if (typeof id !== "string") throw new TypeError("game ID for lichess.games.export() must be a string");
         let def = {
             moves: true,
-            tags: true, 
+            tags: true,
             clocks: true, 
             evals: true, 
             opening: true, 
-            literate: false
+            literate: false,            
+            fetchUsers: false,
+            json: true
         };
         if (!Object.keys(options).every(k => k in def)) throw new Error(`Query parameter doesn't exist!`);
-        if (!Object.values(options).every(v => typeof v !== "boolean")) throw new Error('Query parameter must take a boolean value!');
+        if (!Object.values(options).every(v => typeof v === "boolean")) throw new Error('Query parameter must take a boolean value!');
+        if (id.length > 8) id = id.slice(0, 8);
+        options = Object.assign(def, options);
         try {
-            return await rp.get({
-                uri: `${config.uri}game/export/${id}?${qs.stringify(Object.assign(def, options))}`,
+            let result = new Game(JSON.parse(await rp.get({
+                uri: `${config.uri}game/export/${id}?${qs.stringify(options)}`,
                 headers: {
-                    Accept: "application/" + (json ? "json" : "x-chess-pgn")
+                    Accept: "application/" + (options.json ? "json" : "x-chess-pgn")
                 },
                 timeout: 2000
-            });
+            })));
+            if (!options.fetchUsers) return result;
+            let colours = new Map();
+            colours.set(result.players.get('white').id, 'white');
+            colours.set(result.players.get('black').id, 'black');
+            let users = await this.Users.getMultiple(result.players.keyArray());
+            let players = users.reKey(colours);
+            result.players = result.players.merge(players);
+            return result;
         } catch (e) {
             if (e) throw e;
         }
     }
     
-    async byUser(username, options = {}, ndjson = false, filepath) { //it would be really nice if I learned how to use typescript to verify these values better than this   
+    byUser(username, options = {}, ndjson = true, filepath) { //it would be really nice if I learned how to use typescript to verify these values better than this   
         let keys = ["since", "until", "max", "vs", "perfType", "color", "rated", "analysed", "ongoing", "moves", "tags", "clocks", "evals", "opening"]
         if (typeof username !== "string") throw new TypeError("game ID for lichess.games.exportUser() must be a string");
         if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError("Invalid format for lichess username: " + username);
         if (options.since && options.since < 1356998400070) throw new Error("Date specified is before date of Lichess site launch");
         if (options.until && options.until < 1356998400070) throw new Error("Date specified is before date of Lichess site launch");
-        if (typeof options.max !== "undefined" && (options.max !== null || typeof options.max !== "number" || options.max < 1)) throw new Error("Could not interpret value for max number of games to download");
+        if (typeof options.max !== "undefined" && options.max !== null && (typeof options.max !== "number"&& options.max < 1)) throw new Error("Could not interpret value for max number of games to download");
         if (options.vs && typeof options.vs !== "string") throw new TypeError("game ID for lichess.games.export() must be a string");
         if (options.vs && !/[a-z][\w-]{0,28}[a-z0-9]/i.test(options.vs)) throw new TypeError("Invalid format for lichess username: " + options.vs);
         if (options.perfType) {
@@ -53,28 +84,37 @@ class Users {
         }
         if (typeof options.color !== "undefined" && typeof options.color !== "string" && !/^(?:white|black)$/.test(options.color)) throw new TypeError("color parameter takes a string value of 'white' or 'black'");
         for (let option of ["rated", "analysed", "ongoing", "moves", "tags", "clocks", "evals", "opening"]) {
-            if (typeof [options[option]] !== "undefined" && typeof options[option] !== "boolean") throw new TypeError(option + " parameter takes a boolean value");
+            if (typeof options[option] !== "undefined" && typeof options[option] !== "boolean") throw new TypeError(option + " parameter takes a boolean value");
         }
-        if (ndjson === false && !filepath) throw new Error()
-        let values = keys.filter(k => typeof options[k] !== "undefined").map(k => options[k]);
-        let query = (values.length > 0 ? "?" : "") + values.join("&");
+        if (ndjson === false && !filepath) throw new Error('pgn must contain a path to pipe to');
+        let query = qs.stringify(options);
         try {
-            return await rp.get({
-                "uri": config.uri + "api/games/user/" + username + query,
-                "headers": {
-                    "Accept": "application/" + (ndjson ? "x-json" : "x-chess-pgn")
-                }
-            });
-            /*
-            request({
-                "uri": config.uri + "api/games/user/" + username + query,
-                "headers": {
-                    "Accept": "application/" + (ndjson ? "x-json" : "x-chess-pgn")
-                }
-            })
-            .on('response', console.log)
-            .pipe(request.put(filepath));
-            */
+            let req = {
+                uri: `${config.uri}api/games/user/${username}?${query}`,
+                headers: {
+                    Accept: "application/" + (ndjson ? "x-ndjson" : "x-chess-pgn")
+                },
+                timeout: 20000,
+                json: true
+            }
+            switch (Boolean(options.stream)) {
+                case true:
+                    let output = new EventEmitter();
+                    request(req)
+                        .on('data', (data) => {
+                            let game = new Game(JSON.parse(data.toString().trim()));
+                            output.emit('data', game);
+                        })
+                        .on('error', (e) => output.emit('error', e))
+                        .on('end', () => output.emit('end'));
+                    return output;
+                case false:
+                    return Promise.resolve((async () => {
+                        new GameStore(Util.ndjson((await rp.get(req)).trim()))
+                    })());
+                default:
+                    throw new TypeError(options);
+            }      
         } catch (e) {
             if (e) throw e;
         }
@@ -199,4 +239,4 @@ class Users {
     
 }
 
-module.exports = Users;
+module.exports = Games;
