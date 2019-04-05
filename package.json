@@ -1,6 +1,6 @@
 {
-    "name": "lichess-es6",
-    "version": "0.0.6",
+    "name": "lichess",
+    "version": "1.0.0",
     "description": "The best NodeJS client for the Lichess API",
     "main": "src/main.js",
     "scripts": {
@@ -8,7 +8,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/theLAZYmd/lichess-es6.git"
+        "url": "git+https://github.com/theLAZYmd/lichess.js.git"
     },
     "keywords": [
         "lichess",
@@ -19,18 +19,14 @@
     "author": "theLAZYmd",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/theLAZYmd/lichess-es6/issues"
+        "url": "https://github.com/theLAZYmd/lichess.js/issues"
     },
-    "homepage": "https://github.com/theLAZYmd/lichess-es6#readme",
+    "homepage": "https://github.com/theLAZYmd/lichess.js#readme",
     "dependencies": {
-        "axios": "^0.18.0",
-        "chromedriver": "^2.46.0",
         "express": "^4.16.4",
-        "io": "^1.0.0",
         "open": "^6.0.0",
         "request": "^2.88.0",
         "request-promise": "^4.2.4",
-        "selenium-webdriver": "^4.0.0-alpha.1",
         "simple-oauth2": "^2.2.1"
     }
 }
