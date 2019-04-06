@@ -1,5 +1,5 @@
 const Base = require('./Base');
-const config = require('../config.js/index.js');
+const config = require('../config.js');
 const UserStore = require('../stores/UserStore');
 const StatusUser = require('./StatusUser');
 /**

@@ -3,7 +3,7 @@ const qs = require('querystring');
 //const fs = require('fs');
 //const cheerio = require('cheerio');
 
-const config = require('../config.json');
+const config = require('../config.js');
 const Util = require('../util/Util');
 const UserStore = require('../stores/UserStore');
 const UserConstructor = require('./users');

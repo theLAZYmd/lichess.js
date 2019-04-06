@@ -4,7 +4,7 @@ const {
     host,
     port,
     callback
-} = require('../config.json');
+} = require('../config.js');
 
 const client = require('../main');
 const lila = (new client)

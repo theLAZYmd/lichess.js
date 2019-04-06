@@ -1,6 +1,6 @@
 const DataStore = require('./DataStore');
 const Rating = require('../structures/Rating');
-const config = require('../config.js/index.js');
+const config = require('../config.js');
 
 /**
  * A data store to store Rating models.
