@@ -68,7 +68,7 @@ class Rating extends Base {
          * @type {Boolean}
          * @readonly
          */
-        this.prov = typeof data.prov !== "undefined" ? data.prov : true;
+        this.prov = this.games === 0 ? true : Boolean(data.prov);
     }
 
     get exists () {
