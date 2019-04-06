@@ -9,7 +9,7 @@ class DataStore extends Collection {
         super();
         if (type) this.Structure = type;
         if (!Array.isArray(iterable) && typeof iterable === "object") iterable = Object.entries(iterable);
-        if (nulls.length > 0) iterable = iterable.concat(nulls.map(key => [key, undefined]));
+        if (nulls.length > 0) iterable = nulls.map(key => [key, undefined]).concat(iterable);
         if (iterable) {
             for (let item of iterable) {
                 if (Array.isArray(item) && item.length === 2) this.add(item[1], item[0]);

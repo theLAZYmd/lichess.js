@@ -84,7 +84,7 @@ class Util {
             const valueOf = elemIsObj && typeof element.valueOf === 'function' ? element.valueOf() : null;
 
             // If it's a collection, make the array of keys
-            if (element instanceof require('./Collection')) out[newProp] = Array.from(element.keys());
+            if (element instanceof require('../stores/Collection')) out[newProp] = Array.from(element.keys());
             // If it's an array, flatten each element
             else if (Array.isArray(element)) out[newProp] = element.map(e => Util.flatten(e));
             // If it's an object with a primitive `valueOf`, use that value
@@ -468,7 +468,7 @@ class Util {
      */
     /* eslint-disable func-names */
     static mixin(store, ignored) {
-        const Collection = require('./Collection');
+        const Collection = require('../stores/Collection');
         Object.getOwnPropertyNames(Collection.prototype)
             .concat(Object.getOwnPropertyNames(Map.prototype)).forEach(prop => {
                 if (ignored.includes(prop)) return;
