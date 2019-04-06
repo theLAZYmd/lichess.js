@@ -1,6 +1,6 @@
 const rp = require('request-promise');
 const request = require('request');
-const config = require('../config.json');
+const config = require('../config.js/index.js');
 const qs = require('querystring');
 const EventEmitter = require('events');
 

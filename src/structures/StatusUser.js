@@ -1,4 +1,4 @@
-const config = require('../config.json');
+const config = require('../config.js/index.js');
 const Base = require('./base');
 
 /**

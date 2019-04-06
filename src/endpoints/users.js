@@ -1,5 +1,5 @@
 const rp = require('request-promise');
-const config = require('../config.json');
+const config = require('../config.js/index.js');
 const qs = require('querystring');
 
 const UserStore = require('../stores/UserStore');
