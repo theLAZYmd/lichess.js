@@ -6,6 +6,8 @@ const {
     callback
 } = require('../config.js');
 
+const List = JSON.parse(require('fs').readFileSync('./src/tests/ids.json'));
+
 const client = require('../main');
 const lila = (new client)
     .setID(id)
@@ -53,10 +55,10 @@ class Test {
         console.log(await lila.users.team('oxford-university-chess-club'));
     }
 
-    static async users() {
-        console.log((await lila.users.getMultiple(["mathace", "opperwezen", "obiwanbenoni"], {
+    static async users(n = 3) {
+        console.log((await lila.users.getMultiple(List.splice(0, n), {
             oauth: false
-        })));
+        })).keys());
     }
 
     static async streaming() {
@@ -112,4 +114,4 @@ class Test {
 
 }
 
-Test.user();
+Test.users(262);

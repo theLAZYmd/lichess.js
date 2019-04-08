@@ -69,6 +69,8 @@ class Rating extends Base {
          * @readonly
          */
         this.prov = this.games === 0 ? true : Boolean(data.prov);
+
+        return this;
     }
 
     get exists () {

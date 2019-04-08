@@ -15,8 +15,10 @@ class Util {
      * @returns {Array}
      */
     static clean(arr) {
-        for (let i = arr.length; i >= 0; i++) {
-            if (arr[i] === null || arr[i] === undefined || arr[i] === '') arr.splice(i, 1);
+        for (let i = arr.length; i >= 0; i--) {
+            if (arr[i] === null || arr[i] === undefined || arr[i] === '') {
+                arr.splice(i, 1);
+            }
         }
         return arr;
     }

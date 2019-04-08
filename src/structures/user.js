@@ -19,12 +19,7 @@ class User extends Base {
          * @readonly
          */
         this.id = data.id;
-
-        this._patch(data);
-    }
-
-    _patch(data) {
-
+        
         /**
          * Whether or not the user is a bot
          * @type {boolean}
@@ -48,6 +43,18 @@ class User extends Base {
          * @readonly
          */
         if (data.title && data.title !== "BOT") this.title = data.title;
+                
+        /**
+         * The timestamp the user was created at
+         * @type {number}
+         * @readonly
+         */
+        if (data.createdAt) this.createdTimestamp = data.createdAt;
+
+        this._patch(data);
+    }
+
+    _patch(data) {
 
         /**
          * Whether or not the user is online
@@ -65,7 +72,6 @@ class User extends Base {
          */
         this.streaming = Boolean(data.streaming);
 
-        
         if (data.profile) {
             let names = [];
             if (data.profile.firstName) names.push(data.profile.firstName);
@@ -127,13 +133,6 @@ class User extends Base {
              */
             if (data.profile.ecfRating) this.ECF = data.profile.ecfRating;
         }
-        
-        /**
-         * The timestamp the user was created at
-         * @type {number}
-         * @readonly
-         */
-        if (data.createdAt) this.createdTimestamp = data.createdAt;
 
         /**
          * The timestamp the user was last seen at at
@@ -226,6 +225,8 @@ class User extends Base {
         if (data.perfs) this.ratings = new RatingStore(data.perfs);
 
         if (typeof data.playing === "string") this.gameURL = data.playing;
+
+        return this;
     }
 
     /**

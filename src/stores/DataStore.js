@@ -5,27 +5,27 @@ const Collection = require('./Collection');
  */
 class DataStore extends Collection {
 
-    constructor(iterable, type, nulls = []) {
+    constructor(iterable = [], type) {
         super();
-        if (type) this.Structure = type;
-        if (!Array.isArray(iterable) && typeof iterable === "object") iterable = Object.entries(iterable);
-        if (nulls.length > 0) iterable = nulls.map(key => [key, undefined]).concat(iterable);
-        if (iterable) {
-            for (let item of iterable) {
-                if (Array.isArray(item) && item.length === 2) this.add(item[1], item[0]);
-                else this.add(item);
-            }
+        if (typeof iterable !== "object") throw new TypeError(iterable);
+        if (!Array.isArray(iterable)) {
+            return new Collection(Object.entries(iterable).map(([key, data]) => [key, this.modify(data, type)]));
         }
-        if (this.Structure) delete this.Structure;
+        for (let item of iterable) {
+            this.add(item, type);
+        }
     }
 
-    add(data, id) {
-        const existing = this.get(id || data.id);
-        if (existing && existing._patch) existing._patch(data);
-        if (existing) return existing;
-        let entry = this.Structure ? new this.Structure(data) : data;
-        this.set(id || entry.id, entry);
+    add(data, Structure) {
+        let existing = this.get(data.id);
+        if (Boolean(existing)) return existing._patch(data);
+        let entry = Structure ? new Structure(data) : data;
+        this.set(entry.id, entry);
         return entry;
+    }
+
+    modify(data, Structure) {
+        return Structure ? new Structure(data) : data;
     }
 
     remove(key) {
