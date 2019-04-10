@@ -9,6 +9,7 @@ class Puzzles {
 	/**
 	 * Returns a random puzzle from Lichess as an FEN. 
 	 * @param {string|number} id 
+	 * @returns {Position}
 	 * @public
 	 */
 	async get(id = '') {
@@ -26,6 +27,7 @@ class Puzzles {
 	/**
 	 * 
 	 * Returns the daily puzzle from Lichess as an FEN.
+	 * @returns {Position}
 	 * @public
 	 */
 	async daily() {
@@ -36,6 +38,12 @@ class Puzzles {
 		}
 	}
 
+	/**
+	 * @typedef {Object} Position
+	 * @property {string} id
+	 * @property {string} fen
+	 * @param {string} url 
+	 */
 	static async scrapePuzzle(url) {
 		try {
 			const buffer = await rp.get(url);
@@ -47,7 +55,10 @@ class Puzzles {
 			initialPly = initialPly[1];
 			let argument = body.match(new RegExp(`"ply":${initialPly},"fen":"(${Puzzles.FENRegEx})"`));
 			if (!argument) throw '';
-			return argument[1];
+			return {
+				id,
+				fen: argument[1]
+			};
 		} catch (e) {
 			throw new Error('Couldn\'t parse HTML for puzzle on page ' + url + ':\n' + e);
 		}
