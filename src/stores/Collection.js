@@ -6,41 +6,17 @@
 class Collection extends Map {
     constructor(iterable) {
         super(iterable);
-
-        /**
-         * Cached array for the `array()` method - will be reset to `null` whenever `set()` or `delete()` are called
-         * @name Collection#_array
-         * @type {?Array}
-         * @private
-         */
-        Object.defineProperty(this, '_array', {
-            value: null,
-            writable: true,
-            configurable: true
-        });
-
-        /**
-         * Cached array for the `keyArray()` method - will be reset to `null` whenever `set()` or `delete()` are called
-         * @name Collection#_keyArray
-         * @type {?Array}
-         * @private
-         */
-        Object.defineProperty(this, '_keyArray', {
-            value: null,
-            writable: true,
-            configurable: true
-        });
     }
 
     set(key, val) {
-        this._array = null;
-        this._keyArray = null;
+    	if (this._array) delete this._array;
+    	if (this._keyArray) delete this._keyArray;
         return super.set(key, val);
     }
 
     delete(key) {
-        this._array = null;
-        this._keyArray = null;
+    	if (this._array) delete this._array;
+    	if (this._keyArray) delete this._keyArray;
         return super.delete(key);
     }
 
@@ -52,8 +28,8 @@ class Collection extends Map {
      * @returns {Array}
      */
     array() {
-        if (!this._array || this._array.length !== this.size) this._array = [...this.values()];
-        return this._array;
+		if (this._array && this._array.length === this.size) return this._array;
+        return this._array = [...this.values()];
     }
 
     /**
@@ -64,8 +40,8 @@ class Collection extends Map {
      * @returns {Array}
      */
     keyArray() {
-        if (!this._keyArray || this._keyArray.length !== this.size) this._keyArray = [...this.keys()];
-        return this._keyArray;
+		if (this._array && this._array.length === this.size) return this._array;
+        return this._array = [...this.keys()];
     }
 
     /**

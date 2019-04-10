@@ -9,6 +9,7 @@ const config = require('../config.js');
 class RatingStore extends DataStore {
     constructor(iterable) {
         super(iterable, Rating);
+		console.log(iterable);
     }
 
     /**

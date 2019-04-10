@@ -1,5 +1,5 @@
 const express = require('express');
-const axios = require('axios');
+//const axios = require('axios');
 const rp = require('request-promise');
 const simpleOAuth = require('simple-oauth2');
 const qs = require('querystring');
@@ -18,9 +18,6 @@ class OAuth2 {
         this.redirectUri = "http://localhost:3000/callback";
     
         console.log(this.oauth2);
-
-        const server = require('http').createServer(this.app);
-        server.listen(80, '78.145.216.207');
     }
 
     /**

@@ -4,17 +4,13 @@ const {
     host,
     port,
     callback
-} = require('../config.js');
+} = require('../config.json');
 
 const List = JSON.parse(require('fs').readFileSync('./src/tests/ids.json'));
 
 const client = require('../main');
 const lila = (new client)
     .setID(id)
-    .setHost(host)
-    .setPort(port)
-    .setCallback(callback)
-    .setScopes()
     //.login(secret);
 
 class Test {
@@ -114,4 +110,5 @@ class Test {
 
 }
 
-Test.users(262);
+Test.user();
+//Test.users(262);
