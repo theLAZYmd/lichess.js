@@ -1,36 +1,36 @@
 {
-  "name": "lichess",
-  "version": "1.0.6",
-  "description": "The best NodeJS client for the Lichess API",
-  "main": "src/main.js",
-  "scripts": {
-    "test": "jshint --exclude ./node_modules && ./node_modules/.bin/mocha --harmony"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/theLAZYmd/lichess.js.git"
-  },
-  "keywords": [
-    "lichess",
-    "lila",
-    "chess",
-    "api"
-  ],
-  "author": "theLAZYmd",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/theLAZYmd/lichess.js/issues"
-  },
-  "homepage": "https://github.com/theLAZYmd/lichess.js#readme",
-  "dependencies": {
-    "express": "^4.16.4",
-    "open": "^6.0.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4",
-    "simple-oauth2": "^2.2.1"
-  },
-  "directories": {
-    "doc": "docs"
-  },
-  "devDependencies": {}
+	"name": "lichess",
+	"version": "1.0.7",
+	"description": "The best NodeJS client for the Lichess API",
+	"main": "src/main.js",
+	"scripts": {
+		"test": "jshint --exclude ./node_modules && ./node_modules/.bin/mocha --harmony"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/theLAZYmd/lichess.js.git"
+	},
+	"keywords": [
+		"lichess",
+		"lila",
+		"chess",
+		"api"
+	],
+	"author": "theLAZYmd",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/theLAZYmd/lichess.js/issues"
+	},
+	"homepage": "https://github.com/theLAZYmd/lichess.js#readme",
+	"dependencies": {
+		"express": "^4.16.4",
+		"open": "^6.0.0",
+		"request": "^2.88.0",
+		"request-promise": "^4.2.4",
+		"simple-oauth2": "^2.2.1"
+	},
+	"directories": {
+		"doc": "docs"
+	},
+	"devDependencies": {}
 }
