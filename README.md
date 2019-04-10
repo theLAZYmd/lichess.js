@@ -9,6 +9,7 @@ Current categories of endpoints are:
 - Tournaments
 - Games
 - Profile
+- Puzzles
 
 And these are all easily called as a property of the package.
 To get started, use `npm install lichess`.
