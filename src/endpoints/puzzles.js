@@ -16,10 +16,7 @@ class Puzzles {
 		try {
 			if (id === 'daily') return this.daily();
 			if (isNaN(Number(id))) throw 'Invalid ID to parse.';
-			if (Puzzles._cache[id]) return Puzzles._cache[id];
-			let fen = await Puzzles.scrapePuzzle(`${config.uri}training/${id}`);
-			Puzzles._cache[id] = fen;
-			return fen;
+			return await Puzzles.scrapePuzzle();
 		} catch (e) {
 			if (e) throw e;
 		}
@@ -32,7 +29,7 @@ class Puzzles {
 	 */
 	async daily() {
 		try {
-			return await Puzzles.scrapePuzzle(`${config.uri}training/daily`);
+			return await Puzzles.scrapePuzzle('daily');
 		} catch (e) {
 			if (e) throw e;
 		}
@@ -44,8 +41,10 @@ class Puzzles {
 	 * @property {string} fen
 	 * @param {string} url 
 	 */
-	static async scrapePuzzle(url) {
+	static async scrapePuzzle(_id = '') {
 		try {
+			if (_id && Puzzles._cache[_id]) return Puzzles._cache[_id];
+			const url = `${config.uri}training/${_id}`;
 			const buffer = await rp.get(url);
 			const body = buffer.toString();
 			let id = body.match(/content="Chess tactic #([0-9]+) - (?:White|Black) to play"/);
@@ -55,12 +54,11 @@ class Puzzles {
 			initialPly = initialPly[1];
 			let argument = body.match(new RegExp(`"ply":${initialPly},"fen":"(${Puzzles.FENRegEx})"`));
 			if (!argument) throw '';
-			return {
-				id,
-				fen: argument[1]
-			};
+			let fen = argument[1];
+			Puzzles._cache[id] = fen;
+			return {id, fen};
 		} catch (e) {
-			throw new Error('Couldn\'t parse HTML for puzzle on page ' + url + ':\n' + e);
+			throw new Error('Couldn\'t parse HTML for puzzle \'' + _id + '\':\n' + e);
 		}
 	}
 

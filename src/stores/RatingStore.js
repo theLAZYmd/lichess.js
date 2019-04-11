@@ -7,12 +7,11 @@ const config = require('../config.js');
  * @extends {DataStore}
  */
 class RatingStore extends DataStore {
-    constructor(iterable) {
-        super(iterable, Rating);
-		console.log(iterable);
-    }
+	constructor(iterable) {
+		super(iterable, Rating);
+	}
 
-    /**
+	/**
      * Data that resolves to give a Rating object. This can be:
      * * A Rating object
      * * A Snowflake
@@ -21,24 +20,24 @@ class RatingStore extends DataStore {
      * @typedef {Rating|Snowflake|Message} RatingResolvable
      */
 
-    /**
+	/**
      * Resolves a RatingResolvable to a Rating object.
      * @param {RatingResolvable} rating The RatingResolvable to identify
      * @returns {?Rating}
      */
-    resolve(rating) {
-        if (rating instanceof User) return rating.perfs;
-        return super.resolve(rating);
-    }
+	resolve(rating) {
+		if (rating instanceof User) return rating.perfs;
+		return super.resolve(rating);
+	}
 
-    /**
+	/**
      * Resolves a RatingResolvable to a rating ID string.
      * @param {RatingResolvable} rating The RatingResolvable to identify
      * @returns {?Snowflake}
      */
-    resolveID(rating) {
-        return super.resolveID(rating);
-    }
+	resolveID(rating) {
+		return super.resolveID(rating);
+	}
 }
 
 module.exports = RatingStore;
