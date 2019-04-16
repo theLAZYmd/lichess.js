@@ -1,14 +1,13 @@
 const DataStore = require('./DataStore');
 const Rating = require('../structures/Rating');
-const config = require('../config.js');
 
 /**
  * A data store to store Rating models.
  * @extends {DataStore}
  */
 class RatingStore extends DataStore {
-	constructor(iterable) {
-		super(iterable, Rating);
+	constructor(iterable, Constructor) {
+		super(iterable, Constructor || Rating);
 	}
 
 	/**

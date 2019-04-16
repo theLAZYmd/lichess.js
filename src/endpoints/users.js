@@ -3,6 +3,7 @@ const config = require('../config.js');
 const qs = require('querystring');
 
 const UserStore = require('../stores/UserStore');
+const RatingStore = require('../stores/RatingStore');
 const StatusUser = require('../structures/StatusUser');
 const StreamUser = require('../structures/StreamUser');
 const User = require('../structures/User');
@@ -212,15 +213,31 @@ class Users {
 		if (typeof username !== 'string') throw new TypeError('lichess.users.history() takes string values of an array as an input: ' + username);
 		if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError('Invalid format for lichess username: ' + username);
 		try {
-			return await rp.get({
-				uri: config.uri + 'api/user/' + username + '/rating-history',
+			let raw = await rp.get({
+				uri: `${config.uri}api/user/${username}/rating-history`,
+				headers: {
+					Accept: 'application/vnd.lichess.v1+json'
+				},
 				json: true,
 				timeout: 2000
+			});
+			let arr = raw.map(({name, points}) => [
+				name,
+				points.reduce((obj, [year, month, day, rating]) => {
+					let k = new Date(year, month, day).getTime();
+					let v = rating;
+					obj[k] = v;
+					return obj;
+				}, {})
+			]);
+			return new RatingStore(arr, function returner (data) {
+				return data;
 			});
 		} catch (e) {
 			if (e) throw e;
 		}
 	}
+
 	/**
      * The activity feed of a user viewable on their profile
      * Needs to Have an ActivityStore built for it!

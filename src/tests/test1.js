@@ -43,6 +43,7 @@ class Test {
 	}
 
 	static async history() {
+		//lila.users.history('theLAZYmd')
 		console.log(await lila.users.history('theLAZYmd'));
 	}
 
@@ -118,5 +119,5 @@ class Test {
 
 }
 
-Test.puzzle();
+Test.history();
 //Test.users(262);

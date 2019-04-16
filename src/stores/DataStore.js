@@ -8,9 +8,8 @@ class DataStore extends Collection {
 	constructor(iterable = [], type) {
 		super();
 		if (typeof iterable !== 'object') throw new TypeError(iterable);
-		if (!Array.isArray(iterable)) {
-			return new Collection(Object.entries(iterable).map(([key, data]) => [key, this.modify(data, type)]));
-		}
+		if (!Array.isArray(iterable)) iterable = Object.entries(iterable);
+		if (iterable[0].length === 2) return new Collection(iterable.map(([key, data]) => [key, this.modify(data, type)]));
 		for (let item of iterable) {
 			this.add(item, type);
 		}
@@ -18,7 +17,7 @@ class DataStore extends Collection {
 
 	add(data, Structure) {
 		let existing = this.get(data.id);
-		if (existing) return existing._patch(data);
+		if (existing && typeof existing._path === 'function') return existing._patch(data);
 		let entry = Structure ? new Structure(data) : data;
 		this.set(entry.id, entry);
 		return entry;
