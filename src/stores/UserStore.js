@@ -8,11 +8,11 @@ const U = require('../structures/User');
  * @param {Constructor} User A user type or implemented user type by which each member of the collection can be constructed.
  */
 class UserStore extends DataStore {
-    constructor(iterable, User = U) {
-        super(iterable, User);
-    }
+	constructor(iterable, User = U) {
+		super(iterable, User);
+	}
 
-    /**
+	/**
      * Data that resolves to give a User object. This can be:
      * * A User object
      * * A Snowflake
@@ -21,23 +21,23 @@ class UserStore extends DataStore {
      * @typedef {User} UserResolvable
      */
 
-    /**
+	/**
      * Resolves a UserResolvable to a User object.
      * @param {UserResolvable} user The UserResolvable to identify
      * @returns {?User}
      */
-    resolve(user) {
-        return super.resolve(user);
-    }
+	resolve(user) {
+		return super.resolve(user);
+	}
 
-    /**
+	/**
      * Resolves a UserResolvable to a user ID string.
      * @param {UserResolvable} user The UserResolvable to identify
      * @returns {?string}
      */
-    resolveID(user) {
-        return super.resolveID(user);
-    }
+	resolveID(user) {
+		return super.resolveID(user);
+	}
 
 }
 

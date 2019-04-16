@@ -47,6 +47,10 @@ class Test {
 		console.log(await lila.users.history('theLAZYmd'));
 	}
 
+	static async stats() {
+		console.log(await lila.users.stats('theLAZYmd', 'crazyhouse'));
+	}
+
 	static async titled() {
 		console.log(await lila.users.titled('GM'));
 	}
@@ -119,5 +123,5 @@ class Test {
 
 }
 
-Test.history();
+Test.stats();
 //Test.users(262);

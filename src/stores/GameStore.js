@@ -8,11 +8,11 @@ const Game = require('../structures/Game');
  * @param {Constructor} Game A game type or implemented game type by which each member of the collection can be constructed.
  */
 class GameStore extends DataStore {
-    constructor(iterable) {
-        super(iterable, Game);
-    }
+	constructor(iterable) {
+		super(iterable, Game);
+	}
 
-    /**
+	/**
      * Data that resolves to give a Game object. This can be:
      * * A Game object
      * * A Snowflake
@@ -21,23 +21,23 @@ class GameStore extends DataStore {
      * @typedef {Game|Snowflake} GameResolvable
      */
 
-    /**
+	/**
      * Resolves a GameResolvable to a Game object.
      * @param {GameResolvable} game The GameResolvable to identify
      * @returns {?Game}
      */
-    resolve(game) {
-        return super.resolve(game);
-    }
+	resolve(game) {
+		return super.resolve(game);
+	}
 
-    /**
+	/**
      * Resolves a GameResolvable to a game ID string.
      * @param {GameResolvable} game The GameResolvable to identify
      * @returns {?Snowflake}
      */
-    resolveID(game) {
-        return super.resolveID(game);
-    }
+	resolveID(game) {
+		return super.resolveID(game);
+	}
 
 }
 
