@@ -121,7 +121,11 @@ class Test {
 		console.log(await lila.puzzles.daily());
 	}
 
+	static async shield() {
+		console.log(await lila.tournaments.lastShield('Crazyhouse'));
+	}
+
 }
 
-Test.stats();
+Test.shield();
 //Test.users(262);

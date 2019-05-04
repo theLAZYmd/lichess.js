@@ -1,7 +1,6 @@
 const rp = require('request-promise');
 const qs = require('querystring');
-//const fs = require('fs');
-//const cheerio = require('cheerio');
+const cheerio = require('cheerio');
 
 const config = require('../config.js');
 const Util = require('../util/Util');
@@ -17,6 +16,9 @@ class Tournaments {
 		this.access_token = access_token;
 	}
 
+	/**
+	 * Returns the list of ongoing tournaments
+	 */
 	async get () {
 		return await rp.get({
 			uri: config.uri + '/api/tournament',
@@ -135,6 +137,142 @@ class Tournaments {
 		} catch (e) {
 			if (e) throw e;
 		}
+	}
+
+	/**
+	 * Crawls the Lichess shield pages and returns the list of tournament IDs for each shield
+	 * @param {string?} variant - The shield variant
+	 * @param {Boolean?} dev - Whether the lichess.dev page should be parsed
+	 * @public
+	 * @returns {string[]|Object}
+	 */
+	async shields(variant = '', dev = false) {
+		if (variant && dev) return await this.constructor.getV2Variant(variant);
+		if (dev) return await this.constructor.getV2Shields();
+		let data = await this.constructor.getV1Shields();
+		if (variant) return data[variant];
+		return data;
+	}
+
+	/**
+	 * Returns the results of the last shield in a variant
+	 * @param {LichessVariant} variant 
+	 * @param {ResultsData} data 
+	 */
+	async lastShield(variant, data) {
+		try {
+			const ids = await this.shields(variant, false);
+			const id = ids.shift();
+			return await this.results(id, data);
+		} catch (e) {
+			if (e) throw e;
+		}
+	}
+
+	/**
+	 * Single web-crawler for V2 lichess design
+	 * @param {string} variant - The shield variant 
+	 * @private
+	 * @returns {string[]}
+	 */
+	static async getV2Variant(variant) {
+		const data = await rp.get(`${config.dev}tournament/shields/${variant}`);
+		let found = [];
+		const $ = cheerio.load(data);
+		const $1 = cheerio.load($('div[class="page-menu__content box"]').html());
+		const links = $1('a');
+		$1(links).each((i, link) => {
+			let text = $1(link).attr('href');
+			try {
+				let matches = text.split('/');
+				let [n, tournament, id, etc] = matches;
+				if (typeof etc !== 'undefined') return;
+				if (n !== '') return;
+				if (tournament !== 'tournament') return;
+				if (id === 'leaderboard') return;
+				if (id === 'shields') return;
+				found.push(id);
+			} catch (e) {
+				if (e) throw [text, e];
+			}
+		});
+		return found;
+	}
+
+	/**
+	 * Web-crawler for all shields on V1 lichess design
+	 * @private
+	 * @returns {Object}
+	 */
+	static async getV1Shields() {
+		const data = await rp.get('https://lichess.org/tournament/shields');
+		let output = {};
+		const $ = cheerio.load(data);
+		const stages = $('.winner_list');
+		$(stages).each((i, stage) => {
+			let s = $(stage).html();
+			let $1 = cheerio.load(s);
+			let curr = null;
+			$1('h2').each((i, elem) => {
+				curr = $1(elem)
+					.text()
+					.trim()
+					.split('\n')
+					.pop()
+					.trim();
+			});
+			output[curr] = [];
+			let links = $1('a');
+			$1(links).each((i, link) => {
+				let line = $(link);
+				if (!line.attr('href')) return;
+				if (typeof line.attr('class') !== 'undefined') return;
+				let path = line.attr('href');
+				let id = path.split('/').pop();
+				output[curr].push(id);
+			});
+		});
+		return output;
+	}
+
+	/**
+	 * Web-crawler for all shields on V2 lichess design
+	 * @private
+	 * @returns {Object}
+	 */
+	static async getV2Shields() {
+		const data = await rp.get('https://lichess.dev/tournament/shields');
+		let output = {};
+		const $ = cheerio.load(data);
+		const sections = $('.tournament-shields__item');
+		$(sections).each((i, section) => {
+			let s = $(section).html();
+			let $1 = cheerio.load(s);
+			let curr = null;
+			$1('h2').each((i, elem) => {
+				curr = $1(elem)
+					.text()
+					.trim()
+					.slice(1);
+			});
+			output[curr] = [];
+			let links = $1('a');
+			$1(links).each((i, link) => {
+				let line = $(link);
+				if (!line.attr('href')) return;
+				if (typeof line.attr('class') !== 'undefined') return;
+				let path = line.attr('href');
+				let matches = path.split('/');
+				let [n, tournament, id, etc] = matches;
+				if (typeof etc !== 'undefined') return;
+				if (n !== '') return;
+				if (tournament !== 'tournament') return;
+				if (id === 'leaderboard') return;
+				if (id === 'shields') return;
+				output[curr].push(id);
+			});
+		});
+		return output;
 	}
 
 }
