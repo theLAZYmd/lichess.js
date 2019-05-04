@@ -62,7 +62,7 @@ class Tournaments {
 			if (typeof nb !== 'number') throw new TypeError('Number of games to fetch must be type Number');
 			if (typeof fetchUsers !== 'boolean') throw new TypeError('fetch takes Boolean values');
 			if (nb <= 0) throw new RangeError('Number of results to fetch is outside the range');        
-			let results = Util.ndjson((await rp.get({
+			let res = Util.ndjson((await rp.get({
 				method: 'GET',
 				uri: `${config.uri}api/tournament/${id}/results?${qs.stringify({nb})}`,
 				headers: {
@@ -70,11 +70,27 @@ class Tournaments {
 				},
 				timeout: 2000
 			})).trim());
-			let result = new UserStore(results, TournamentUser);
-			if (!fetchUsers) return result;
+			let results = new UserStore(res, TournamentUser);
+			if (!fetchUsers) return {id, results};
 			const Users = new UserConstructor(this);
-			let users = await Users.getMultiple(result.keyArray());
-			return result.merge(users);
+			let users = await Users.getMultiple(results.keyArray());
+			results = results.merge(users);
+			return {id, results};
+		} catch (e) {
+			if (e) throw e;
+		}
+	}
+	
+	/**
+	 * Returns the results of the last shield in a variant
+	 * @param {LichessVariant} variant 
+	 * @param {ResultsData} data 
+	 */
+	async lastShield(variant, data) {
+		try {
+			const ids = await this.shields(variant, false);
+			const id = ids.shift();
+			return await this.results(id, data);
 		} catch (e) {
 			if (e) throw e;
 		}
@@ -152,21 +168,6 @@ class Tournaments {
 		let data = await this.constructor.getV1Shields();
 		if (variant) return data[variant];
 		return data;
-	}
-
-	/**
-	 * Returns the results of the last shield in a variant
-	 * @param {LichessVariant} variant 
-	 * @param {ResultsData} data 
-	 */
-	async lastShield(variant, data) {
-		try {
-			const ids = await this.shields(variant, false);
-			const id = ids.shift();
-			return await this.results(id, data);
-		} catch (e) {
-			if (e) throw e;
-		}
 	}
 
 	/**
