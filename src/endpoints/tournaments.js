@@ -157,12 +157,12 @@ class Tournaments {
 
 	/**
 	 * Crawls the Lichess shield pages and returns the list of tournament IDs for each shield
-	 * @param {string?} variant - The shield variant
+	 * @param {string?} variant - The shield variant as a variant KEY
 	 * @param {Boolean?} dev - Whether the lichess.dev page should be parsed
 	 * @public
 	 * @returns {string[]|Object}
 	 */
-	async shields(variant = '', dev = false) {
+	async shields(variant = '') {
 		try {
 			if (variant) return await this.constructor.getV2Variant(variant);
 			else return await this.constructor.getV2Shields();
@@ -178,6 +178,7 @@ class Tournaments {
 	 * @returns {string[]}
 	 */
 	static async getV2Variant(variant) {
+		if (config.variants.concat(config.shield).indexOf(variant) !== -1) throw new Error('Variant ' + variant + ' does not have a valid value:\n' + config.variants.concat(config.shield).join(', '));
 		const data = await rp.get(`${config.uri}tournament/shields/${variant}`);
 		let found = [];
 		const $ = cheerio.load(data);
@@ -244,10 +245,11 @@ class Tournaments {
 		$('.tournament-shields__item').each((i, section) => {
 			let curr = null;
 			$('h2', section).each((i, elem) => {
-				curr = $(elem)
-					.text()
-					.trim()
-					.slice(1);
+				curr = $('a', elem)
+					.attr('href')
+					.split('/')
+					.pop()
+					.trim();
 			});
 			output[curr] = [];
 			$('a', section).each((i, link) => {

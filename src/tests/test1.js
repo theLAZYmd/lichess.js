@@ -122,7 +122,7 @@ class Test {
 	}
 
 	static async shield() {
-		console.log(await lila.tournaments.lastShield('Crazyhouse'));
+		console.log(await lila.tournaments.shields());
 	}
 
 }

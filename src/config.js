@@ -17,6 +17,9 @@ module.exports = {
 		'threeCheck',
 		'puzzle'
 	],
+	shield: [
+		'superblitz'
+	],
 	titles: [                     //list of titles available on Lichess
 		'GM',
 		'WGM',
