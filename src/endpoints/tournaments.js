@@ -178,7 +178,7 @@ class Tournaments {
 	 * @returns {string[]}
 	 */
 	static async getV2Variant(variant) {
-		if (config.variants.concat(config.shield).indexOf(variant) !== -1) throw new Error('Variant ' + variant + ' does not have a valid value:\n' + config.variants.concat(config.shield).join(', '));
+		if (config.variants.concat(config.shield).indexOf(variant) === -1) throw new Error('Variant ' + variant + ' does not have a valid value:\n' + config.variants.concat(config.shield).join(', '));
 		const data = await rp.get(`${config.uri}tournament/shields/${variant}`);
 		let found = [];
 		const $ = cheerio.load(data);
