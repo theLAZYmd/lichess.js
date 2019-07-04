@@ -8,7 +8,7 @@ const Util = require('../util/Util');
 const Users = require('./users');
 const GameStore = require('../stores/GameStore');
 const UserStore = require('../stores/UserStore');
-const Game = require('../structures/game.js');
+const Game = require('../structures/Game.js');
 const StatusUser = require('../structures/StatusUser');
 const DataStore = require('../stores/DataStore');
 
