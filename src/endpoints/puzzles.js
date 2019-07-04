@@ -1,5 +1,5 @@
 const rp = require('request-promise');
-const config = require('../config.js');
+const config = require('../config');
 
 class Puzzles {
 

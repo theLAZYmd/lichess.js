@@ -2,7 +2,7 @@ const rp = require('request-promise');
 const qs = require('querystring');
 const cheerio = require('cheerio');
 
-const config = require('../config.js');
+const config = require('../config');
 const Util = require('../util/Util');
 const UserStore = require('../stores/UserStore');
 const UserConstructor = require('./users');

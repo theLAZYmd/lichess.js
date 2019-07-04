@@ -1,4 +1,4 @@
-const Base = require('./base');
+const Base = require('./Base');
 
 /**
  * Represents a Lichess user in a tournament
