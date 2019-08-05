@@ -15,7 +15,6 @@ const Games = require('./endpoints/games');
 const Tournaments = require('./endpoints/tournaments');
 const Profile = require('./endpoints/profile');
 const Puzzles = require('./endpoints/puzzles');
-
 /**
  * Creates a new instance of a JavaScript client for the Lichess API.
  * This client is almost entirely asynchronous and relies on the dependencies in package.json, with the most notable being {'request-promise'}
@@ -123,9 +122,11 @@ class Lila {
 
 	/**
      * Logs into the client OAuth credentials using the app secret
+	 * Only for personal token use
      * @param {string} secret 
      */
 	login(secret) {
+		if (this.access_token) return this;
 		if (!secret) throw 'Invalid secret to login';
 		this.oauthOptions.secret = secret;
 		this.oauth = this.getOAuth(Math.random().toString(36).substring(2));
@@ -146,7 +147,8 @@ class Lila {
      */
 	async authentication() {
 		try {
-			await once(authentication, 'login');
+			let x = await once(authentication, 'login');
+			if (!x) throw 'Failed to log in';
 			return true;
 		} catch (e) {
 			throw e;

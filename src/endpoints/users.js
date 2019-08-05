@@ -65,13 +65,14 @@ class Users {
 		//if (names.length > 50) throw new RangeError("Cannot check status of more than 50 names");
 		if (!names.every(n => typeof n === 'string' && /[a-z][\w-]{0,28}[a-z0-9]/i.test(n))) throw new SyntaxError('Invalid format for lichess username.');
 		try {
-			return new UserStore(JSON.parse(await rp.post({
+			let options = {
 				method: 'POST',
 				uri: `${config.uri}api/users`,
 				body: names.join(','),
 				timeout: 10000,
-				//json: true
-			})));
+			};
+			let arr = JSON.parse(await rp.post(options));
+			return arr.map(data => new User(data));
 		} catch (e) {
 			if (e) throw e;
 		}
@@ -86,12 +87,12 @@ class Users {
 		if (typeof username !== 'string') throw new TypeError('lichess.users.get() takes string values of an array as an input: ' + username);
 		if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError('Invalid format for lichess username: ' + username);
 		try {
-			return new UserStore(Util.ndjson((await rp.post({
+			return Util.ndjson((await rp.post({
 				method: 'GET',
 				uri: `${config.uri}api/user/${username}/following`,
 				timeout: 2000,
 				json: true
-			}))).trim());
+			})).trim());
 		} catch (e) {
 			if (e) throw e;
 		}
@@ -106,12 +107,12 @@ class Users {
 		if (typeof username !== 'string') throw new TypeError('lichess.users.get() takes string values of an array as an input: ' + username);
 		if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError('Invalid format for lichess username: ' + username);
 		try {
-			return new UserStore(Util.ndjson((await rp.post({
+			return Util.ndjson((await rp.post({
 				method: 'GET',
 				uri: `${config.uri}api/user/${username}/followers`,
 				timeout: 2000,
 				json: true
-			}))).trim());
+			})).trim());
 		} catch (e) {
 			if (e) throw e;
 		}
@@ -152,10 +153,9 @@ class Users {
 				json: true,
 				timeout: 2000
 			});
-			let result = new UserStore(results, StatusUser);
-			if (!fetchUsers) return result;
-			let users = await this.getMultiple(result.keyArray().filter(k => filter(result.get(k))));
-			return result.merge(users);
+			if (!fetchUsers) return results;
+			let users = await this.getMultiple(results.keyArray().filter(k => filter(results.get(k))));
+			return results.merge(users);
 		} catch (e) {
 			if (e) throw e;
 		}
@@ -306,10 +306,10 @@ class Users {
 	async team(teamID) {
 		if (typeof teamID !== 'string') throw new TypeError('teamID takes string values: ' + teamID);
 		try {
-			return new UserStore(Util.ndjson((await rp.get({
+			return Util.ndjson((await rp.get({
 				uri: `${config.uri}team/${teamID}/users`,
 				timeout: 10000
-			})).trim()));
+			})).trim());
 		} catch (e) {
 			if (e) throw e;
 		}
@@ -370,14 +370,14 @@ class Users {
 		let titleList = new Map(config.titles.map(s => [s, true]));
 		if (!titles.every(t => titleList.get(t))) throw new TypeError('Title must match list of lichess title keys: ' + config.titles.join(', '));
 		try {
-			return new UserStore(Util.ndjson((await rp.get({
+			return Util.ndjson((await rp.get({
 				uri: `${config.uri}api/users/titled?${qs.stringify({
 					titles: titles.join(','),
 					online
 				})}`,
 				json: true,
 				timeout: 10000
-			})).trim()));
+			})).trim());
 		} catch (e) {
 			if (e) throw e;
 		}

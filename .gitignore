@@ -4,3 +4,4 @@ package-lock.json
 misc/
 src/tests/debug.log
 src/config.json
+.vscode/launch.json

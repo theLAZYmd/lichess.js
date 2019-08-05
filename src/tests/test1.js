@@ -13,8 +13,7 @@ const List = JSON.parse(require('fs').readFileSync('./src/tests/ids.json'));
 
 const client = require('../main');
 const lila = (new client)
-	.setID(id);
-//.login(secret);
+	.setPersonal('yqiybX5KWGZ2Uom3');
 
 class Test {
 
@@ -37,9 +36,7 @@ class Test {
 	}
 
 	static async user() { 
-		console.log(await lila.users.get(['theLAZYmd'], {
-			oauth: false
-		}));
+		console.log((await lila.users.get(['theLAZYmd'])).id);
 	}
 
 	static async history() {
@@ -59,10 +56,8 @@ class Test {
 		console.log(await lila.users.team('oxford-university-chess-club'));
 	}
 
-	static async users(n = 3) {
-		console.log((await lila.users.getMultiple(List.splice(0, n), {
-			oauth: false
-		})).keys());
+	static async users(n = Number(process.argv[2]) || 100) {
+		console.log(await lila.users.getMultiple(List.slice(0, n)));
 	}
 
 	static async streaming() {
@@ -89,8 +84,13 @@ class Test {
 	}
 
 	static async me() {
-		await lila.authentication();
-		console.log(await lila.profile.get());
+		try {
+			//await lila.authentication();
+			let res = await lila.profile.get();
+			console.log(res);
+		} catch (e) {
+			if (e) console.error(e);
+		}
 	}
 
 	static async game() {
@@ -127,5 +127,4 @@ class Test {
 
 }
 
-Test.shield();
-//Test.users(262);
+Test.users();

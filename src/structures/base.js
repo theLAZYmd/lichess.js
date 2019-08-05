@@ -1,5 +1,6 @@
 const Collection = require('../stores/Collection');
 const Util = require('../util/Util');
+const util = require('util');
 
 /**
  * Represents a data model that is identifiable by a Snowflake (i.e. Discord API data models).
@@ -28,6 +29,17 @@ class Base {
 
 	valueOf() {
 		return this.id;
+	}
+
+	inspect() {
+		let obj = {};
+		for (let prop of Object.getOwnPropertyNames(this.constructor.prototype)) {
+			if (prop.startsWith('_')) continue;
+			if (typeof this[prop] === 'function') continue;
+			if (typeof this[prop] === 'undefined') continue;
+			obj[prop] = this[prop];
+		}
+		return obj;
 	}
 }
 

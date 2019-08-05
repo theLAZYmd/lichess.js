@@ -1,4 +1,3 @@
-const qs = require('querystring');
 const Base = require('./Base');
 const Util = require('../util/Util');
 const RatingStore = require('../stores/RatingStore');
@@ -13,221 +12,283 @@ const config = require('../config');
 class User extends Base {
 	constructor(data) {
 		super();
-
-		/**
-         * The ID of the user, must match /[a-z][\w-]{0,28}[a-z0-9]/i
-         * @type {string}
-         * @readonly
-         */
-		this.id = data.id;
-        
-		/**
-         * Whether or not the user is a bot
-         * @type {boolean}
-         * @name User#bot
-         * @readonly
-         */
-		this.bot = Boolean(data.title === 'BOT');
-
-		/**
-         * The username of the user
-         * @type {string}
-         * @name User#username
-         * @readonly
-         */
-		if (data.username) this.username = data.username;
-
-		/**
-         * A user's title on Lichess
-         * @type {string}
-         * @name User#title
-         * @readonly
-         */
-		if (data.title && data.title !== 'BOT') this.title = data.title;
-                
-		/**
-         * The timestamp the user was created at
-         * @type {number}
-         * @readonly
-         */
-		if (data.createdAt) this.createdTimestamp = data.createdAt;
-
+		this._data = data;
 		this._patch(data);
 	}
 
-	_patch(data) {
+	/**
+	 * The ID of the user, must match /[a-z][\w-]{0,28}[a-z0-9]/i
+	 * @type {string}
+	 * @readonly
+	 */
+	get id () {
+		return this._data.id;
+	}
+  
+	/**
+	 * Whether or not the user is a bot
+	 * @type {boolean}
+	 * @name User#bot
+	 * @readonly
+	 */
+	get bot () {
+		return Boolean(this._data.title === 'BOT');
+	}
 
-		/**
-         * Whether or not the user is online
-         * @type {Boolean}
-         * @name User#online
-         * @readonly
-         */
-		this.online = Boolean(data.online);
+	/**
+	 * The username of the user
+	 * @type {string}
+	 * @name User#username
+	 * @readonly
+	 */
+	get username () {
+		return this._data.username;
+	}
+
+	/**
+	 * A user's title on Lichess
+	 * @type {string?}
+	 * @name User#title
+	 * @readonly
+	 */
+	get title () {
+		if (this._data.title && this._data.title !== 'BOT') return this._data.title;
+		return undefined;
+	}
+			
+	/**
+	 * The timestamp the user was created at
+	 * @type {number}
+	 * @readonly
+	 */
+	get createdTimestamp () {
+		if (this._data.createdAt) return this._data.createdAt;
+		return null;		
+	}
+
+	/**
+	 * Whether or not the user is online
+	 * @type {Boolean}
+	 * @name User#online
+	 * @readonly
+	 */
+	get online() {
+		return Boolean(this._data.online);
+	}
                 
-		/**
-         * Whether or not the user is streaming
-         * @type {Boolean}
-         * @name User#streaming
-         * @readonly
-         */
-		this.streaming = Boolean(data.streaming);
+	/**
+	 * Whether or not the user is streaming
+	 * @type {Boolean}
+	 * @name User#streaming
+	 * @readonly
+	 */
+	get streaming () {
+		return Boolean(this._data.streaming);
+	}
 
-		if (data.profile) {
-			let names = [];
-			if (data.profile.firstName) names.push(data.profile.firstName);
-			if (data.profile.lastName) names.push(data.profile.lastName);
-
-			/**
-             * A user's name
-             * @type {string}
-             * @readonly
-             */
-			if (names.length > 0) this.name = names.join(' ');
-
-			/**
-             * A user's country as an ISO3166-1 code
-             * @type {string}
-             * @readonly
-             */
-			if (data.profile.country) this.country = data.profile.country;
-
-			/**
-             * A user's location
-             * @type {string}
-             * @readonly
-             */
-			if (data.profile.location) this.location = data.profile.location;
-
-			/**
-             * A user's self-written biography
-             * @type {string}
-             * @readonly
-             */
-			if (data.profile.bio) this.bio = data.profile.bio;
-
-			/**
-             * The links a user has chosen to write in their biography
-             * @type {string[]}
-             * @readonly
-             */
-			if (data.profile.links) this.links = Util.clean(data.profile.links.split('\r\n'));
-
-			/**
-             * A user's FIDE rating, if they have provided it
-             * @type {number}
-             * @readonly
-             */
-			if (data.profile.fideRating) this.FIDE = data.profile.fideRating;
-
-			/**
-             * A user's USCF rating, if they have provided it
-             * @type {number}
-             * @readonly
-             */
-			if (data.profile.uscfRating) this.USCF = data.profile.uscfRating;
-
-			/**
-             * A user's ECF rating, if they have provided it
-             * @type {number}
-             * @readonly
-             */
-			if (data.profile.ecfRating) this.ECF = data.profile.ecfRating;
+	get names () {
+		let names = [];
+		if (this._data.profile) {
+			if (this._data.profile.firstName) names.push(this._data.profile.firstName);
+			if (this._data.profile.lastName) names.push(this._data.profile.lastName);
 		}
+		return names.length ? names : undefined;
+	}
+	
+	/**
+	 * A user's name
+	 * @type {string}
+	 * @readonly
+	 */
+	get name () {
+		if (this.names) return this.names.join(' ');
+		return undefined;
+	}
 
-		/**
-         * The timestamp the user was last seen at at
-         * @type {number}
-         * @readonly
-         */
-		if (data.seenAt) this.seenTimestamp = data.createdAt;
+	/**
+	 * A user's country as an ISO3166-1 code
+	 * @type {string}
+	 * @readonly
+	 */
+	get country () {
+		if (this._data.profile) return this._data.profile.country;
+		return undefined;
+	}
 
-		/**
-         * The user's language, in format of {ISO 639-1}-{ISO3166-1}
-         * @type {string}
-         * @name User#language
-         * @readonly
-         */
-		if (data.language) this.language = data.language;
+	/**
+	 * A user's location
+	 * @type {string}
+	 * @readonly
+	 */
+	get location () {
+		if (this._data.profile) return this._data.profile.location;
+		return undefined;
+	}
 
-		/**
-         * The URL to a user's profile
-         * @type {string}
-         * @name User#url
-         * @readonly
-         */
-		if (data.url) this.url = data.url;
+	/**
+	 * A user's self-written biography
+	 * @type {string}
+	 * @readonly
+	 */
+	get bio () {
+		if (this._data.profile) return this._data.profile.bio;
+		return undefined;
+	}
 
-		/**
-         * The number of following for a user
-         * @type {number}
-         * @name User#following
-         * @readonly
-         */
-		if (typeof data.nbFollowing !== 'undefined') this.following = data.nbFollowing;
+	/**
+	 * The links a user has chosen to write in their biography
+	 * @type {string[]}
+	 * @readonly
+	 */
+	get links () {
+		if (this._data.profile && this._data.profile.links) return Util.clean(this._data.profile.links.split('\r\n'));
+		return undefined;
+	}
 
-		/**
-         * The number of followers for a user
-         * @type {number}
-         * @name User#followers
-         * @readonly
-         */
-		if (typeof data.nbFollowers !== 'undefined') this.followers = data.nbFollowers;
+	/**
+	 * A user's FIDE rating, if they have provided it
+	 * @type {number}
+	 * @readonly
+	 */
+	get FIDE () {
+		if (this._data.profile) return this._data.profile.fideRating;
+		return undefined;
+	}
 
-		/**
-         * The user's game completion rate
-         * @type {number}
-         * @name User#completionRate
-         * @readonly
-         */
-		if (data.completionRate) this.completionRate = data.completionRate;
+	/**
+	 * A user's USCF rating, if they have provided it
+	 * @type {number}
+	 * @readonly
+	 */
+	get USCF () {
+		if (this._data.profile) return this._data.profile.uscfRating;
+		return undefined;
+	}
 
-		if (data.playTime) {
+	/**
+	 * A user's ECF rating, if they have provided it
+	 * @type {number}
+	 * @readonly
+	 */
+	get ECF () {
+		if (this._data.profile) return this._data.profile.ecfRating;
+		return undefined;
+	}
 
-			/**
-             * The total time a user has spent playing on Lichess
-             * @type {time}
-             * @readonly
-             */
-			if (data.playTime.total) this.playTime = Util.getTime(data.playTime.total * 1000);
+	/**
+	 * The timestamp the user was last seen at at
+	 * @type {number}
+	 * @readonly
+	 */
+	get seenTimestamp() {
+		return this._data.seenTimestamp;
+	}
 
-			if (data.playTime.tv) this.tvTime = Util.getTime(data.playTime.tv * 1000);
-		}
+	/**
+	 * The user's language, in format of {ISO 639-1}-{ISO3166-1}
+	 * @type {string}
+	 * @name User#language
+	 * @readonly
+	 */
+	get language() {
+		return this._data.language;
+	}
 
-		/**
-         * @typedef {Object} GamesObject
-         * @property {Number} all
-         * @property {Number} rated
-         * @property {Number} ai
-         * @property {Number} draw
-         * @property {Number} drawH
-         * @property {Number} loss
-         * @property {Number} lossH
-         * @property {Number} win
-         * @property {Number} winH
-         * @property {Number} bookmark
-         * @property {Number} playing
-         * @property {Number} import
-         * @property {Number} me
-         */
+	/**
+	 * The URL to a user's profile
+	 * @type {string}
+	 * @name User#url
+	 * @readonly
+	 */
+	get url () {
+		return this._data.url;
+	}
 
-		/**
-         * Represents a summary of the games a user has played.
-         * @type {GamesObject}
-         * @name User#games
-         * @readonly
-         */
-		if (data.count) this.games = data.count;
+	/**
+	 * The number of following for a user
+	 * @type {number}
+	 * @name User#following
+	 * @readonly
+	 */
+	get following () {
+		return this._data.nbFollowing;
+	}
 
-		/**
-         * List of all valid Lichess ratings mapped to the user's rating for that variant
-         * @returns {Collection<Rating>}
-         */
-		this.ratings = new RatingStore(data.perfs);
+	/**
+	 * The number of followers for a user
+	 * @type {number}
+	 * @name User#followers
+	 * @readonly
+	 */
+	get followers () {
+		return this._data.nbFollowers;
+	}
 
-		if (typeof data.playing === 'string') this.gameURL = data.playing;
+	/**
+	 * The user's game completion rate
+	 * @type {number}
+	 * @name User#completionRate
+	 * @readonly
+	 */
+	get completionRate () {
+		this._data.completionRate;
+		return undefined;
+	}
 
-		return this;
+	/**
+	 * The total time a user has spent playing on Lichess
+	 * @type {time}
+	 * @readonly
+	 */
+	get playTime() {
+		if (this._data.playTime && this._data.playTime.total) return Util.getTime(this._data.playTime.total * 1000);
+		return undefined;
+	}
+
+	get tvTime () {
+		if (this._data.playTime && this._data.playTime.tv) return Util.getTime(this._data.playTime.tv * 1000);
+		return undefined;
+	}
+
+	/**
+	 * @typedef {Object} GamesObject
+	 * @property {Number} all
+	 * @property {Number} rated
+	 * @property {Number} ai
+	 * @property {Number} draw
+	 * @property {Number} drawH
+	 * @property {Number} loss
+	 * @property {Number} lossH
+	 * @property {Number} win
+	 * @property {Number} winH
+	 * @property {Number} bookmark
+	 * @property {Number} playing
+	 * @property {Number} import
+	 * @property {Number} me
+	 */
+
+	/**
+	 * Represents a summary of the games a user has played.
+	 * @type {GamesObject}
+	 * @name User#gameCount
+	 * @readonly
+	 */
+	get gameCount () {
+		if (this._data.count) return this._data.count;
+		return undefined;
+	}
+
+	/**
+	 * List of all valid Lichess ratings mapped to the user's rating for that variant
+	 * @returns {Collection<Rating>}
+	 */
+	get perfs () {
+		return new RatingStore(this._data.perfs);
+	}
+
+	get gameURL () {
+		if (typeof this._data.playing === 'string') return this._data.playing;
+		return undefined;
 	}
 
 	/**
@@ -245,7 +306,8 @@ class User extends Base {
      * @readonly
      */
 	get seenAt() {
-		return new Date(this.seenTimestamp);
+		if (this.seenTimestamp) return new Date(this.seenTimestamp);
+		return undefined;
 	}
 
 	/**
@@ -255,9 +317,7 @@ class User extends Base {
      * @readonly
      */
 	get challengeURL() {
-		return `${config.url}?${qs.stringify({
-			user: this.id + '#friend'
-		})}`;
+		return `${config.uri}?user=${this.id}#friend`;
 	}
 
 	/**
@@ -267,9 +327,7 @@ class User extends Base {
      * @readonly
      */
 	get messageURL() {
-		return `${config.url}inbox/new?${qs.stringify({
-			user: this.id
-		})}`;
+		return `${config.uri}inbox/new?user=${this.id}`;
 	}
 
 	/**
@@ -280,7 +338,7 @@ class User extends Base {
      */
 	get watchURL() {
 		if (!this.playing === false) return undefined;
-		return `${config.uri}/@/${this.username}/tv`;
+		return `${config.uri}@/${this.username}/tv`;
 	}
 
 	/**
@@ -291,7 +349,7 @@ class User extends Base {
      */
 	get streamURL() {
 		if (!this.streaming === false) return undefined;
-		return `${config.uri}/@/${this.username}/tv`;
+		return `${config.uri}@/${this.username}/tv`;
 	}
 
 	/**
@@ -317,11 +375,11 @@ class User extends Base {
 	toString() {
 		return `[${this.id}](${this.url})`;
 	}
-
+	/*
 	toJSON(...props) {
 		const json = super.toJSON({}, ...props);
 		return json;
-	}
+	}*/
 
 	send() {}
 }
