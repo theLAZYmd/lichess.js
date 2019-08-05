@@ -86,15 +86,17 @@ class Users {
 	async following(username) {
 		if (typeof username !== 'string') throw new TypeError('lichess.users.get() takes string values of an array as an input: ' + username);
 		if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError('Invalid format for lichess username: ' + username);
+		const uri = `${config.uri}api/user/${username}/following`;
 		try {
-			return Util.ndjson((await rp.post({
-				method: 'GET',
-				uri: `${config.uri}api/user/${username}/following`,
-				timeout: 2000,
-				json: true
-			})).trim());
+			return Util.ndjson((await rp.get({
+				uri,
+				Accept: 'application/x-ndjson'
+			})).trim()).map(data => new User(data));
 		} catch (e) {
-			if (e) throw e;
+			if (e) {
+				console.error(uri);
+				throw e;
+			}
 		}
 	}
 

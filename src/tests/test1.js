@@ -60,6 +60,10 @@ class Test {
 		console.log(await lila.users.getMultiple(List.slice(0, n)));
 	}
 
+	static async following() {
+		console.log(await lila.users.following('theLAZYmd'));
+	}
+
 	static async streaming() {
 		console.log(await lila.users.streaming({
 			fetchUsers: true
@@ -127,4 +131,4 @@ class Test {
 
 }
 
-Test.users();
+Test.following();
