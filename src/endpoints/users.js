@@ -1,3 +1,4 @@
+const request = require('request');
 const rp = require('request-promise');
 const config = require('../config');
 const qs = require('querystring');
@@ -87,17 +88,35 @@ class Users {
 		if (typeof username !== 'string') throw new TypeError('lichess.users.get() takes string values of an array as an input: ' + username);
 		if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError('Invalid format for lichess username: ' + username);
 		const uri = `${config.uri}api/user/${username}/following`;
-		try {
-			return Util.ndjson((await rp.get({
+		return await new Promise((res, rej) => {
+			let output = [];
+			let last = '';
+			const options = {
 				uri,
 				Accept: 'application/x-ndjson'
-			})).trim()).map(data => new User(data));
-		} catch (e) {
-			if (e) {
-				console.error(uri);
-				throw e;
+			};
+			try {
+				let req = request.get(options);
+				req.on('data', (data) => {
+					let str = data.toString();
+					try {
+						last += str;
+						let json = JSON.parse(last);
+						last = '';
+						output.push(new User(json));
+					} catch (e) {
+						last += str;
+					}
+				})
+					.on('response', (response) => {
+						if (response.statusCode !== 200) req.emit('error', 'Not found');
+					})
+					.on('error', rej)
+					.on('end', () => res(output));
+			} catch (e) {
+				if (e) rej(e)
 			}
-		}
+		});
 	}
 
 	/**
@@ -108,16 +127,36 @@ class Users {
 	async followers(username) {
 		if (typeof username !== 'string') throw new TypeError('lichess.users.get() takes string values of an array as an input: ' + username);
 		if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError('Invalid format for lichess username: ' + username);
-		try {
-			return Util.ndjson((await rp.post({
-				method: 'GET',
-				uri: `${config.uri}api/user/${username}/followers`,
-				timeout: 2000,
-				json: true
-			})).trim());
-		} catch (e) {
-			if (e) throw e;
-		}
+		const uri = `${config.uri}api/user/${username}/followers`;
+		return await new Promise((res, rej) => {
+			let output = [];
+			let last = '';
+			const options = {
+				uri,
+				Accept: 'application/x-ndjson'
+			};
+			try {
+				let req = request.get(options);
+				req.on('data', (data) => {
+					let str = data.toString();
+					try {
+						last += str;
+						let json = JSON.parse(last);
+						last = '';
+						output.push(new User(json));
+					} catch (e) {
+						last += str;
+					}
+				})
+					.on('response', (response) => {
+						if (response.statusCode !== 200) req.emit('error', 'Not found');
+					})
+					.on('error', rej)
+					.on('end', () => res(output));
+			} catch (e) {
+				if (e) rej(e);
+			}
+		});
 	}
 
 	/**

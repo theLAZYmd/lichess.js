@@ -5,3 +5,4 @@ misc/
 src/tests/debug.log
 src/config.json
 .vscode/launch.json
+src/tests/followers.log
