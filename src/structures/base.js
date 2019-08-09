@@ -14,6 +14,7 @@ class Base {
 	}
 
 	_patch(data) {
+		this._data = data;
 		return data;
 	}
 

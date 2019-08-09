@@ -12,7 +12,6 @@ const config = require('../config');
 class User extends Base {
 	constructor(data) {
 		super();
-		this._data = data;
 		this._patch(data);
 	}
 

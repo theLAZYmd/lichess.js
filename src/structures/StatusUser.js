@@ -20,57 +20,73 @@ class StatusUser extends Base {
 
 	constructor(data) {
 		super();
+		this._patch(data);
 
-		/**
-         * ID of a user taken from their username
-         */
-		this.id = data.id;
+	}
 
-		/**
-         * ID of a user taken from the 'name' property
-         */
-		this.username = data.name;
+	/**
+	 * ID of a user taken from their username
+	 */
+	get id () {
+		return this._data.id;
+	}
 
-		/**
-         * A user's title on Lichess
-         * @type {string}
-         * @name StatusUser#title
-         * @readonly
-         */
-		if (data.title && data.title !== 'BOT') this.title = data.title;
+	/**
+	 * ID of a user taken from the 'name' property
+	 */
+	get username () {
+		return this._data.name;
+	}
 
+	/**
+	 * A user's title on Lichess
+	 * @type {string}
+	 * @name StatusUser#title
+	 * @readonly
+	 */
+	get title () {
+		if (this._data.title && this._data.title !== 'BOT') return this._data.title;
+		return undefined;
+	}
                 
-		/**
-         * Whether or not the user is online
-         * @type {Boolean}
-         * @name StatusUser#online
-         * @readonly
-         */
-		this.online = Boolean(data.online);
-                
-		/**
-         * Whether or not the user is playing
-         * @type {Boolean}
-         * @name StatusUser#playing
-         * @readonly
-         */
-		this.playing = Boolean(data.playing);
-                
-		/**
-         * Whether or not the user is streaming
-         * @type {Boolean}
-         * @name StatusUser#streaming
-         * @readonly
-         */
-		this.streaming = Boolean(data.streaming);
-                
-		/**
-         * Whether or not the user is a patron
-         * @type {Boolean}
-         * @name StatusUser#patron
-         * @readonly
-         */
-		this.patron = Boolean(data.patron);
+	/**
+	 * Whether or not the user is online
+	 * @type {Boolean}
+	 * @name StatusUser#online
+	 * @readonly
+	 */
+	get online () {
+		return Boolean(this._data.online);
+	}
+			
+	/**
+	 * Whether or not the user is playing
+	 * @type {Boolean}
+	 * @name StatusUser#playing
+	 * @readonly
+	 */
+	get playing () {
+		return Boolean(this._data.playing);
+	}
+			
+	/**
+	 * Whether or not the user is streaming
+	 * @type {Boolean}
+	 * @name StatusUser#streaming
+	 * @readonly
+	 */
+	get streaming () {
+		return Boolean(this._data.streaming);
+	}
+     
+	/**
+	 * Whether or not the user is a patron
+	 * @type {Boolean}
+	 * @name StatusUser#patron
+	 * @readonly
+	 */
+	get patron () {
+		return Boolean(this._data.patron);
 	}
 
 	/**

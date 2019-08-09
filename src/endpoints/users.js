@@ -2,13 +2,13 @@ const request = require('request');
 const rp = require('request-promise');
 const config = require('../config');
 const qs = require('querystring');
+const Promise = require('bluebird');
+const {OperationalError} = Promise;
 
 const UserStore = require('../stores/UserStore');
-const RatingStore = require('../stores/RatingStore');
 const StatusUser = require('../structures/StatusUser');
 const StreamUser = require('../structures/StreamUser');
 const User = require('../structures/User');
-const Util = require('../util/Util');
 
 class Users {
 
@@ -21,6 +21,7 @@ class Users {
 	/**
      * Get user(s) public data. Calls {getOne} or {getMultiple} depending on input parameter.
      * @param {string|string[]} userParam 
+	 * @returns {Promise<User|User[]>}
      */
 	async get(userParam) {
 		if (typeof userParam === 'string') return this.getOne(...arguments);
@@ -39,7 +40,7 @@ class Users {
 	/**
      * Read public data of a user.
      * @param {string} username 
-     * @returns {User}
+     * @returns {Promsie<User>}
      */
 	async getOne(username) {
 		if (typeof username !== 'string') throw new TypeError('lichess.users.get() takes string values of an array as an input: ' + username);
@@ -58,13 +59,22 @@ class Users {
 
 	/**
      * Get several users by their IDs. Users are returned in the order same order as the IDs.
-     * @param {string[]} names 
-     * @returns {Promise<Collection<User>>}
+     * @param {string[]|Object[]} names 
+     * @returns {Promise<User[]>}
      */
 	async getMultiple(names) {
 		if (!Array.isArray(names)) throw new TypeError('lichess.users.getMultiple() takes an array as an input');
 		//if (names.length > 50) throw new RangeError("Cannot check status of more than 50 names");
-		if (!names.every(n => typeof n === 'string' && /[a-z][\w-]{0,28}[a-z0-9]/i.test(n))) throw new SyntaxError('Invalid format for lichess username.');
+		names = names.map((n) => {
+			if (typeof (n) === 'object') {
+				if (!n.id || !/[a-z][\w-]{0,28}[a-z0-9]/i.test(n.id)) throw new OperationalError('Invalid format for lichess username. ' + JSON.stringify(n));
+				return n.id;
+			} else if (typeof n === 'string') {
+				if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(n)) throw new OperationalError('Invalid format for lichess username. ' + n);
+				return n;
+			}
+			throw new TypeError('Invalid type for lichess username. ' + n.toString() + ', ' + typeof n);
+		});
 		try {
 			let options = {
 				method: 'POST',
@@ -82,7 +92,7 @@ class Users {
 	/**
      * Gets a list of users following a specified user
      * @param {string} username 
-     * @returns {Promise<Collection<User>>}
+     * @returns {Promise<User[]>}
      */
 	async following(username) {
 		if (typeof username !== 'string') throw new TypeError('lichess.users.get() takes string values of an array as an input: ' + username);
@@ -93,15 +103,15 @@ class Users {
 			let last = '';
 			const options = {
 				uri,
-				Accept: 'application/x-ndjson'
+				Accept: 'application/x-ndjson',
+				timeout: 1800000
 			};
 			try {
 				let req = request.get(options);
 				req.on('data', (data) => {
-					let str = data.toString();
+					let str = data.toString().trim();
 					try {
-						last += str;
-						let json = JSON.parse(last);
+						let json = JSON.parse(last + str);
 						last = '';
 						output.push(new User(json));
 					} catch (e) {
@@ -114,7 +124,7 @@ class Users {
 					.on('error', rej)
 					.on('end', () => res(output));
 			} catch (e) {
-				if (e) rej(e)
+				if (e) rej(e);
 			}
 		});
 	}
@@ -122,7 +132,7 @@ class Users {
 	/**
      * Gets a list of users who follow a specified user
      * @param {string} username 
-     * @returns {Promise<Collection<User>>}
+     * @returns {Promise<User[]>}
      */
 	async followers(username) {
 		if (typeof username !== 'string') throw new TypeError('lichess.users.get() takes string values of an array as an input: ' + username);
@@ -138,10 +148,9 @@ class Users {
 			try {
 				let req = request.get(options);
 				req.on('data', (data) => {
-					let str = data.toString();
+					let str = data.toString().trim();
 					try {
-						last += str;
-						let json = JSON.parse(last);
+						let json = JSON.parse(last + str);
 						last = '';
 						output.push(new User(json));
 					} catch (e) {
@@ -176,7 +185,7 @@ class Users {
      * Gets the status of many users and returns it
      * @param {string[]} ids 
      * @param {statusOptions} options
-     * @returns {Promise<Collection<StatusUser|User>>}
+     * @returns {Promise<User[]|StatusUser[]>}
      */
 	async status(ids, {
 		fetchUsers = false,
@@ -194,9 +203,10 @@ class Users {
 				json: true,
 				timeout: 2000
 			});
+			results = results.filter(filter).map(r => new StatusUser(r));
 			if (!fetchUsers) return results;
-			let users = await this.getMultiple(results.keyArray().filter(k => filter(results.get(k))));
-			return results.merge(users);
+			let users = await this.getMultiple(results);
+			return results.map((u, i) => Object.assign(u, users[i]));
 		} catch (e) {
 			if (e) throw e;
 		}
@@ -204,10 +214,15 @@ class Users {
 
 	/**
      * Gets the top 10 players by rating of every variant
-     * @returns {Promise<Colection>}
+	 * @param {string[]} keys
+     * @returns {Promise<User[]>}
      */
-	async top10() {
+	async top10(keys = []) {
 		try {
+			if (typeof keys === 'string') keys = [keys];
+			if (Array.isArray(keys)) {
+				if (!keys.every(k => config.variants[k])) throw new TypeError('Expected a valid lichess variant');
+			} else throw new TypeError('Expected an array of strings for Lichess variant types');
 			let obj = await rp.get({
 				uri: config.uri + 'player',
 				headers: {
@@ -216,10 +231,8 @@ class Users {
 				json: true,
 				timeout: 2000
 			});
-			for (let variant of Object.keys(obj)) {
-				obj[variant] = new UserStore(obj[variant]);
-			}
-			return obj;
+			if (keys.length === 1) return obj[keys[0]].map(user => new User(user));
+			return keys.map(k => new User(obj[k]));
 		} catch (e) {
 			if (e) throw e;
 		}
@@ -236,20 +249,26 @@ class Users {
 		if (config.variants.every(v => v !== variant)) throw new TypeError('Variant must match list of lichess variant keys: ' + config.variants.join(', '));
 		if (n > 200) throw new TypeError('Cannot get leaderboard for more than 200 names');
 		try {
-			return new UserStore((await rp.get({
+			let results = await rp.get({
 				uri: config.uri + 'player/top/' + n + '/' + variant,
 				headers: {
 					Accept: 'application/vnd.lichess.v3+json'
 				},
 				json: true,
 				timeout: 2000
-			})).users);
+			});
+			return results.map(r => new User(r));
 		} catch (e) {
 			if (e) throw e;
 		}
 	}
 
-	//seems to be deprecated
+	/**
+	 * Lichess API documentation specifies an array of [year, month, day, rating] entries
+	 * This is parsed to an array of [timestamp, rating] entries
+	 * @param {string} username
+	 * @deprecated ?
+	 */
 	async history(username) {
 		if (typeof username !== 'string') throw new TypeError('lichess.users.history() takes string values of an array as an input: ' + username);
 		if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError('Invalid format for lichess username: ' + username);
@@ -267,20 +286,18 @@ class Users {
 				points.reduce((obj, [year, month, day, rating]) => {
 					let k = new Date(year, month, day).getTime();
 					let v = rating;
-					obj[k] = v;
+					obj.push([k, v]);
 					return obj;
-				}, {})
+				}, [])
 			]);
-			return new RatingStore(arr, function returner (data) {
-				return data;
-			});
+			return arr;
 		} catch (e) {
 			if (e) throw e;
 		}
 	}
 
 	async stats(username, variant) {
-		if (typeof username !== 'string') throw new TypeError('lichess.users.history() takes string values of an array as an input: ' + username);
+		if (typeof username !== 'string') throw new TypeError('lichess.users.stats() takes string values of an array as an input: ' + username);
 		if (!/[a-z][\w-]{0,28}[a-z0-9]/i.test(username)) throw new TypeError('Invalid format for lichess username: ' + username);
 		try {
 			let raw = await rp.get({
@@ -346,11 +363,39 @@ class Users {
      */
 	async team(teamID) {
 		if (typeof teamID !== 'string') throw new TypeError('teamID takes string values: ' + teamID);
+		const uri = `${config.uri}team/${teamID}/users`;
 		try {
-			return Util.ndjson((await rp.get({
-				uri: `${config.uri}team/${teamID}/users`,
-				timeout: 10000
-			})).trim());
+			return await new Promise((res, rej) => {
+				let output = [];
+				let last = '';
+				const options = {
+					uri,
+					Accept: 'application/x-ndjson'
+				};
+				try {
+					let req = request.get(options);
+					req.on('data', (data) => {
+						data.toString().trim().split('\n').forEach(line => req.emit('line', line));
+					})
+						.on('line', (str) => {
+							let test = last + str;
+							try {
+								let json = JSON.parse(test);
+								last = '';
+								output.push(new User(json));
+							} catch (e) {
+								last += str;
+							}
+						})
+						.on('response', (response) => {
+							if (response.statusCode !== 200) req.emit('error', 'Not found');
+						})
+						.on('error', rej)
+						.on('end', () => res(output));
+				} catch (e) {
+					if (e) rej(e);
+				}
+			});
 		} catch (e) {
 			if (e) throw e;
 		}
@@ -359,21 +404,22 @@ class Users {
 	/**
      * Get a list of users who are live.
      * @param {statusOptions} options
-     * @returns {Promise<Collection<StatusUser|User>>}
+     * @returns {Promise<StatusUser[]|User[]>}
      */
 	async streaming({
 		fetchUsers = false,
 		filter = user => user.streaming
 	} = {}) {
 		try {
-			let result = new UserStore(await rp.get({
+			let results = new UserStore(await rp.get({
 				uri: `${config.uri}streamer/live`,
 				json: true,
 				timeout: 2000
 			}), StreamUser);
-			if (!fetchUsers) return result;
-			let users = await this.getMultiple(result.keyArray().filter(k => filter(result.get(k))));
-			return result.merge(users);
+			results = results.map(r => new User(r)).filter(filter);
+			if (!fetchUsers) return results;
+			let users = await this.getMultiple(results);
+			return results.map((r, i) => Object.assign(r, users[i]));
 		} catch (e) {
 			if (e) throw e;
 		}
@@ -410,18 +456,37 @@ class Users {
 		if (!Array.isArray(titles)) throw new TypeError('Titles to check must be in an array');
 		let titleList = new Map(config.titles.map(s => [s, true]));
 		if (!titles.every(t => titleList.get(t))) throw new TypeError('Title must match list of lichess title keys: ' + config.titles.join(', '));
-		try {
-			return Util.ndjson((await rp.get({
-				uri: `${config.uri}api/users/titled?${qs.stringify({
-					titles: titles.join(','),
-					online
-				})}`,
-				json: true,
-				timeout: 10000
-			})).trim());
-		} catch (e) {
-			if (e) throw e;
-		}
+		const options = {
+			uri: `${config.uri}api/users/titled?${qs.stringify({
+				titles: titles.join(','),
+				online
+			})}`,
+			json: true
+		};
+		return await new Promise((res, rej) => {
+			try {
+				let output = [];
+				let last = '';
+				let req = request.get(options);
+				req.on('data', (data) => {
+					let str = data.toString().trim();
+					try {
+						let json = JSON.parse(last + str);
+						last = '';
+						output.push(new User(json));
+					} catch (e) {
+						last += str;
+					}
+				})
+					.on('response', (response) => {
+						if (response.statusCode !== 200) req.emit('error', 'Not found');
+					})
+					.on('error', rej)
+					.on('end', () => res(output));
+			} catch (e) {
+				if (e) rej(e);
+			}
+		});
 	}
 
 }
