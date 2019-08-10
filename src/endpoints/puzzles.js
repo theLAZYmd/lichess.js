@@ -29,7 +29,19 @@ class Puzzles {
 	 */
 	async daily() {
 		try {
-			return await Puzzles.scrapePuzzle('daily');
+			/* eslint-disable no-unused-vars */
+			const options = {
+				uri: `${config.uri}training/daily`,
+				headers: {
+					Accept: 'application/vnd.lichess.v1+json'
+				},
+				json: true
+			};
+			const result = rp.get(options);
+			const {game, puzzle, mode, difficulty} = result;
+			const {id, rating, attempts, fen, color, initialPly, lines, vote, initialMove, enabled} = puzzle;
+			const {choices, current} = difficulty;
+			return {id, fen};
 		} catch (e) {
 			if (e) throw e;
 		}
