@@ -45,7 +45,7 @@ class Lila {
      * Sets the client's Personal Access Token if one is supplied
      * @param {string} secret 
      */
-	setPersonal(access_token) {
+	setToken(access_token) {
 		this.access_token = access_token;
 		return this;
 	}
