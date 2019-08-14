@@ -9,35 +9,49 @@ class TournamentUser extends Base {
 
 	constructor(data) {
 		super();
+		this._patch(data);
+	}
 
-		/**
-         * ID of a user taken from their username
-         */
-		this.id = data.username.toLowerCase();
+	/**
+	 * ID of a user taken from their username
+	 */
+	get id () {
+		if (!this._data.username) return null;
+		return this._data.username.toLowerCase();
+	}
 
-		/**
-         * ID of a user taken from their username
-         */
-		this.username = data.username;
+	/**
+	 * ID of a user taken from their username
+	 */
+	get username () {
+		return this._data.username;
+	}
 
-		/**
-         * The ranking of a user in a tournament, should be equal to this.index() + 1
-         * @type {number}
-         */
-		if (typeof data.rank !== 'undefined') this.rank = data.rank;
+	/**
+	 * The ranking of a user in a tournament, should be equal to this.index() + 1
+	 * @type {number}
+	 */
+	get rank () {
+		return this._data.rank;
+	}
 
-		/**
-         * TournamentUser's score in the tournament
-         * @type {number}
-         */
-		if (typeof data.score !== 'undefined') this.score = data.score;
+	/**
+	 * TournamentUser's score in the tournament
+	 * @type {number}
+	 */
+	get score () {
+		return this._data.score;
+	}
 
-		/**
-         * TournamentUser's current rating. Should be equal to user.get().rating[variant];
-         */
-		if (data.rating) this.rating = data.rating;
+	/**
+	 * TournamentUser's current rating. Should be equal to user.get().rating[variant];
+	 */
+	get rating () {
+		return this._data.rating;
+	}
 
-		if (data.performance) this.performance = data.performance;
+	get performance () {
+		return this._data.performance;
 	}
 
 }

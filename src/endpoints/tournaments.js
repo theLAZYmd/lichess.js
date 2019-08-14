@@ -1,10 +1,10 @@
+const request = require('request');
 const rp = require('request-promise');
 const qs = require('querystring');
 const cheerio = require('cheerio');
 
 const config = require('../config');
-const Util = require('../util/Util');
-const UserStore = require('../stores/UserStore');
+const User = require('../structures/user');
 const UserConstructor = require('./users');
 const TournamentUser = require('../structures/TournamentUser');
 
@@ -17,9 +17,58 @@ class Tournaments {
 	}
 
 	/**
+	 * @typedef LichessTournament
+	 * @property {Number} nbPlayers - the number in the tournament
+	 * @property {TournamentGame} duels - contains the ID of the game, and a 'p' property with an array of two players 'n' name 'r' rating and 'k' ranking for each
+	 * @property {Object} standing - property page: 1, players User[] with name, rank, rating, ratingDiff, score, sheet: {scores, total, fire}, title
+	 * @property {Boolean} isStarted - has the tournament started?
+	 * @property {Number?} secondsToStart - doesn't exist after tournament has started
+	 * @property {Number?} secondsToFinish - doesn't exist before tournament has started
+	 * @property {TournamentGame?} featured - id, fen, color, lastMove, white {rank, name, rating}, black {rank, name, rating, title, berserk}
+	 * @property {string} id
+	 * @property {string} createdBy
+	 * @property {Date} startsAt
+	 * @property {string} system - dictates the type of arena
+	 * @property {string} fullName - username
+	 * @property {Number} minutes
+	 * @property {Object} perf - icon, name of variant type
+	 * @property {Object} clock - limit, increment
+	 * @property {string} variant
+	 * @property {Object?} spotlight - 'headline', 'description', 'iconFont'
+	 * @property {Boolean} berserkable
+	 * @property {Object} verdicts - 'list' [{condition: 'val', verdict: 'ok'}], accepted Boolean - list of conditions for restrictions on tournaments
+	 * @property {Object} schedule - 'freq' ex: shield, 'speed' ex: classical
+	 * @property {Object} quote - text and author
+	 * @property {string} defender - username
+	 */
+
+	/**
+	 * Gets the live data of a tournament
+	 * @param {string} id
+	 * @returns LichessTournament
+	 */
+	async live (id) {
+		try {
+			/* eslint-disable no-unused-vars */
+			let data = await rp.get({
+				method: 'GET',
+				uri: config.uri + 'tournament/' + id,
+				header: {
+					Accept: 'application/vnd.lichess.v1+json'
+				},
+				timeout: 2000
+			});
+			let {nbPlayers, duels, standing, isStarted, secondsToFinish, featured, id, createdBy, startsAt, system, fullName, minutes, perf, clock, variant, spotlight, beserkable, verdicts, schedule, defender} = data;
+			return data;
+		} catch (e) {
+			if (e) throw e;
+		}
+	}
+
+	/**
 	 * Returns the list of ongoing tournaments
 	 */
-	async get () {
+	async list () {
 		return await rp.get({
 			uri: config.uri + '/api/tournament',
 			json: true,
@@ -53,32 +102,62 @@ class Tournaments {
 		}
 	}
 
+	/**
+	 * Returns the results (as an array of users) 
+	 * @param {*} id 
+	 * @param {*} options
+	 * @returns {Object}
+	 * @property {string} id
+	 * @property {User[]} results
+	 */
 	async results (id, {
 		nb = 9,
-		fetchUsers = true
+		fetchUsers = true,
+		filter = () => true
 	} = {}) {
-		try {
-			if (typeof id !== 'string') throw new TypeError('Tournament ID must be a string');
-			if (typeof nb !== 'number') throw new TypeError('Number of games to fetch must be type Number');
-			if (typeof fetchUsers !== 'boolean') throw new TypeError('fetch takes Boolean values');
-			if (nb <= 0) throw new RangeError('Number of results to fetch is outside the range');        
-			let res = Util.ndjson((await rp.get({
-				method: 'GET',
-				uri: `${config.uri}api/tournament/${id}/results?${qs.stringify({nb})}`,
-				headers: {
-					Accept: 'application/x-json'
-				},
-				timeout: 2000
-			})).trim());
-			let results = new UserStore(res, TournamentUser);
-			if (!fetchUsers) return {id, results};
-			const Users = new UserConstructor(this);
-			let users = await Users.getMultiple(results.keyArray());
-			results = results.merge(users);
-			return {id, results};
-		} catch (e) {
-			if (e) throw e;
-		}
+		if (typeof id !== 'string') throw new TypeError('Tournament ID must be a string');
+		if (typeof nb !== 'number') throw new TypeError('Number of games to fetch must be type Number');
+		if (typeof fetchUsers !== 'boolean') throw new TypeError('fetch takes Boolean values');
+		if (nb <= 0) throw new RangeError('Number of results to fetch is outside the range');        
+		const uri = `${config.uri}api/tournament/${id}/results?${qs.stringify({nb})}`;
+		return await new Promise((res, rej) => {
+			let output = [];
+			let last = '';
+			const options = {
+				uri,
+				Accept: 'application/x-ndjson'
+			};
+			try {
+				let req = request.get(options);
+				const Users = new UserConstructor(this);
+				req.on('data', (data) => {
+					data.toString().trim().split('\n').forEach(line => req.emit('line', line));
+				})
+					.on('line', (str) => {
+						let test = last + str;
+						try {
+							let json = JSON.parse(test);
+							last = '';
+							output.push(new User(json));
+						} catch (e) {
+							last += str;
+						}
+					})
+					.on('response', (response) => {
+						if (response.statusCode !== 200) req.emit('error', 'Not found');
+					})
+					.on('error', rej)
+					.on('end', async () => {							
+						let results = output.map(r => new TournamentUser(r)).filter(filter);
+						if (!fetchUsers) return {id, results};
+						let users = await Users.getMultiple(results);
+						results = results.map((u, i) => Object.assign(u, users[i]));
+						res({id, results});
+					});
+			} catch (e) {
+				if (e) rej(e);
+			}
+		});
 	}
 	
 	/**
@@ -91,26 +170,6 @@ class Tournaments {
 			const ids = await this.shields(variant, false);
 			const id = ids.shift();
 			return await this.results(id, data);
-		} catch (e) {
-			if (e) throw e;
-		}
-	}
-
-	async live (id) {
-		try {
-			let html = await rp.get({
-				method: 'GET',
-				uri: config.uri + 'tournament/' + id,
-				timeout: 2000
-			});
-			let json = JSON.parse(html.match(/\{.*\:\{.*\:.*\}\}/g)[0]);
-			//fs.writeFileSync('../../misc/sandbox.json', JSON.stringify(json, null, 4));
-			/*
-            let $ = cheerio.load(html);
-            $('script').each((i, elem) => {
-                console.log($(this));
-            })*/
-			return json;
 		} catch (e) {
 			if (e) throw e;
 		}
