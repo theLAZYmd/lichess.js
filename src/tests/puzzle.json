@@ -1,0 +1,1 @@
+{"game":{},"puzzle":{"id":99663,"rating":1501,"attempts":90648,"fen":"8/3r2b1/P6k/1PQ4p/2P1p1pN/5pP1/5P1P/3rRK2 w - - 0 34","color":"black","initialPly":67,"gameId":"ASwiHbhB","lines":{"d1e1":{"f1e1":{"g7c3":{"e1f1":{"d7d1":"win"}}}}},"vote":849,"initialMove":"b5b6","enabled":true},"mode":"try","difficulty":{"choices":[[2,"Normal"]],"current":2}}

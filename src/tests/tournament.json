@@ -1,0 +1,278 @@
+{
+	"nbPlayers": 18,
+	"duels": [{
+		"id": "pcdMEGF4",
+		"p": [{
+			"n": "VeryNiceeeee",
+			"r": 1891,
+			"k": 15
+		}, {
+			"n": "baga33",
+			"r": 2033,
+			"k": 3
+		}]
+	}],
+	"standing": {
+		"page": 1,
+		"players": [{
+			"name": "tal555",
+			"rank": 1,
+			"rating": 2016,
+			"ratingDiff": 0,
+			"score": 28,
+			"sheet": {
+				"scores": [
+					[2, 2],
+					[2, 2],
+					[4, 3], 0, [2, 2],
+					[2, 2],
+					[4, 3],
+					[4, 3],
+					[4, 3],
+					[4, 3], 0
+				],
+				"total": 28
+			}
+		}, {
+			"name": "MeChaNicoX",
+			"rank": 2,
+			"rating": 2112,
+			"ratingDiff": 0,
+			"score": 23,
+			"sheet": {
+				"scores": [2, 0, [3, 2],
+					[2, 2],
+					[4, 3], 0, [2, 2],
+					[2, 2],
+					[4, 3],
+					[4, 3], 0
+				],
+				"total": 23
+			}
+		}, {
+			"name": "baga33",
+			"rank": 3,
+			"rating": 2033,
+			"ratingDiff": 0,
+			"score": 16,
+			"sheet": {
+				"scores": [
+					[2, 2],
+					[2, 2], 0, [2, 2],
+					[2, 2], 0, [2, 2],
+					[2, 2],
+					[4, 3], 0, 0
+				],
+				"total": 16
+			}
+		}, {
+			"name": "wagnerovsky",
+			"rank": 4,
+			"rating": 2118,
+			"ratingDiff": 0,
+			"score": 16,
+			"sheet": {
+				"scores": [0, [2, 2],
+					[2, 2], 0, [2, 2],
+					[2, 2],
+					[4, 3], 0, 0, 0, [2, 2],
+					[2, 2]
+				],
+				"total": 16,
+				"fire": true
+			}
+		}, {
+			"name": "churrosagogo",
+			"rank": 5,
+			"rating": 2069,
+			"ratingDiff": 0,
+			"score": 16,
+			"sheet": {
+				"scores": [2, 0, 0, 0, [2, 2],
+					[2, 2],
+					[4, 3], 0, 2, 0, 0, [2, 2],
+					[2, 2]
+				],
+				"total": 16,
+				"fire": true
+			}
+		}, {
+			"name": "TheLAZYmd",
+			"rank": 6,
+			"rating": 2148,
+			"ratingDiff": 0,
+			"score": 16,
+			"sheet": {
+				"scores": [
+					[2, 2],
+					[3, 2], 0, 0, [3, 2],
+					[2, 2], 0, 0, [3, 2],
+					[3, 2], 0
+				],
+				"total": 16
+			}
+		}, {
+			"name": "Headstrong",
+			"rank": 7,
+			"rating": 2315,
+			"ratingDiff": 0,
+			"score": 12,
+			"sheet": {
+				"scores": [
+					[2, 2],
+					[2, 2],
+					[4, 3],
+					[4, 3]
+				],
+				"total": 12,
+				"fire": true
+			}
+		}, {
+			"name": "curiexr",
+			"rank": 8,
+			"rating": 2217,
+			"ratingDiff": 0,
+			"score": 8,
+			"sheet": {
+				"scores": [
+					[2, 2],
+					[2, 2],
+					[4, 3]
+				],
+				"total": 8,
+				"fire": true
+			}
+		}, {
+			"name": "tajizadegan",
+			"rank": 9,
+			"rating": 1669,
+			"ratingDiff": 0,
+			"score": 6,
+			"sheet": {
+				"scores": [2, 0, 0, 0, 2, 0, 2, 0],
+				"total": 6
+			}
+		}, {
+			"name": "vzn2",
+			"rank": 10,
+			"rating": 1819,
+			"ratingDiff": 0,
+			"score": 6,
+			"sheet": {
+				"scores": [0, 2, 0, 0, [2, 2],
+					[2, 2], 0
+				],
+				"total": 6
+			}
+		}]
+	},
+	"isFinished": true,
+	"isRecentlyFinished": true,
+	"podium": [{
+		"name": "tal555",
+		"rank": 1,
+		"rating": 2016,
+		"ratingDiff": 0,
+		"score": 28,
+		"sheet": {
+			"scores": [
+				[2, 2],
+				[2, 2],
+				[4, 3], 0, [2, 2],
+				[2, 2],
+				[4, 3],
+				[4, 3],
+				[4, 3],
+				[4, 3], 0
+			],
+			"total": 28
+		},
+		"nb": {
+			"game": 11,
+			"berserk": 0,
+			"win": 9
+		},
+		"performance": 2259
+	}, {
+		"name": "MeChaNicoX",
+		"rank": 2,
+		"rating": 2112,
+		"ratingDiff": 0,
+		"score": 23,
+		"sheet": {
+			"scores": [2, 0, [3, 2],
+				[2, 2],
+				[4, 3], 0, [2, 2],
+				[2, 2],
+				[4, 3],
+				[4, 3], 0
+			],
+			"total": 23
+		},
+		"nb": {
+			"game": 11,
+			"berserk": 1,
+			"win": 8
+		},
+		"performance": 2220
+	}, {
+		"name": "baga33",
+		"rank": 3,
+		"rating": 2033,
+		"ratingDiff": 0,
+		"score": 16,
+		"sheet": {
+			"scores": [
+				[2, 2],
+				[2, 2], 0, [2, 2],
+				[2, 2], 0, [2, 2],
+				[2, 2],
+				[4, 3], 0, 0
+			],
+			"total": 16
+		},
+		"nb": {
+			"game": 11,
+			"berserk": 0,
+			"win": 7
+		},
+		"performance": 2172
+	}],
+	"pairingsClosed": true,
+	"stats": {
+		"games": 66,
+		"moves": 3792,
+		"whiteWins": 36,
+		"blackWins": 30,
+		"draws": 0,
+		"berserks": 11,
+		"averageRating": 1972
+	},
+	"id": "b355Mnb9",
+	"createdBy": "lichess",
+	"startsAt": "2019-08-10T18:00:00.000Z",
+	"system": "arena",
+	"fullName": "Crazyhouse Bullet Arena",
+	"minutes": 27,
+	"perf": {
+		"icon": "",
+		"name": "Crazyhouse"
+	},
+	"clock": {
+		"limit": 60,
+		"increment": 0
+	},
+	"variant": "crazyhouse",
+	"berserkable": true,
+	"verdicts": {
+		"list": [{
+			"condition": "≥ 20 Crazyhouse rated games",
+			"verdict": "ok"
+		}],
+		"accepted": true
+	},
+	"schedule": {
+		"freq": "hourly",
+		"speed": "bullet"
+	}
+}

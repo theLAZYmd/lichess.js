@@ -1,0 +1,385 @@
+{
+	"nbPlayers": 2396,
+	"duels": [{
+		"id": "TW1EEB6L",
+		"p": [{
+			"n": "Kucan",
+			"r": 2295,
+			"k": 26
+		}, {
+			"n": "Robbero",
+			"r": 2190,
+			"k": 2
+		}]
+	}, {
+		"id": "tZhqtbL2",
+		"p": [{
+			"n": "Soltan1800",
+			"r": 2394,
+			"k": 23
+		}, {
+			"n": "pouria_naghavi",
+			"r": 1974,
+			"k": 57
+		}]
+	}, {
+		"id": "giEe7XuY",
+		"p": [{
+			"n": "GASILA",
+			"r": 2056,
+			"k": 98
+		}, {
+			"n": "Zugzwang_TV",
+			"r": 2298,
+			"k": 1,
+			"t": "IM"
+		}]
+	}, {
+		"id": "cyKYItZj",
+		"p": [{
+			"n": "Igor76",
+			"r": 2099,
+			"k": 22
+		}, {
+			"n": "shayanaghaie",
+			"r": 2236,
+			"k": 64
+		}]
+	}, {
+		"id": "9ZH9UmIo",
+		"p": [{
+			"n": "TrickyMorphy",
+			"r": 2029,
+			"k": 1452
+		}, {
+			"n": "jomibema",
+			"r": 2206,
+			"k": 1442
+		}]
+	}, {
+		"id": "LqNG258P",
+		"p": [{
+			"n": "MoneyDoctor",
+			"r": 1996,
+			"k": 16
+		}, {
+			"n": "AuaAua",
+			"r": 2168,
+			"k": 15
+		}]
+	}],
+	"standing": {
+		"page": 1,
+		"players": [{
+			"name": "Zugzwang_TV",
+			"rank": 1,
+			"rating": 2298,
+			"ratingDiff": 0,
+			"score": 122,
+			"sheet": {
+				"scores": [
+					[3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[4, 3],
+					[4, 3],
+					[5, 3],
+					[4, 3],
+					[4, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3]
+				],
+				"total": 122,
+				"fire": true
+			},
+			"title": "IM"
+		}, {
+			"name": "Robbero",
+			"rank": 2,
+			"rating": 2190,
+			"ratingDiff": 0,
+			"score": 87,
+			"sheet": {
+				"scores": [
+					[3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[5, 3], 0, [3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[2, 3],
+					[3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[2, 3], 3, 1, [3, 2],
+					[3, 2], 0, [2, 2],
+					[3, 2], 0
+				],
+				"total": 87
+			}
+		}, {
+			"name": "santiagobmf",
+			"rank": 3,
+			"rating": 2064,
+			"ratingDiff": 0,
+			"score": 81,
+			"sheet": {
+				"scores": [
+					[3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[2, 3],
+					[3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[5, 3], 0, 3, 0, 0, 1, [3, 2],
+					[3, 2], 0, [3, 2],
+					[3, 2], 0, 0, 0, [3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[5, 3]
+				],
+				"total": 81,
+				"fire": true
+			},
+			"withdraw": true
+		}, {
+			"name": "Krawall24",
+			"rank": 4,
+			"rating": 1971,
+			"ratingDiff": 0,
+			"score": 78,
+			"sheet": {
+				"scores": [
+					[3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[4, 3],
+					[5, 3],
+					[5, 3], 0, 0, 3, 0, 0, [2, 2],
+					[2, 2], 0, 0, 3, 0, 3, 0, [3, 2],
+					[3, 2], 0, 0, [3, 2],
+					[3, 2],
+					[5, 3], 0, 0, 1, 0, [3, 2],
+					[3, 2], 0, 0, [3, 2],
+					[3, 2], 0, 0
+				],
+				"total": 78
+			}
+		}, {
+			"name": "Keys_erSoze",
+			"rank": 5,
+			"rating": 2000,
+			"ratingDiff": 0,
+			"score": 64,
+			"sheet": {
+				"scores": [2, 0, 3, 0, [3, 2],
+					[3, 2],
+					[5, 3],
+					[4, 3], 0, 3, 0, 2, 0, [3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3], 0, 0, 3, 1, 3, 0, 1, 0, 0, 1, [3, 2],
+					[3, 2],
+					[5, 3], 0, 3, 0
+				],
+				"total": 64
+			}
+		}, {
+			"name": "henrikcernov",
+			"rank": 6,
+			"rating": 2016,
+			"ratingDiff": 0,
+			"score": 62,
+			"sheet": {
+				"scores": [
+					[3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[2, 3],
+					[3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[2, 3],
+					[3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3], 0
+				],
+				"total": 62
+			}
+		}, {
+			"name": "chesssky2",
+			"rank": 7,
+			"rating": 1947,
+			"ratingDiff": 0,
+			"score": 62,
+			"sheet": {
+				"scores": [
+					[3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3], 0, [3, 2],
+					[3, 2], 0, 0, 0, 1, 0, 3, 0, 0, 0, 0, 3, 0, 0, [3, 2],
+					[3, 2],
+					[5, 3], 0, [3, 2],
+					[2, 2], 0, 0, 0, 0, 1, [3, 2],
+					[3, 2]
+				],
+				"total": 62,
+				"fire": true
+			}
+		}, {
+			"name": "fisshy",
+			"rank": 8,
+			"rating": 2037,
+			"ratingDiff": 0,
+			"score": 60,
+			"sheet": {
+				"scores": [
+					[2, 2],
+					[3, 2], 0, [3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3], 0, 3, 0, [3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[5, 3], 0, 0, [3, 2],
+					[3, 2], 0, 1, 3, 0, 2, 0, 3, 0
+				],
+				"total": 60
+			}
+		}, {
+			"name": "gustavovilasboas632",
+			"rank": 9,
+			"rating": 2082,
+			"ratingDiff": 0,
+			"score": 55,
+			"sheet": {
+				"scores": [0, 0, [2, 2],
+					[2, 2],
+					[4, 3],
+					[4, 3],
+					[4, 3],
+					[4, 3],
+					[4, 3], 0, [2, 2],
+					[2, 2],
+					[4, 3],
+					[4, 3],
+					[4, 3],
+					[4, 3],
+					[4, 3],
+					[4, 3], 0, 0, [3, 2]
+				],
+				"total": 55
+			}
+		}, {
+			"name": "Kartviller",
+			"rank": 10,
+			"rating": 2108,
+			"ratingDiff": 0,
+			"score": 53,
+			"sheet": {
+				"scores": [3, 0, 0, 0, [3, 2],
+					[3, 2],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[5, 3],
+					[4, 3]
+				],
+				"total": 53,
+				"fire": true
+			}
+		}]
+	},
+	"isStarted": true,
+	"secondsToFinish": 11417,
+	"featured": {
+		"id": "giEe7XuY",
+		"fen": "8/4kp2/Bb4p1/5p2/P2NpP2/2r1P1P1/R4K1P/2r5",
+		"color": "black",
+		"lastMove": "c8c3",
+		"white": {
+			"rank": 101,
+			"name": "GASILA",
+			"rating": 2056
+		},
+		"black": {
+			"rank": 1,
+			"name": "Zugzwang_TV",
+			"rating": 2298,
+			"title": "IM",
+			"berserk": true
+		}
+	},
+	"id": "Ihr5piy0",
+	"createdBy": "lichess",
+	"startsAt": "2019-08-09T16:00:00.000Z",
+	"system": "arena",
+	"fullName": "Classical Shield Arena",
+	"minutes": 600,
+	"perf": {
+		"icon": "+",
+		"name": "Classical"
+	},
+	"clock": {
+		"limit": 1200,
+		"increment": 10
+	},
+	"variant": "standard",
+	"spotlight": {
+		"headline": "Battle for the Classical Shield",
+		"description": "This [Shield trophy](https://lichess.org/blog/Wh36WiQAAMMApuRb/introducing-shield-tournaments) is unique.\nThe winner keeps it for one month,\nthen must defend it during the next Classical Shield tournament!",
+		"iconFont": "5"
+	},
+	"berserkable": true,
+	"verdicts": {
+		"list": [],
+		"accepted": true
+	},
+	"schedule": {
+		"freq": "shield",
+		"speed": "classical"
+	},
+	"defender": "soltan1800"
+}

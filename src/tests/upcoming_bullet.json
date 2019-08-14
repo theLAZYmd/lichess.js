@@ -1,0 +1,40 @@
+{
+	"nbPlayers": 0,
+	"duels": [],
+	"standing": {
+		"page": 1,
+		"players": []
+	},
+	"secondsToStart": 3890,
+	"id": "JZddG6tj",
+	"createdBy": "lichess",
+	"startsAt": "2019-08-10T00:30:00.000Z",
+	"system": "arena",
+	"fullName": "Hourly Bullet Arena",
+	"minutes": 27,
+	"perf": {
+		"icon": "T",
+		"name": "Bullet"
+	},
+	"clock": {
+		"limit": 60,
+		"increment": 0
+	},
+	"variant": "standard",
+	"berserkable": true,
+	"verdicts": {
+		"list": [{
+			"condition": "≥ 20 Bullet rated games",
+			"verdict": "ok"
+		}],
+		"accepted": true
+	},
+	"schedule": {
+		"freq": "hourly",
+		"speed": "bullet"
+	},
+	"quote": {
+		"text": "Chess problems demand from the composer the same virtues that characterize all worthwhile art: originality, invention, conciseness, harmony, complexity, and splendid insincerity.",
+		"author": "Vladimir Nabokov"
+	}
+}
