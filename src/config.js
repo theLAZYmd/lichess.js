@@ -18,7 +18,8 @@ module.exports = {
 		'puzzle'
 	],
 	shield: [
-		'superblitz'
+		'superblitz',
+		'ultrabullet'
 	],
 	titles: [                     //list of titles available on Lichess
 		'GM',
