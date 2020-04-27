@@ -8,15 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const rp = require('request-promise');
-const config = require('../config.json');
-const qs = require('querystring');
-const User = require('../structures/User');
-const Util = require('../util/Util');
+Object.defineProperty(exports, "__esModule", { value: true });
+const requests_1 = require("../utils/requests");
 class Profile {
-    constructor(oauth, result, access_token) {
-        this.oauth = oauth;
-        this.result = result;
+    constructor(access_token) {
         this.access_token = access_token;
     }
     /**
@@ -25,26 +20,16 @@ class Profile {
      */
     get() {
         return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const token = this.oauth ? this.oauth.accessToken.create(this.result) : undefined;
-                let access_token = token ? token.token.access_token : this.access_token;
-                let options = {
-                    uri: `${config.uri}api/account`,
-                    json: true,
-                    timeout: 5000,
-                    headers: {
-                        Accept: 'application/json',
-                        Authorization: 'Bearer ' + access_token
-                    }
-                };
-                return new User(yield rp.get(options));
-            }
-            catch (e) {
-                if (e)
-                    throw e;
-            }
+            return requests_1.GET({
+                url: '/api/account',
+                timeout: 5000,
+                headers: {
+                    Accept: 'application/json',
+                    Authorization: 'Bearer ' + this.access_token
+                }
+            });
         });
     }
 }
-module.exports = Profile;
+exports.default = Profile;
 //# sourceMappingURL=profile.js.map

@@ -1,9 +1,5 @@
 import Users from './endpoints/users';
-import Games from './endpoints/games';
-import Tournaments from './endpoints/tournaments';
 import Profile from './endpoints/profile';
-import Puzzles from './endpoints/puzzles';
-import Teams from './endpoints/teams';
 /**
  * Creates a new instance of a JavaScript client for the Lichess API.
  * This client is almost entirely asynchronous and relies on the dependencies in package.json, with the most notable being {'request-promise'}
@@ -50,10 +46,6 @@ export default class Lila {
      * })
      */
     get users(): Users;
-    get games(): Games;
-    get tournaments(): Tournaments;
     get profile(): Profile;
-    get puzzles(): Puzzles;
-    get teams(): Teams;
 }
 //# sourceMappingURL=index.d.ts.map

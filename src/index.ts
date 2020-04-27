@@ -1,7 +1,8 @@
 import Users from './endpoints/users';/*
 import Games from './endpoints/games';
 import Tournaments from './endpoints/tournaments';*/
-import Profile from './endpoints/profile';/*
+import Profile from './endpoints/profile';
+import Challenge from './endpoints/challenge';/*
 import Puzzles from './endpoints/puzzles';
 import Teams from './endpoints/teams';*/
 /**
@@ -86,8 +87,11 @@ export default class Lila {
 	}*/
     
 	get profile() {
-		if (!this.access_token) throw new Error('Can\'t call OAuth method without having first logged in!');
 		return new Profile(this.access_token);
+	}
+    
+	get challenge() {
+		return new Challenge(this.access_token);
 	}
 /*
 	get puzzles() {

@@ -3,12 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const users_1 = __importDefault(require("./endpoints/users"));
-const games_1 = __importDefault(require("./endpoints/games"));
-const tournaments_1 = __importDefault(require("./endpoints/tournaments"));
-const profile_1 = __importDefault(require("./endpoints/profile"));
-const puzzles_1 = __importDefault(require("./endpoints/puzzles"));
-const teams_1 = __importDefault(require("./endpoints/teams"));
+const users_1 = __importDefault(require("./endpoints/users")); /*
+import Games from './endpoints/games';
+import Tournaments from './endpoints/tournaments';*/
+const profile_1 = __importDefault(require("./endpoints/profile")); /*
+import Puzzles from './endpoints/puzzles';
+import Teams from './endpoints/teams';*/
 /**
  * Creates a new instance of a JavaScript client for the Lichess API.
  * This client is almost entirely asynchronous and relies on the dependencies in package.json, with the most notable being {'request-promise'}
@@ -81,22 +81,18 @@ class Lila {
     get users() {
         return new users_1.default(this.access_token);
     }
-    get games() {
-        return new games_1.default(this.access_token);
-    }
-    get tournaments() {
-        return new tournaments_1.default(this.access_token);
-    }
+    /*
+        get games() {
+            return new Games(this.access_token);
+        }
+    
+        get tournaments() {
+            return new Tournaments(this.access_token);
+        }*/
     get profile() {
         if (!this.access_token)
             throw new Error('Can\'t call OAuth method without having first logged in!');
         return new profile_1.default(this.access_token);
-    }
-    get puzzles() {
-        return new puzzles_1.default();
-    }
-    get teams() {
-        return new teams_1.default(this.access_token);
     }
 }
 exports.default = Lila;

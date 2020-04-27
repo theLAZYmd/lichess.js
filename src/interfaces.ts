@@ -178,3 +178,46 @@ export interface RankUser {
 export type Rank = {
 	[key in Variant]: RankUser[]
 }
+
+export interface Game {
+	id: string
+	url: string
+	color: 'random' | 'white' | 'black'
+	direction: 'out' | 'in'
+	variant: {
+		key: Variant
+		name: string
+		short: string
+	}
+	challenger: StatusUser
+	destUser: StatusUser
+	perf: {
+		icon: string
+		name: string
+	}
+	rated: boolean;
+	speed: Speed;
+	status: string;
+}
+
+export type Speed = 'blitz' | 'bullet' | 'rapid' | 'classical' | 'hyperbullet' | 'ultrabullet'
+
+export interface TimeControl {
+	increment: number
+	limit: number
+	show: string
+	type: string
+}
+
+export interface ChallengeOptions {
+	rated: boolean
+	clock?: {
+		limit: number
+		increment: number
+	}
+	days?: number
+	color?: 'random' | 'color' | 'white'
+	variant?: Variant | 'standard'
+	fen?: string
+	acceptByToken?: string
+}
