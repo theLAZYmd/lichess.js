@@ -1,14 +1,16 @@
 {
 	"name": "lichess",
-	"version": "2.0.0",
+	"version": "2.0.2",
 	"description": "The best NodeJS client for the Lichess API",
-	"main": "src/main.js",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
 	"scripts": {
-		"test": "jshint --exclude ./node_modules && ./node_modules/.bin/mocha --harmony"
+		"test": "jshint --exclude ./node_modules && ./node_modules/.bin/mocha --harmony",
+		"build": "tsc --sourceMap"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/theLAZYmd/lazy-lila.git"
+		"url": "git+https://github.com/theLAZYmd/lichess.git"
 	},
 	"keywords": [
 		"lichess",
@@ -19,9 +21,9 @@
 	"author": "theLAZYmd",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/theLAZYmd/lazy-lila/issues"
+		"url": "https://github.com/theLAZYmd/lichess/issues"
 	},
-	"homepage": "https://github.com/theLAZYmd/lazy-lila#readme",
+	"homepage": "https://github.com/theLAZYmd/lichess#readme",
 	"dependencies": {
 		"cheerio": "^1.0.0-rc.3",
 		"express": "^4.16.4",
@@ -36,6 +38,7 @@
 	"devDependencies": {
 		"@types/bluebird-global": "^3.5.12",
 		"@types/request": "^2.48.4",
-		"axios": "^0.19.2"
+		"axios": "^0.19.2",
+		"typescript": "^3.8.3"
 	}
 }
