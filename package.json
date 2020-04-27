@@ -1,6 +1,6 @@
 {
 	"name": "lichess",
-	"version": "1.1.5",
+	"version": "2.0.0",
 	"description": "The best NodeJS client for the Lichess API",
 	"main": "src/main.js",
 	"scripts": {
