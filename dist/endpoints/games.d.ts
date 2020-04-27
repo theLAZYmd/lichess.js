@@ -40,3 +40,4 @@ declare class Games {
     ongoing(nb?: number): Promise<any>;
     tv(variants?: any[]): Promise<any>;
 }
+//# sourceMappingURL=games.d.ts.map

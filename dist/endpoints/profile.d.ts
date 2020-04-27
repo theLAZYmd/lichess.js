@@ -10,3 +10,4 @@ declare class Profile {
      */
     get(): any;
 }
+//# sourceMappingURL=profile.d.ts.map

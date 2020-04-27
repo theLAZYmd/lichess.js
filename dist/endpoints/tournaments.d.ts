@@ -117,3 +117,4 @@ declare class Tournaments {
      */
     public shields(variant?: string | null): Object | string[];
 }
+//# sourceMappingURL=tournaments.d.ts.map

@@ -166,3 +166,4 @@ export declare type Rank = {
     [key in Variant]: RankUser[];
 };
 export {};
+//# sourceMappingURL=interfaces.d.ts.map

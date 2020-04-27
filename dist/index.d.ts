@@ -56,3 +56,4 @@ export default class Lila {
     get puzzles(): Puzzles;
     get teams(): Teams;
 }
+//# sourceMappingURL=index.d.ts.map

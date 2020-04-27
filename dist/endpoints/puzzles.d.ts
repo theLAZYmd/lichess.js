@@ -31,3 +31,4 @@ declare namespace Puzzles {
     export function scrapePuzzle(_id?: string): Promise<any>;
     export const _cache: {};
 }
+//# sourceMappingURL=puzzles.d.ts.map

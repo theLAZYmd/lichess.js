@@ -79,3 +79,4 @@ export default class Users {
      */
     titled(titles?: Title[], online?: boolean): Promise<User[]>;
 }
+//# sourceMappingURL=users.d.ts.map

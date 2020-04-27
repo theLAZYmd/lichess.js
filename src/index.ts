@@ -1,9 +1,9 @@
-import Users from './endpoints/users';
+import Users from './endpoints/users';/*
 import Games from './endpoints/games';
-import Tournaments from './endpoints/tournaments';
-import Profile from './endpoints/profile';
+import Tournaments from './endpoints/tournaments';*/
+import Profile from './endpoints/profile';/*
 import Puzzles from './endpoints/puzzles';
-import Teams from './endpoints/teams';
+import Teams from './endpoints/teams';*/
 /**
  * Creates a new instance of a JavaScript client for the Lichess API.
  * This client is almost entirely asynchronous and relies on the dependencies in package.json, with the most notable being {'request-promise'}
@@ -76,26 +76,26 @@ export default class Lila {
 	get users() {
 		return new Users(this.access_token);
 	}
-
+/*
 	get games() {
 		return new Games(this.access_token);
 	}
 
 	get tournaments() {
 		return new Tournaments(this.access_token);
-	}
+	}*/
     
 	get profile() {
 		if (!this.access_token) throw new Error('Can\'t call OAuth method without having first logged in!');
 		return new Profile(this.access_token);
 	}
-
+/*
 	get puzzles() {
 		return new Puzzles();
 	}
 
 	get teams() {
 		return new Teams(this.access_token);
-	}
+	}*/
 
 }

@@ -29,3 +29,4 @@ declare class Teams {
      */
     kick(id: any, userID: any): Promise<null>;
 }
+//# sourceMappingURL=teams.d.ts.map
