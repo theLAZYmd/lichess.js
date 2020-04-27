@@ -1,5 +1,5 @@
 const rp = require('request-promise');
-const config = require('../config');
+const config = require('../config.json');
 const qs = require('querystring');
 
 const User = require('../structures/User');

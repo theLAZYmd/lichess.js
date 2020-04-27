@@ -174,3 +174,7 @@ export interface RankUser {
 	patron: boolean
 	online: boolean
 }
+
+export type Rank = {
+	[key in Variant]: RankUser[]
+}

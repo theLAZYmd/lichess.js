@@ -3,7 +3,7 @@ const rp = require('request-promise');
 const qs = require('querystring');
 const cheerio = require('cheerio');
 
-const config = require('../config');
+const config = require('../config.json');
 const User = require('../structures/User');
 const UserConstructor = require('./users');
 const TournamentUser = require('../structures/TournamentUser');
