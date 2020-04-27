@@ -1,0 +1,1 @@
+export const username = /[a-z][\w-]{0,28}[a-z0-9]/i;
