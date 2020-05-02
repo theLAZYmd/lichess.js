@@ -1,6 +1,8 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import Axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
-axios.defaults.baseURL = 'https://lichess.org';
+const axios = Axios.create({
+	baseURL: 'https://lichess.org'
+});
 
 export function GET(options: AxiosRequestConfig): Promise<any> {
 	options = Object.assign(options, {

@@ -6,7 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const users_1 = __importDefault(require("./endpoints/users")); /*
 import Games from './endpoints/games';
 import Tournaments from './endpoints/tournaments';*/
-const profile_1 = __importDefault(require("./endpoints/profile")); /*
+const profile_1 = __importDefault(require("./endpoints/profile"));
+const challenge_1 = __importDefault(require("./endpoints/challenge")); /*
 import Puzzles from './endpoints/puzzles';
 import Teams from './endpoints/teams';*/
 /**
@@ -90,9 +91,10 @@ class Lila {
             return new Tournaments(this.access_token);
         }*/
     get profile() {
-        if (!this.access_token)
-            throw new Error('Can\'t call OAuth method without having first logged in!');
         return new profile_1.default(this.access_token);
+    }
+    get challenge() {
+        return new challenge_1.default(this.access_token);
     }
 }
 exports.default = Lila;

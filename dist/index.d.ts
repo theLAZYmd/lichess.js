@@ -1,5 +1,6 @@
 import Users from './endpoints/users';
 import Profile from './endpoints/profile';
+import Challenge from './endpoints/challenge';
 /**
  * Creates a new instance of a JavaScript client for the Lichess API.
  * This client is almost entirely asynchronous and relies on the dependencies in package.json, with the most notable being {'request-promise'}
@@ -47,5 +48,6 @@ export default class Lila {
      */
     get users(): Users;
     get profile(): Profile;
+    get challenge(): Challenge;
 }
 //# sourceMappingURL=index.d.ts.map
