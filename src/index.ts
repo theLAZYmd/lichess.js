@@ -13,7 +13,7 @@ import Teams from './endpoints/teams';*/
  */
 export default class Lichess {
 
-	constructor(public access_token: string) {}
+	constructor(public access_token?: string) {}
 	/**
      * Sets the client's Personal Access Token if one is supplied
      * @param {string} secret 
