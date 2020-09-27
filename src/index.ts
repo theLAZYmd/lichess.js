@@ -5,18 +5,20 @@ import Profile from './endpoints/profile';
 import Challenge from './endpoints/challenge';/*
 import Puzzles from './endpoints/puzzles';
 import Teams from './endpoints/teams';*/
+
 /**
  * Creates a new instance of a JavaScript client for the Lichess API.
  * This client is almost entirely asynchronous and relies on the dependencies in package.json, with the most notable being {'request-promise'}
  * View {Collection} to see the properties of a collection.
  */
-export default class Lila {
+export default class Lichess {
 
 	constructor(public access_token: string) {}
 	/**
      * Sets the client's Personal Access Token if one is supplied
      * @param {string} secret 
      */
+
 	setToken(access_token: string) {
 		this.access_token = access_token;
 		return this;
@@ -103,3 +105,5 @@ export default class Lila {
 	}*/
 
 }
+
+export * from './interfaces';
