@@ -12,7 +12,7 @@ export * from '../interfaces';
 
 export default class Users {
 
-	constructor(public access_token: string) {}
+	constructor(public access_token?: string) {}
 
 	search(term: string, friend: boolean = false, object: boolean = true): Promise<SearchResult> {
 		return GET({

@@ -29,7 +29,7 @@ class Users {
     constructor(access_token) {
         this.access_token = access_token;
     }
-    searchUsers(term, friend = true, object = true) {
+    search(term, friend = false, object = true) {
         return requests_1.GET({
             url: '/player/autocomplete',
             params: {

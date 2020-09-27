@@ -1,12 +1,13 @@
 {
 	"name": "lichess",
-	"version": "2.0.7",
+	"version": "2.0.9",
 	"description": "The best NodeJS client for the Lichess API",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"scripts": {
 		"test": "mocha",
-		"build": "tsc --sourceMap"
+		"build": "tsc --sourceMap",
+		"deploy": "git push -u origin master; npm publish"
 	},
 	"repository": {
 		"type": "git",
