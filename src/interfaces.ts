@@ -44,7 +44,7 @@ export interface User {
 		location: string
 	},
 	language: "en-GB",
-	pers: {
+	perfs: {
 		[key in Variant]: Perf
 	}
 	patron: boolean,

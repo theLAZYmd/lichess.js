@@ -15,7 +15,7 @@ import Teams from './endpoints/teams';*/
  * This client is almost entirely asynchronous and relies on the dependencies in package.json, with the most notable being {'request-promise'}
  * View {Collection} to see the properties of a collection.
  */
-class Lila {
+class Lichess {
     constructor(access_token) {
         this.access_token = access_token;
     }
@@ -97,5 +97,5 @@ class Lila {
         return new challenge_1.default(this.access_token);
     }
 }
-exports.default = Lila;
+exports.default = Lichess;
 //# sourceMappingURL=index.js.map

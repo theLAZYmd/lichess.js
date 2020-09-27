@@ -54,7 +54,7 @@ class Users {
     getOne(username, timeout) {
         if (!regexes.username.test(username))
             throw new TypeError('Invalid format for lichess username: ' + username);
-        return requests_1.GET({ url: '/api/user' + username, timeout });
+        return requests_1.GET({ url: '/api/user/' + username, timeout });
     }
     /**
      * Get several users by their IDs. Users are returned in the order same order as the IDs.

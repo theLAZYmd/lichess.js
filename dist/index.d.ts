@@ -6,7 +6,7 @@ import Challenge from './endpoints/challenge';
  * This client is almost entirely asynchronous and relies on the dependencies in package.json, with the most notable being {'request-promise'}
  * View {Collection} to see the properties of a collection.
  */
-export default class Lila {
+export default class Lichess {
     access_token: string;
     constructor(access_token: string);
     /**
@@ -50,4 +50,5 @@ export default class Lila {
     get profile(): Profile;
     get challenge(): Challenge;
 }
+export * from './interfaces';
 //# sourceMappingURL=index.d.ts.map

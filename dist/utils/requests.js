@@ -4,13 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
-axios_1.default.defaults.baseURL = 'https://lichess.org';
+const axios = axios_1.default.create({
+    baseURL: 'https://lichess.org'
+});
 function GET(options) {
     options = Object.assign(options, {
         method: 'GET',
         timeout: 5000
     });
-    let x = axios_1.default(options)
+    let x = axios(options)
         .catch((e) => {
         console.error(e);
         throw e;
@@ -28,7 +30,7 @@ function POST(options) {
             'Content-Type': 'application/json'
         }
     });
-    return axios_1.default(options)
+    return axios(options)
         .then((res) => res.data)
         .catch((e) => {
         throw e;

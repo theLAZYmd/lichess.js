@@ -43,7 +43,7 @@ export default class Users {
      */
 	getOne(username: string, timeout?: number): Promise<User> {
 		if (!regexes.username.test(username)) throw new TypeError('Invalid format for lichess username: ' + username);
-		return GET({ url: '/api/user' + username, timeout })
+		return GET({ url: '/api/user/' + username, timeout })
 	}
 
 	/**
