@@ -26,6 +26,7 @@
 	},
 	"homepage": "https://github.com/theLAZYmd/lichess#readme",
 	"dependencies": {
+		"axios": "^0.19.2",
 		"cheerio": "^1.0.0-rc.3",
 		"express": "^4.16.4",
 		"open": "^6.0.0",
@@ -39,7 +40,6 @@
 	"devDependencies": {
 		"@types/bluebird-global": "^3.5.12",
 		"@types/request": "^2.48.4",
-		"axios": "^0.19.2",
 		"chai": "^4.2.0",
 		"chai-interface": "^2.0.3",
 		"ts-interface-builder": "^0.2.2",
