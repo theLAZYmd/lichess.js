@@ -20,8 +20,24 @@ class Lichess {
         this.access_token = access_token;
     }
     /**
+     *
+     * Lichess time controls are based on estimated game duration = (clock initial time) + 40 × (clock increment)
+     * For instance, the estimated duration of a 5+3 game is 5 × 60 + 40 × 3 = 420 seconds.
+     */
+    static getTimeControlCategory(mins, increment) {
+        let d = (mins * 60) + 40 * increment;
+        if (d < 30)
+            return 'ultrabullet';
+        if (d < 180)
+            return 'bullet';
+        if (d < 480)
+            return 'blitz';
+        if (d < 1500)
+            return 'rapid';
+        return 'classical';
+    }
+    /**
      * Sets the client's Personal Access Token if one is supplied
-     * @param {string} secret
      */
     setToken(access_token) {
         this.access_token = access_token;

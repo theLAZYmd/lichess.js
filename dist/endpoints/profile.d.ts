@@ -1,7 +1,7 @@
 import { User } from '../interfaces';
 export default class Profile {
-    access_token: string;
-    constructor(access_token: string);
+    access_token?: string | undefined;
+    constructor(access_token?: string | undefined);
     /**
      * Read public data of logged-in user.
      * @returns {User}

@@ -3,7 +3,7 @@ import { Game, ChallengeOptions } from '../interfaces';
 
 export default class Challenge {
 
-	constructor(public access_token: string) {}
+	constructor(public access_token?: string) {}
 
 	/**
      * Read public data of logged-in user.

@@ -37,7 +37,7 @@ class Users {
                 friend: friend ? 1 : 0,
                 object: object ? 1 : 0
             }
-        });
+        }).then(v => v.result);
     }
     get(userParam, timeout) {
         if (typeof userParam === 'string')

@@ -1,4 +1,4 @@
-import Users from './endpoints/users';/*
+import Users, { Speed } from './endpoints/users';/*
 import Games from './endpoints/games';
 import Tournaments from './endpoints/tournaments';*/
 import Profile from './endpoints/profile';
@@ -14,11 +14,24 @@ import Teams from './endpoints/teams';*/
 export default class Lichess {
 
 	constructor(public access_token?: string) {}
+
+	/**
+	 * 
+	 * Lichess time controls are based on estimated game duration = (clock initial time) + 40 × (clock increment)
+	 * For instance, the estimated duration of a 5+3 game is 5 × 60 + 40 × 3 = 420 seconds.
+	 */
+	static getTimeControlCategory(mins: number, increment: number): Speed {
+		let d = (mins * 60) + 40 * increment;
+		if (d < 30) return 'ultrabullet'
+		if (d < 180) return 'bullet';
+		if (d < 480) return 'blitz';
+		if (d < 1500) return 'rapid';
+		return 'classical';
+	}
+
 	/**
      * Sets the client's Personal Access Token if one is supplied
-     * @param {string} secret 
      */
-
 	setToken(access_token: string) {
 		this.access_token = access_token;
 		return this;

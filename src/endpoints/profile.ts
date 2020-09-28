@@ -3,7 +3,7 @@ import { User } from '../interfaces';
 
 export default class Profile {
 
-	constructor(public access_token: string) {}
+	constructor(public access_token?: string) {}
 
 	/**
      * Read public data of logged-in user.
