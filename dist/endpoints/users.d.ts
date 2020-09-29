@@ -3,7 +3,7 @@ export * from '../interfaces';
 export default class Users {
     access_token?: string | undefined;
     constructor(access_token?: string | undefined);
-    search(term: string, friend?: boolean, object?: boolean): Promise<SearchResult>;
+    search(term: string, friend?: boolean, object?: boolean): Promise<SearchResult[]>;
     /**
      * Get user(s) public data. Calls {getOne} or {getMultiple} depending on input parameter.
      */

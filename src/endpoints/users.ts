@@ -14,7 +14,7 @@ export default class Users {
 
 	constructor(public access_token?: string) {}
 
-	search(term: string, friend: boolean = false, object: boolean = true): Promise<SearchResult> {
+	search(term: string, friend: boolean = false, object: boolean = true): Promise<SearchResult[]> {
 		return GET({
 			url: '/player/autocomplete',
 			params: {
